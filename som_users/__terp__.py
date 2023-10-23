@@ -12,7 +12,6 @@ Module for Representa Virtual Office integration
     ],
     "init_xml": [],
     "demo_xml": [
-        "demo/res_partner_demo.xml",
     ],
     "update_xml":[
         "security/ir.model.access.csv",
