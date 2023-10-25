@@ -24,7 +24,7 @@ class SomUsersTests(testing.OOTestCase):
         an_invalid_partner_vat = 123
         result = self.partner.get_partner(self.cursor, self.uid, an_invalid_partner_vat)
 
-        self.assertEqual(result, 'User not found')
+        self.assertIsNone(result)
 
 
     def test__get_partner__user_exists(self):

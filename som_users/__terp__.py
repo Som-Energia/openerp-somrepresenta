@@ -2,7 +2,7 @@
 {
     "name": "Representa Business layer",
     "description": """
-Module for Representa Virtual Office integration
+        Module for Representa Virtual Office integration
     """,
     "version": "0-dev",
     "author": "Som Energia",

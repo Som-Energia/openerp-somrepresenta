@@ -14,6 +14,6 @@ class Partner(osv.osv):
         if partner_id:
             partner = partner_obj.read(cursor, uid, partner_id)   
             return partner
-        return 'User not found'
+        return None
 
 Partner()
