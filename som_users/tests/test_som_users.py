@@ -33,3 +33,11 @@ class SomUsersTests(testing.OOTestCase):
                 costumer=True)
         )
         self.assertEqual(expected_result, result)
+
+    def test__get_partner__user_exists_and_is_NOT_active(self):
+        res_partner_address_soci_not_active_vat = '14763905K'
+
+        result = self.partner.get_partner(self.cursor, self.uid, res_partner_address_soci_not_active_vat)
+
+        expected_result = dict()
+        self.assertEqual(expected_result, result)

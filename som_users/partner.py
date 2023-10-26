@@ -8,7 +8,10 @@ class Partner(osv.osv):
 
     def get_partner(self, cursor, uid, cif):
         partner_obj = self.pool.get('res.partner')
-        search_params = [('vat','=', cif)]
+        search_params = [
+            ('vat','=', cif),
+            ('active','=', True)
+        ]
         partner_id = partner_obj.search(cursor, uid, search_params)
         if partner_id:
             partner = partner_obj.browse(cursor, uid, partner_id)
@@ -19,6 +22,6 @@ class Partner(osv.osv):
                 roles=dict(
                     costumer=partner[0].customer)
             )
-        return None
+        return dict()
 
 Partner()
