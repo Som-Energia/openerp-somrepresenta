@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from osv import osv
 
+
 class Partner(osv.osv):
 
     _name = 'partner'
@@ -14,14 +15,16 @@ class Partner(osv.osv):
         ]
         partner_id = partner_obj.search(cursor, uid, search_params)
         if partner_id:
-            partner = partner_obj.browse(cursor, uid, partner_id)
+            partner = partner_obj.browse(cursor, uid, partner_id)[0]
+
             return dict(
-                nif=str(partner[0].vat),
-                name=str(partner[0].name),
-                email=str(partner[0].address[0].email) if partner[0].address else '',
+                nif=str(partner.vat),
+                name=str(partner.name),
+                email=str(partner.address[0].email),
                 roles=dict(
-                    costumer=partner[0].customer)
+                    costumer=partner.customer)
             )
         return dict()
+
 
 Partner()
