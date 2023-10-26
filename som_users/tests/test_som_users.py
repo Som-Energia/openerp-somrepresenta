@@ -20,8 +20,9 @@ class SomUsersTests(testing.OOTestCase):
     def tearDown(self):
         self.txn.stop()
 
-    def test__get_partner__user_exists(self):
+    def test__get_partner__user_exists_and_is_active(self):
         res_partner_address_soci_vat = '48591264S'
+
         result = self.partner.get_partner(self.cursor, self.uid, res_partner_address_soci_vat)
 
         expected_result = dict(
