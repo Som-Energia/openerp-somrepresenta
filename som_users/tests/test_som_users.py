@@ -21,9 +21,9 @@ class SomUsersTests(testing.OOTestCase):
         self.txn.stop()
 
     def test__get_partner__user_exists_and_is_active(self):
-        res_partner_address_soci_vat = '48591264S'
+        res_partner_soci_vat = '48591264S'
 
-        result = self.partner.get_partner(self.cursor, self.uid, res_partner_address_soci_vat)
+        result = self.partner.get_partner(self.cursor, self.uid, res_partner_soci_vat)
 
         expected_result = dict(
             nif='48591264S',
