@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <openerp>
     <data>
-        <!-- Partner -->
+        <!-- Partner exists and is active -->
         <record id="res_partner_soci" model="res.partner">
             <field name="name">Benedetti, Mario</field>
             <field name="ref">S202199</field>
             <field name="vat">48591264S</field>
+            <field name="active" eval="True"/>
         </record>
         <record id="res_partner_address_soci" model="res.partner.address">
             <field name="city">Paso de los Toros</field>
@@ -17,6 +18,14 @@
             <field name="type">default</field>
             <field name="email">test@test.test</field>
             <field name="partner_id" ref="res_partner_soci"/>
+        </record>
+
+        <!-- Partner exists and is NOT active -->
+        <record id="res_partner_soci_not_active" model="res.partner">
+            <field name="name">San Basilio, Paloma</field>
+            <field name="ref">S205199</field>
+            <field name="vat">14763905K</field>
+            <field name="active" eval="False"/>
         </record>
      </data>
 </openerp>
