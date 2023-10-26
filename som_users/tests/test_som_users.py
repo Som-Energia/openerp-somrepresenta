@@ -47,3 +47,19 @@ class SomUsersTests(testing.OOTestCase):
         result = self.partner.get_partner(self.cursor, self.uid, res_partner_soci_not_exists_vat)
 
         self.assertEqual(result['code'], 'PartnerNotExists')
+
+    def test__get_profile(self):
+        res_partner_soci_vat = '48591264S'
+
+        result = self.partner.get_profile(self.cursor, self.uid, res_partner_soci_vat)
+        expected_result = dict(
+            nif = '48591264S',
+            address = 'Rincón de Haikus, 23',
+            city = 'Paso de los Toros',
+            zip = '08600',
+            state = 'Granada',
+            phone = '666666666',
+            roles = dict(customer=True),
+        )
+
+        self.assertEqual(expected_result, result)

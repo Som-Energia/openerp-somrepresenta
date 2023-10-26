@@ -33,5 +33,28 @@ class Partner(osv.osv):
             )
         raise PartnerNotExists()
 
+    def get_profile(self, cursor, uid, nif):
+        partner_obj = self.pool.get('res.partner')
+
+        search_params = [
+           ('vat','=', nif),
+           ('active','=', True)
+        ]
+        partner_id = partner_obj.search(cursor, uid, search_params)
+        if partner_id:
+            partner = partner_obj.browse(cursor, uid, partner_id)[0]
+
+            return dict(
+               nif=str(partner.vat),
+               address=str(partner.address[0].street),
+               city=str(partner.address[0].city),
+               zip=str(partner.address[0].zip),
+               state=str(partner.address[0].state_id.name),
+               phone=str(partner.address[0].phone),
+               roles=dict(
+                   customer=partner.customer)
+           )
+        return dict()
+
 
 Partner()

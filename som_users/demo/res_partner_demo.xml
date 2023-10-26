@@ -13,13 +13,14 @@
             <field name="name">Benedetti, Mario</field>
             <field name="zip">08600</field>
             <field name="title">M.</field>
-            <field name="country_id" model="res.country" search="[('name','=','Espanya')]"/>
+            <field name="country_id" model="res.country" search="[('name','=','España')]"/>
+            <field name="state_id" model="res.country.state" search="[('name', '=', 'Granada')]"/>
             <field name="street">Rincón de Haikus, 23</field>
             <field name="type">default</field>
             <field name="email">test@test.test</field>
+            <field name="phone">666666666</field>
             <field name="partner_id" ref="res_partner_soci"/>
         </record>
-
         <!-- Partner exists and is NOT active -->
         <record id="res_partner_soci_not_active" model="res.partner">
             <field name="name">San Basilio, Paloma</field>
