@@ -41,3 +41,11 @@ class SomUsersTests(testing.OOTestCase):
 
         expected_result = dict()
         self.assertEqual(expected_result, result)
+
+    def test__get_partner__user_NOT_exists(self):
+        res_partner_soci_not_exists_vat = '12345678A'
+
+        result = self.partner.get_partner(self.cursor, self.uid, res_partner_soci_not_exists_vat)
+
+        expected_result = dict()
+        self.assertEqual(expected_result, result)
