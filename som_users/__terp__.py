@@ -12,6 +12,7 @@
     ],
     "init_xml": [],
     "demo_xml": [
+        "demo/res_partner_demo.xml",
     ],
     "update_xml":[
         "security/ir.model.access.csv",
@@ -19,4 +20,3 @@
     "active": False,
     "installable": True
 }
-

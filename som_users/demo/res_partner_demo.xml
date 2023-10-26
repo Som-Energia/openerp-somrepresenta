@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<openerp>
+    <data>
+        <!-- Partner -->
+        <record id="res_partner_soci" model="res.partner">
+            <field name="name">Benedetti, Mario</field>
+            <field name="ref">S202199</field>
+            <field name="vat">48591264S</field>
+        </record>
+        <record id="res_partner_address_soci" model="res.partner.address">
+            <field name="city">Paso de los Toros</field>
+            <field name="name">Benedetti, Mario</field>
+            <field name="zip">08600</field>
+            <field name="title">M.</field>
+            <field name="country_id" model="res.country" search="[('name','=','Espanya')]"/>
+            <field name="street">Rincón de Haikus, 23</field>
+            <field name="type">default</field>
+            <field name="email">test@test.test</field>
+            <field name="partner_id" ref="res_partner_soci"/>
+        </record>
+     </data>
+</openerp>
