@@ -1,12 +1,19 @@
 # -*- coding: utf-8 -*-
 from osv import osv
 
+from som_users.decorators import www_entry_point
+from som_users.exceptions import PartnerNotExists
+
 
 class Partner(osv.osv):
 
     _name = 'partner'
     _inherit = 'res.partner'
 
+
+    @www_entry_point(
+        expected_exceptions=PartnerNotExists
+    )
     def get_partner(self, cursor, uid, cif):
         partner_obj = self.pool.get('res.partner')
         search_params = [
@@ -24,7 +31,7 @@ class Partner(osv.osv):
                 roles=dict(
                     costumer=partner.customer)
             )
-        return dict()
+        raise PartnerNotExists()
 
 
 Partner()

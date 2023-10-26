@@ -34,18 +34,16 @@ class SomUsersTests(testing.OOTestCase):
         )
         self.assertEqual(expected_result, result)
 
-    def test__get_partner__user_exists_and_is_NOT_active(self):
+    def test__get_partner__user_exists_and_is_not_active(self):
         res_partner_address_soci_not_active_vat = '14763905K'
 
         result = self.partner.get_partner(self.cursor, self.uid, res_partner_address_soci_not_active_vat)
 
-        expected_result = dict()
-        self.assertEqual(expected_result, result)
+        self.assertEqual(result['code'], 'PartnerNotExists')
 
-    def test__get_partner__user_NOT_exists(self):
+    def test__get_partner__user_does_not_exists(self):
         res_partner_soci_not_exists_vat = '12345678A'
 
         result = self.partner.get_partner(self.cursor, self.uid, res_partner_soci_not_exists_vat)
 
-        expected_result = dict()
-        self.assertEqual(expected_result, result)
+        self.assertEqual(result['code'], 'PartnerNotExists')
