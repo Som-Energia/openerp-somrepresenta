@@ -30,7 +30,7 @@ class SomUsersTests(testing.OOTestCase):
             name='Benedetti, Mario',
             email='test@test.test',
             roles=dict(
-                costumer=True)
+                customer=True)
         )
         self.assertEqual(expected_result, result)
 

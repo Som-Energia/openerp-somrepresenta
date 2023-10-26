@@ -14,10 +14,10 @@ class Partner(osv.osv):
     @www_entry_point(
         expected_exceptions=PartnerNotExists
     )
-    def get_partner(self, cursor, uid, cif):
+    def get_partner(self, cursor, uid, nif):
         partner_obj = self.pool.get('res.partner')
         search_params = [
-            ('vat','=', cif),
+            ('vat','=', nif),
             ('active','=', True)
         ]
         partner_id = partner_obj.search(cursor, uid, search_params)
@@ -29,7 +29,7 @@ class Partner(osv.osv):
                 name=str(partner.name),
                 email=str(partner.address[0].email),
                 roles=dict(
-                    costumer=partner.customer)
+                    customer=partner.customer)
             )
         raise PartnerNotExists()
 
