@@ -4,12 +4,9 @@ from osv import osv
 from som_users.decorators import www_entry_point
 from som_users.exceptions import PartnerNotExists
 
+class Partner(osv.osv_memory):
 
-class Partner(osv.osv):
-
-    _name = 'partner'
-    _inherit = 'res.partner'
-
+    _name = "partner"
 
     @www_entry_point(
         expected_exceptions=PartnerNotExists
