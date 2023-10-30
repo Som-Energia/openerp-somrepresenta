@@ -58,7 +58,10 @@ class SomUsersTests(testing.OOTestCase):
             city = 'Paso de los Toros',
             zip = '08600',
             state = 'Granada',
-            phone = '666666666',
+            phone = dict(
+                landline='933333333',
+                mobile='666666666',
+            ),
             roles = dict(customer=True),
         )
 

@@ -4,6 +4,7 @@ from osv import osv
 from som_users.decorators import www_entry_point
 from som_users.exceptions import PartnerNotExists
 
+
 class Partner(osv.osv_memory):
 
     _name = "partner"
@@ -32,7 +33,6 @@ class Partner(osv.osv_memory):
 
     def get_profile(self, cursor, uid, nif):
         partner_obj = self.pool.get('res.partner')
-
         search_params = [
            ('vat','=', nif),
            ('active','=', True)
@@ -42,12 +42,15 @@ class Partner(osv.osv_memory):
             partner = partner_obj.browse(cursor, uid, partner_id)[0]
 
             return dict(
-               nif=str(partner.vat),
-               address=str(partner.address[0].street),
-               city=str(partner.address[0].city),
-               zip=str(partner.address[0].zip),
-               state=str(partner.address[0].state_id.name),
-               phone=str(partner.address[0].phone),
+               nif=partner.vat,
+               address=partner.address[0].street,
+               city=partner.address[0].city,
+               zip=partner.address[0].zip,
+               state=partner.address[0].state_id.name,
+               phone=dict(
+                   landline=partner.address[0].phone,
+                   mobile=partner.address[0].mobile,
+               ),
                roles=dict(
                    customer=partner.customer)
            )

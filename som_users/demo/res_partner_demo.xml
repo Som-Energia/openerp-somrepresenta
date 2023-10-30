@@ -18,7 +18,8 @@
             <field name="street">Rincón de Haikus, 23</field>
             <field name="type">default</field>
             <field name="email">test@test.test</field>
-            <field name="phone">666666666</field>
+            <field name="phone">933333333</field>
+            <field name="mobile">666666666</field>
             <field name="partner_id" ref="res_partner_soci"/>
         </record>
         <!-- Partner exists and is NOT active -->
