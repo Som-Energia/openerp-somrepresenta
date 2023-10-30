@@ -12,7 +12,8 @@ class Users(osv.osv_memory):
     @www_entry_point(
         expected_exceptions=PartnerNotExists
     )
-    def get_partner_info(self, cursor, uid, nif):
+    def get_user_login_info(self, cursor, uid, nif):
+        #TODO: get res.users login info
         partner_obj = self.pool.get('res.partner')
         search_params = [
             ('vat','=', nif),
@@ -32,7 +33,8 @@ class Users(osv.osv_memory):
             )
         raise PartnerNotExists()
 
-    def get_partner_profile(self, cursor, uid, nif):
+    def get_profile(self, cursor, uid, nif):
+        # Get user profile: for now recover customer profile
         partner_obj = self.pool.get('res.partner')
         search_params = [
            ('vat','=', nif),

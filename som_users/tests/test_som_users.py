@@ -21,10 +21,10 @@ class SomUsersTests(testing.OOTestCase):
     def tearDown(self):
         self.txn.stop()
 
-    def test__get_partner__user_exists_and_is_active(self):
+    def test__get_user_login_info__user_exists_and_is_active(self):
         res_partner_soci_vat = '48591264S'
 
-        result = self.users.get_partner_info(self.cursor, self.uid, res_partner_soci_vat)
+        result = self.users.get_user_login_info(self.cursor, self.uid, res_partner_soci_vat)
 
         expected_result = dict(
             nif='48591264S',
@@ -35,24 +35,24 @@ class SomUsersTests(testing.OOTestCase):
         )
         self.assertEqual(expected_result, result)
 
-    def test__get_partner__user_exists_and_is_not_active(self):
+    def test__get_user_login_info__user_exists_and_is_not_active(self):
         res_partner_address_soci_not_active_vat = '14763905K'
 
-        result = self.users.get_partner_info(self.cursor, self.uid, res_partner_address_soci_not_active_vat)
+        result = self.users.get_user_login_info(self.cursor, self.uid, res_partner_address_soci_not_active_vat)
 
         self.assertEqual(result['code'], 'PartnerNotExists')
 
-    def test__get_partner__user_does_not_exists(self):
+    def test__get_user_login_info__user_does_not_exists(self):
         res_partner_soci_not_exists_vat = '12345678A'
 
-        result = self.users.get_partner_info(self.cursor, self.uid, res_partner_soci_not_exists_vat)
+        result = self.users.get_user_login_info(self.cursor, self.uid, res_partner_soci_not_exists_vat)
 
         self.assertEqual(result['code'], 'PartnerNotExists')
 
-    def test__get_partner_profile(self):
+    def test__get_profile(self):
         res_partner_soci_vat = '48591264S'
 
-        result = self.users.get_partner_profile(self.cursor, self.uid, res_partner_soci_vat)
+        result = self.users.get_profile(self.cursor, self.uid, res_partner_soci_vat)
         expected_result = dict(
             nif = '48591264S',
             address = 'Rincón de Haikus, 23',
