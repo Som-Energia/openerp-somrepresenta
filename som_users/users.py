@@ -47,6 +47,8 @@ class Users(osv.osv_memory):
 
             return dict(
                nif=partner.vat,
+               name=partner.name,
+               email=partner.address[0].email,
                address=partner.address[0].street,
                city=partner.address[0].city,
                zip=partner.address[0].zip,

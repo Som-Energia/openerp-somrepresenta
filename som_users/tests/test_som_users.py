@@ -55,6 +55,8 @@ class SomUsersTests(testing.OOTestCase):
         result = self.users.get_profile(self.cursor, self.uid, res_partner_soci_vat)
         expected_result = dict(
             nif = '48591264S',
+            name = 'Benedetti, Mario',
+            email = 'test@test.test',
             address = 'Rincón de Haikus, 23',
             city = 'Paso de los Toros',
             zip = '08600',
