@@ -5,14 +5,14 @@ from som_users.decorators import www_entry_point
 from som_users.exceptions import PartnerNotExists
 
 
-class Partner(osv.osv_memory):
+class Users(osv.osv_memory):
 
-    _name = "partner"
+    _name = "users"
 
     @www_entry_point(
         expected_exceptions=PartnerNotExists
     )
-    def get_partner(self, cursor, uid, nif):
+    def get_partner_info(self, cursor, uid, nif):
         partner_obj = self.pool.get('res.partner')
         search_params = [
             ('vat','=', nif),
@@ -31,7 +31,7 @@ class Partner(osv.osv_memory):
             )
         raise PartnerNotExists()
 
-    def get_profile(self, cursor, uid, nif):
+    def get_partner_profile(self, cursor, uid, nif):
         partner_obj = self.pool.get('res.partner')
         search_params = [
            ('vat','=', nif),
@@ -57,4 +57,4 @@ class Partner(osv.osv_memory):
         return dict()
 
 
-Partner()
+Users()

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from osv import osv
-from som_users import partner
+from som_users import users
 
 class Installation(osv.osv):
 
