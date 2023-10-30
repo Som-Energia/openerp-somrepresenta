@@ -30,8 +30,7 @@ class SomUsersTests(testing.OOTestCase):
             nif='48591264S',
             name='Benedetti, Mario',
             email='test@test.test',
-            roles=dict(
-                customer=True)
+            roles=['customer']
         )
         self.assertEqual(expected_result, result)
 
@@ -65,7 +64,7 @@ class SomUsersTests(testing.OOTestCase):
                 landline='933333333',
                 mobile='666666666',
             ),
-            roles = dict(customer=True),
+            roles = ['customer']
         )
 
         self.assertEqual(expected_result, result)

@@ -28,8 +28,7 @@ class Users(osv.osv_memory):
                 nif=partner.vat,
                 name=partner.name,
                 email=partner.address[0].email,
-                roles=dict(
-                    customer=partner.customer)
+                roles=['customer']
             )
         raise PartnerNotExists()
 
@@ -57,8 +56,7 @@ class Users(osv.osv_memory):
                    landline=partner.address[0].phone,
                    mobile=partner.address[0].mobile,
                ),
-               roles=dict(
-                   customer=partner.customer)
+               roles=['customer']
            )
         return dict()
 
