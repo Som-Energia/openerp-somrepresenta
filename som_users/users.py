@@ -32,6 +32,9 @@ class Users(osv.osv_memory):
             )
         raise PartnerNotExists()
 
+    @www_entry_point(
+        expected_exceptions=PartnerNotExists
+    )
     def get_profile(self, cursor, uid, nif):
         # Get user profile: for now recover customer profile
         partner_obj = self.pool.get('res.partner')
@@ -42,7 +45,7 @@ class Users(osv.osv_memory):
         ]
         partner_id = partner_obj.search(cursor, uid, search_params)
         if not partner_id:
-            return dict()
+            raise PartnerNotExists()
 
         partner = partner_obj.browse(cursor, uid, partner_id)[0]
 
