@@ -16,7 +16,8 @@ class Users(osv.osv_memory):
         partner_obj = self.pool.get('res.partner')
         search_params = [
             ('vat','=', nif),
-            ('active','=', True)
+            ('active','=', True),
+            ('customer','=', True)
         ]
         partner_id = partner_obj.search(cursor, uid, search_params)
         if partner_id:
@@ -35,7 +36,8 @@ class Users(osv.osv_memory):
         partner_obj = self.pool.get('res.partner')
         search_params = [
            ('vat','=', nif),
-           ('active','=', True)
+           ('active','=', True),
+           ('customer','=', True)
         ]
         partner_id = partner_obj.search(cursor, uid, search_params)
         if partner_id:
