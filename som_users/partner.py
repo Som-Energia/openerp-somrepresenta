@@ -23,9 +23,9 @@ class Partner(osv.osv_memory):
             partner = partner_obj.browse(cursor, uid, partner_id)[0]
 
             return dict(
-                nif=str(partner.vat),
-                name=str(partner.name),
-                email=str(partner.address[0].email),
+                nif=partner.vat,
+                name=partner.name,
+                email=partner.address[0].email,
                 roles=dict(
                     customer=partner.customer)
             )
