@@ -12,7 +12,7 @@ class Users(osv.osv_memory):
     @www_entry_point(
         expected_exceptions=PartnerNotExists
     )
-    def get_user_login_info(self, cursor, uid, login):
+    def identify_login(self, cursor, uid, login):
         #TODO: get res.users login info
         partner_obj = self.pool.get('res.partner')
         search_params = [
