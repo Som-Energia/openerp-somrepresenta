@@ -30,7 +30,7 @@ class SomUsersTests(testing.OOTestCase):
         result = self.users.get_user_login_info(self.cursor, self.uid, res_partner_soci_vat)
 
         expected_result = dict(
-            nif='ES48591264S',
+            vat='ES48591264S',
             name='Benedetti, Mario',
             email='test@test.test',
             roles=['customer'],
@@ -57,7 +57,7 @@ class SomUsersTests(testing.OOTestCase):
 
         result = self.users.get_profile(self.cursor, self.uid, res_partner_soci_vat)
         expected_result = dict(
-            nif = 'ES48591264S',
+            vat = 'ES48591264S',
             name = 'Benedetti, Mario',
             email = 'test@test.test',
             address = 'Rincón de Haikus, 23',
@@ -65,7 +65,8 @@ class SomUsersTests(testing.OOTestCase):
             zip = '08600',
             state = 'Granada',
             phones = ['933333333', '666666666'],
-            roles = ['customer']
+            roles = ['customer'],
+            username = 'ES48591264S',
         )
 
         self.assertEqual(expected_result, result)
@@ -88,7 +89,7 @@ class SomUsersTests(testing.OOTestCase):
 
         result = self.users.get_profile(self.cursor, self.uid, res_partner_soci_vat)
         expected_result = dict(
-            nif = 'ES48591264S',
+            vat = 'ES48591264S',
             name = 'Benedetti, Mario',
             email = 'test@test.test',
             address = 'Rincón de Haikus, 23',
@@ -96,6 +97,7 @@ class SomUsersTests(testing.OOTestCase):
             zip = '08600',
             state = 'Granada',
             phones = [],
-            roles = ['customer']
+            roles = ['customer'],
+            username = 'ES48591264S',
         )
         self.assertEqual(expected_result, result)

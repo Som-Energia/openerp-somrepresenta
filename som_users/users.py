@@ -12,11 +12,11 @@ class Users(osv.osv_memory):
     @www_entry_point(
         expected_exceptions=PartnerNotExists
     )
-    def get_user_login_info(self, cursor, uid, nif):
+    def get_user_login_info(self, cursor, uid, login):
         #TODO: get res.users login info
         partner_obj = self.pool.get('res.partner')
         search_params = [
-            ('vat','=', nif),
+            ('vat','=', login),
             ('active','=', True),
             ('customer','=', True)
         ]
@@ -25,7 +25,7 @@ class Users(osv.osv_memory):
             partner = partner_obj.browse(cursor, uid, partner_id)[0]
 
             return dict(
-                nif=partner.vat,
+                vat=partner.vat,
                 name=partner.name,
                 email=partner.address[0].email,
                 roles=['customer'],
@@ -36,11 +36,11 @@ class Users(osv.osv_memory):
     @www_entry_point(
         expected_exceptions=PartnerNotExists
     )
-    def get_profile(self, cursor, uid, nif):
+    def get_profile(self, cursor, uid, username):
         # Get user profile: for now recover customer profile
         partner_obj = self.pool.get('res.partner')
         search_params = [
-           ('vat','=', nif),
+           ('vat','=', username),
            ('active','=', True),
            ('customer','=', True),
         ]
@@ -51,7 +51,9 @@ class Users(osv.osv_memory):
         partner = partner_obj.browse(cursor, uid, partner_id)[0]
 
         return dict(
-            nif=partner.vat,
+            username=partner.vat,
+            roles=['customer'],
+            vat=partner.vat,
             name=partner.name,
             email=partner.address[0].email,
             address=partner.address[0].street,
@@ -63,7 +65,6 @@ class Users(osv.osv_memory):
                 for key in ['phone', 'mobile']
                 if partner.address[0][key]
             ],
-            roles=['customer']
         )
 
 
