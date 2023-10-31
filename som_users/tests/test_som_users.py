@@ -33,7 +33,8 @@ class SomUsersTests(testing.OOTestCase):
             nif='ES48591264S',
             name='Benedetti, Mario',
             email='test@test.test',
-            roles=['customer']
+            roles=['customer'],
+            username='ES48591264S',
         )
         self.assertEqual(expected_result, result)
 

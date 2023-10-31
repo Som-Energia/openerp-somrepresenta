@@ -28,7 +28,8 @@ class Users(osv.osv_memory):
                 nif=partner.vat,
                 name=partner.name,
                 email=partner.address[0].email,
-                roles=['customer']
+                roles=['customer'],
+                username=partner.vat,
             )
         raise PartnerNotExists()
 
