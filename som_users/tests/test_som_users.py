@@ -19,17 +19,18 @@ class SomUsersTests(testing.OOTestCase):
 
         self.cursor = self.txn.cursor
         self.uid = self.txn.user
+        self.maxDiff = None
 
     def tearDown(self):
         self.txn.stop()
 
     def test__get_user_login_info__user_exists_and_is_active(self):
-        res_partner_soci_vat = '48591264S'
+        res_partner_soci_vat = 'ES48591264S'
 
         result = self.users.get_user_login_info(self.cursor, self.uid, res_partner_soci_vat)
 
         expected_result = dict(
-            nif='48591264S',
+            nif='ES48591264S',
             name='Benedetti, Mario',
             email='test@test.test',
             roles=['customer']
@@ -37,25 +38,25 @@ class SomUsersTests(testing.OOTestCase):
         self.assertEqual(expected_result, result)
 
     def test__get_user_login_info__user_exists_and_is_not_active(self):
-        res_partner_address_soci_not_active_vat = '14763905K'
+        res_partner_address_soci_not_active_vat = 'ES14763905K'
 
         result = self.users.get_user_login_info(self.cursor, self.uid, res_partner_address_soci_not_active_vat)
 
         self.assertEqual(result['code'], 'PartnerNotExists')
 
     def test__get_user_login_info__user_does_not_exists(self):
-        res_partner_soci_not_exists_vat = '12345678A'
+        res_partner_soci_not_exists_vat = 'ES12345678A'
 
         result = self.users.get_user_login_info(self.cursor, self.uid, res_partner_soci_not_exists_vat)
 
         self.assertEqual(result['code'], 'PartnerNotExists')
 
     def test__get_profile(self):
-        res_partner_soci_vat = '48591264S'
+        res_partner_soci_vat = 'ES48591264S'
 
         result = self.users.get_profile(self.cursor, self.uid, res_partner_soci_vat)
         expected_result = dict(
-            nif = '48591264S',
+            nif = 'ES48591264S',
             name = 'Benedetti, Mario',
             email = 'test@test.test',
             address = 'Rincón de Haikus, 23',
@@ -69,7 +70,7 @@ class SomUsersTests(testing.OOTestCase):
         self.assertEqual(expected_result, result)
 
     def test__get_profile__without_phone_numbers(self):
-        res_partner_soci_vat = '48591264S'
+        res_partner_soci_vat = 'ES48591264S'
 
         # get address id
         partner_id = self.res_partner.search(
@@ -86,7 +87,7 @@ class SomUsersTests(testing.OOTestCase):
 
         result = self.users.get_profile(self.cursor, self.uid, res_partner_soci_vat)
         expected_result = dict(
-            nif = '48591264S',
+            nif = 'ES48591264S',
             name = 'Benedetti, Mario',
             email = 'test@test.test',
             address = 'Rincón de Haikus, 23',

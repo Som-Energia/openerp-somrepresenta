@@ -5,7 +5,7 @@
         <record id="res_partner_soci" model="res.partner">
             <field name="name">Benedetti, Mario</field>
             <field name="ref">S202199</field>
-            <field name="vat">48591264S</field>
+            <field name="vat">ES48591264S</field>
             <field name="active" eval="True"/>
         </record>
         <record id="res_partner_address_soci" model="res.partner.address">
@@ -27,7 +27,7 @@
         <record id="res_partner_soci_not_active" model="res.partner">
             <field name="name">San Basilio, Paloma</field>
             <field name="ref">S205199</field>
-            <field name="vat">14763905K</field>
+            <field name="vat">ES14763905K</field>
             <field name="active" eval="False"/>
         </record>
         <!-- Partner exists, is active and is not customer -->
