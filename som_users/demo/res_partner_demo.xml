@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<openerp>
+    <data>
+        <!-- Partner exists, is active and is customer -->
+        <record id="res_partner_soci" model="res.partner">
+            <field name="name">Benedetti, Mario</field>
+            <field name="ref">S202199</field>
+            <field name="vat">ES48591264S</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="res_partner_address_soci" model="res.partner.address">
+            <field name="city">Paso de los Toros</field>
+            <field name="name">Benedetti, Mario</field>
+            <field name="zip">08600</field>
+            <field name="title">M.</field>
+            <field name="country_id" model="res.country" search="[('name','=','España')]"/>
+            <field name="state_id" model="res.country.state" search="[('name', '=', 'Granada')]"/>
+            <field name="street">Rincón de Haikus, 23</field>
+            <field name="type">default</field>
+            <field name="email">test@test.test</field>
+            <field name="phone">933333333</field>
+            <field name="mobile">666666666</field>
+            <field name="customer" eval="True"/>
+            <field name="partner_id" ref="res_partner_soci"/>
+        </record>
+        <!-- Partner exists and is NOT active -->
+        <record id="res_partner_soci_not_active" model="res.partner">
+            <field name="name">San Basilio, Paloma</field>
+            <field name="ref">S205199</field>
+            <field name="vat">ES14763905K</field>
+            <field name="active" eval="False"/>
+        </record>
+        <!-- Partner exists, is active and is not customer -->
+        <record id="res_partner_not_customer" model="res.partner">
+            <field name="name">Distri Name</field>
+            <field name="ref">666</field>
+            <field name="vat"></field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="res_partner_address_not_customer" model="res.partner.address">
+            <field name="city">Girona</field>
+            <field name="name">Distri Name</field>
+            <field name="zip">08600</field>
+            <field name="title">M.</field>
+            <field name="country_id" model="res.country" search="[('name','=','España')]"/>
+            <field name="state_id" model="res.country.state" search="[('name', '=', 'Granada')]"/>
+            <field name="street">Distri street, 23</field>
+            <field name="type">default</field>
+            <field name="email">distri@test.test</field>
+            <field name="phone">933333333</field>
+            <field name="mobile">666666666</field>
+            <field name="customer" eval="False"/>
+            <field name="partner_id" ref="res_partner_not_customer"/>
+        </record>
+    </data>
+</openerp>
