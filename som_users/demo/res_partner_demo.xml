@@ -23,6 +23,34 @@
             <field name="customer" eval="True"/>
             <field name="partner_id" ref="res_partner_soci"/>
         </record>
+        <!-- Partner exists, is active and is customer and legal entity-->
+        <record id="res_partner_soci_legal_proxy" model="res.partner">
+            <field name="name">Aplastado, Coyote</field>
+            <field name="vat">ES12345678X</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="res_partner_soci_legal" model="res.partner">
+            <field name="name">ACME Industries</field>
+            <field name="ref">S206199</field>
+            <field name="vat">ESW2796397D</field>
+            <field name="active" eval="True"/>
+            <field name="representante_id" ref="res_partner_soci_legal_proxy"/>
+        </record>
+        <record id="res_partner_address_legal_entity" model="res.partner.address">
+            <field name="city">El Camino</field>
+            <field name="name">ACME Industries</field>
+            <field name="zip">08600</field>
+            <field name="title">M.</field>
+            <field name="country_id" model="res.country" search="[('name','=','España')]"/>
+            <field name="state_id" model="res.country.state" search="[('name', '=', 'Granada')]"/>
+            <field name="street">Cañon, 12</field>
+            <field name="type">default</field>
+            <field name="email">info@acme.com</field>
+            <field name="phone">933333333</field>
+            <field name="mobile">666666666</field>
+            <field name="customer" eval="True"/>
+            <field name="partner_id" ref="res_partner_soci_legal"/>
+        </record>
         <!-- Partner exists and is NOT active -->
         <record id="res_partner_soci_not_active" model="res.partner">
             <field name="name">San Basilio, Paloma</field>

@@ -65,6 +65,8 @@ class Users(osv.osv_memory):
                 for key in ['phone', 'mobile']
                 if partner.address[0][key]
             ],
+            proxy_vat=partner.representante_id.vat if partner.representante_id else False,
+            proxy_name=partner.representante_id.name if partner.representante_id else False,
         )
 
 

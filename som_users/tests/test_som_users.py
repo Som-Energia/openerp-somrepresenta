@@ -67,6 +67,8 @@ class SomUsersTests(testing.OOTestCase):
             phones = ['933333333', '666666666'],
             roles = ['customer'],
             username = 'ES48591264S',
+            proxy_vat= False,
+            proxy_name= False,
         )
 
         self.assertEqual(expected_result, result)
@@ -99,5 +101,27 @@ class SomUsersTests(testing.OOTestCase):
             phones = [],
             roles = ['customer'],
             username = 'ES48591264S',
+            proxy_vat= False,
+            proxy_name= False,
+        )
+        self.assertEqual(expected_result, result)
+
+    def test__get_profile__with_legal_proxy(self):
+        username = 'ESW2796397D'
+
+        result = self.users.get_profile(self.cursor, self.uid, username)
+        expected_result = dict(
+            vat = 'ESW2796397D',
+            name = 'ACME Industries',
+            email = 'info@acme.com',
+            address = 'Cañon, 12',
+            city = 'El Camino',
+            zip = '08600',
+            state = 'Granada',
+            phones = ['933333333', '666666666'],
+            roles = ['customer'],
+            username = 'ESW2796397D',
+            proxy_vat= 'ES12345678X',
+            proxy_name= 'Aplastado, Coyote',
         )
         self.assertEqual(expected_result, result)

@@ -9,6 +9,7 @@
     "category": "www",
     "depends":[
         "base_extended",
+        "partner_representante",
     ],
     "init_xml": [],
     "demo_xml": [
