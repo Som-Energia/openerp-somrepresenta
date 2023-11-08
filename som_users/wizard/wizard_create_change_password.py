@@ -4,6 +4,7 @@ import random
 import string
 import requests
 import json
+from tools import config
 
 from som_users.decorators import www_entry_point
 from som_users.exceptions import FailSendEmail
@@ -63,8 +64,6 @@ class WizardCreateChangePassword(osv.osv_memory):
         except Exception as e:
             raise FailSendEmail(e.message)
 
-        return True
-
     def save_password(self, cursor, uid, partner_id, password):
         partner_o = self.pool.get("res.partner")
         nif = partner_o.read(cursor, uid, partner_id, ['vat'])['vat']
@@ -73,30 +72,43 @@ class WizardCreateChangePassword(osv.osv_memory):
             "username": nif,
             "password": password
         }
-
         headers = {
             'Accept': 'application/json',
-            'X-API-KEY': 'CACA'
+            'X-API-KEY': config.get('X-API-KEY', False)
         }
         url = "https://ov-representa.test.somenergia.coop/api/auth/provisioning"
 
-        r = requests.post(url, data=json.dumps(data), headers=headers)
-        res = json.loads(r.text)
+        res = requests.post(url, data=json.dumps(data), headers=headers)
 
+        if res.status_code != 200:
+            return False
+
+        return True
+
+    @www_entry_point(
+        expected_exceptions=FailSendEmail
+    )
     def action_create_change_password(self, cursor, uid, ids, context=None):
         if context is None:
             context = {}
 
         partner_ids = context.get("active_ids")
         partner_o = self.pool.get("res.partner")
+
         error_info = []
         for partner_id in partner_ids:
             partner = partner_o.browse(cursor, uid, partner_id)
             password = self.generatePassword()
-            self.save_password(cursor, uid, partner_id, password)
-
-            if not self.send_password_email(cursor, uid, partner):
-                error_info.append(partner_id)
+            if not self.save_password(cursor, uid, partner_id, password):
+                info = "{} ({})\n".format(str(int(partner_id)),'Contrassenya no generada')
+                error_info.append(info)
+                continue
+            try:
+                self.send_password_email(cursor, uid, partner)
+            except FailSendEmail as e:
+                info = "{} ({})\n".format(str(int(partner_id)),"Error al generar/enviar l'email")
+                error_info.append(info)
+                continue
 
         values = {
             'state': 'done'
@@ -105,10 +117,10 @@ class WizardCreateChangePassword(osv.osv_memory):
         if error_info:
             values['info'] = "{}: \n {}".format(
                 'Error generant contrassenyes pels següents partners',
-                ','.join([str(int(x)) for x in error_info])
+                ','.join([x for x in error_info])
             )
         else:
-            values['info'] = "{}\n".format('Contrassenyes generades')
+            values['info'] = "{}".format('Contrassenyes generades')
 
         self.write(cursor, uid, ids, values)
         return True
