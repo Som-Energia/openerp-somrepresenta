@@ -2,22 +2,6 @@
 from osv import osv, fields
 from tools.translate import _
 
-"""
-
-Document
-- Persona -signa-> RGPD_OV_REPRESENTA
-- Persona -signa-> CONDICIONS_PARTICULAR -> Contracte
-
-Modelo de documento: RGPD_OV_REPRESENTA, CONDICIONS_PARTICULAR
-   Versions de document: type, version, fecha
-
-RegitryDocumentAFirmar: person, document_type_version, signature_date, documentSignature(null)
-
-DocumentoAFirmar: Persona, Modelo, Fecha, EstaFirmado?, Proces -> giscedata.signatura.document
-ProcesoDeFirma: 
-
-"""
-
 
 class SignedDocumentType(osv.osv):
 
@@ -41,8 +25,8 @@ class SignedDocumentTypeVersion(osv.osv):
         result = {}
         for rec in self.browse(cursor, uid, ids, context):
             result[rec.id] = "{code} - {version}".format(
-                code=self.type.code,
-                version=self.date,
+                code=rec.type.code,
+                version=rec.date,
             )
         return result
 
@@ -52,8 +36,8 @@ class SignedDocumentTypeVersion(osv.osv):
         'date': fields.datetime('Date'),
     }
 
-    _constraints = [
-        ('type_date_uniq', 'unique("type","date_")', _('Only one version of the document is accepted by date!')),
+    _sql_constraints = [
+        ('type_date_uniq', 'unique("type","date")', _('Only one version of the document is accepted by date!')),
     ]
 
 SignedDocumentTypeVersion()
