@@ -24,7 +24,7 @@ class SignedDocumentTypeVersion(osv.osv):
     def _get_name(self, cursor, uid, ids, field_name, arg, context=None):
         result = {}
         for rec in self.browse(cursor, uid, ids, context):
-            result[rec.id] = "{code} - {version}".format(
+            result[rec.id] = "{code}_{version}".format(
                 code=rec.type.code,
                 version=rec.date,
             )

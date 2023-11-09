@@ -67,6 +67,7 @@ class Users(osv.osv_memory):
             ],
             proxy_vat=partner.representante_id.vat if partner.representante_id else None,
             proxy_name=partner.representante_id.name if partner.representante_id else None,
+            signed_documents = {},
         )
 
 

@@ -69,6 +69,7 @@ class SomUsersTests(testing.OOTestCase):
             username = 'ES48591264S',
             proxy_vat= None,
             proxy_name= None,
+            signed_documents = {},
         )
 
         self.assertEqual(expected_result, result)
@@ -103,6 +104,7 @@ class SomUsersTests(testing.OOTestCase):
             username = 'ES48591264S',
             proxy_vat= None,
             proxy_name= None,
+            signed_documents = {},
         )
         self.assertEqual(expected_result, result)
 
@@ -123,5 +125,29 @@ class SomUsersTests(testing.OOTestCase):
             username = 'ESW2796397D',
             proxy_vat= 'ES12345678X',
             proxy_name= 'Aplastado, Coyote',
+            signed_documents = {},
         )
         self.assertEqual(expected_result, result)
+
+    def __test__(self):
+        username = 'ES48591264S'
+        self.users.sign_document(username, 'RGPD_OV_REPRESENTA')
+
+        result = self.users.get_profile(self.cursor, self.uid, username)
+        expected_result = dict(
+            vat = 'ES48591264S',
+            name = 'Benedetti, Mario',
+            email = 'test@test.test',
+            address = 'Rincón de Haikus, 23',
+            city = 'Paso de los Toros',
+            zip = '08600',
+            state = 'Granada',
+            phones = ['933333333', '666666666'],
+            roles = ['customer'],
+            username = 'ES48591264S',
+            signed_documents = {'RGPD_OV_REPRESENTA': '2023-11-09'},
+        )
+
+        self.assertEqual(expected_result, result)
+
+
