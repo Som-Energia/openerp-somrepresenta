@@ -206,3 +206,17 @@ class WizardCreateChangePasswordTests(testing.OOTestCase):
             ','.join(['{} ({})\n'.format(str(int(x)),"Error al generar/enviar l'email") for x in partner_ids if x % 2 == 0])
             )
         )
+
+    def test__save_password__OK(self):
+        partner_id = self.res_partner.search(
+            self.cursor,
+            self.uid,
+            [('vat', '=', 'ES48591264S')]
+        )
+        context = {'active_ids': partner_id}
+        # wiz_id = self.wiz_o.create(self.cursor, self.uid, {}, context=context)
+        password = 'test-password'
+
+        result = self.wiz_o.save_password(self.cursor, self.uid, partner_id, password)
+
+        self.assertTrue(result)
