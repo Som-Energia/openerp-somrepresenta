@@ -16,6 +16,22 @@ class WizardCreateChangePassword(osv.osv_memory):
 
     _name = "wizard.create.change.password"
 
+
+    def default_get(self, cursor, uid, fields, context=None):
+        res = super(WizardCreateChangePassword, self).default_get(cursor, uid, fields, context)
+
+        active_ids = context.get('active_ids')
+
+        info = '{}: \n {}'.format(
+            'Es generarant contrassenyes pels següents partners',
+            ','.join([str(int(x)) for x in active_ids])
+            )
+
+        res.update({
+            'info': info,
+        })
+        return res
+
     def generatePassword(self):
         # Generate a list of random characters
         characters = [random.choice(string.ascii_letters + string.digits + string.punctuation) for _ in range(10)]
