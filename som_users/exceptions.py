@@ -35,3 +35,10 @@ class FailSendEmail(SomUsersException):
             text="Error sending email",
             message=message
         )
+
+class FailSavePassword(SomUsersException):
+    def __init__(self, message):
+        super(FailSavePassword, self).__init__(
+            text="Error saving password",
+            message=message
+        )

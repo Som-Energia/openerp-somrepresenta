@@ -7,7 +7,7 @@ import json
 from tools import config
 
 from som_users.decorators import www_entry_point
-from som_users.exceptions import FailSendEmail
+from som_users.exceptions import FailSendEmail, FailSavePassword
 
 class WizardCreateChangePassword(osv.osv_memory):
 
@@ -64,21 +64,28 @@ class WizardCreateChangePassword(osv.osv_memory):
         except Exception as e:
             raise FailSendEmail(e.message)
 
+    @www_entry_point(
+        expected_exceptions=FailSavePassword
+    )
     def save_password(self, cursor, uid, partner_id, password):
         partner_o = self.pool.get("res.partner")
-        nif = partner_o.read(cursor, uid, partner_id, ['vat'])['vat']
+        try:
+            nif = partner_o.read(cursor, uid, partner_id, ['vat'])['vat']
 
-        data = {
-            "username": nif,
-            "password": password
-        }
-        headers = {
-            'Accept': 'application/json',
-            'X-API-KEY': config.get('X-API-KEY', False)
-        }
-        url = "https://ov-representa.test.somenergia.coop/api/auth/provisioning"
+            data = {
+                "username": nif,
+                "password": password
+            }
+            headers = {
+                'Accept': 'application/json',
+                'X-API-KEY': config.get('X-API-KEY', False)
+            }
+            url = "https://ov-representa.test.somenergia.coop/api/auth/provisioning"
 
-        res = requests.post(url, data=json.dumps(data), headers=headers)
+            res = requests.post(url, data=json.dumps(data), headers=headers)
+
+        except Exception as e:
+            raise FailSavePassword(e.message)
 
         if res.status_code != 200:
             return False
@@ -86,7 +93,7 @@ class WizardCreateChangePassword(osv.osv_memory):
         return True
 
     @www_entry_point(
-        expected_exceptions=FailSendEmail
+        expected_exceptions=[FailSavePassword, FailSendEmail]
     )
     def action_create_change_password(self, cursor, uid, ids, context=None):
         if context is None:
@@ -99,8 +106,13 @@ class WizardCreateChangePassword(osv.osv_memory):
         for partner_id in partner_ids:
             partner = partner_o.browse(cursor, uid, partner_id)
             password = self.generatePassword()
-            if not self.save_password(cursor, uid, partner_id, password):
-                info = "{} ({})\n".format(str(int(partner_id)),'Contrassenya no generada')
+            try:
+                info = "{} ({})\n".format(str(int(partner_id)),'Error al guardar la contrasseya')
+                saved = self.save_password(cursor, uid, partner_id, password)
+                if not saved:
+                    error_info.append(info)
+                    continue
+            except FailSavePassword as e:
                 error_info.append(info)
                 continue
             try:
