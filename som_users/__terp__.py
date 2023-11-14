@@ -10,6 +10,7 @@
     "depends":[
         "base_extended",
         "partner_representante",
+        "som_signed_documents",
     ],
     "init_xml": [],
     "demo_xml": [

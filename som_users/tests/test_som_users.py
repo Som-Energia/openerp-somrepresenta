@@ -135,6 +135,19 @@ class SomUsersTests(testing.OOTestCase):
         result = self.users._documents_signed_by_customer(self.cursor, self.uid, username)
         self.assertEqual([], result)
 
+    def test__documents_signed_by_customer__a_documents_signed(self):
+        username = 'ES48591264S'
+        self.users.sign_document(self.cursor, self.uid, username, 'RGPD_OV_REPRESENTA')
+
+        result = self.users._documents_signed_by_customer(self.cursor, self.uid, username)
+
+        self.assertEqual([
+            dict(
+                document = 'RGPD_OV_REPRESENTA',
+                version = '2023-11-09 00:00:00',
+            ),
+        ], result)
+
     def _test__sign_document__returned_in_profile(self):
         username = 'ES48591264S'
         self.users.sign_document(self.cursor, self.uid, username, 'RGPD_OV_REPRESENTA')
@@ -154,7 +167,7 @@ class SomUsersTests(testing.OOTestCase):
             signed_documents = [
                 dict(
                     document = 'RGPD_OV_REPRESENTA',
-                    version = '2023-11-09',
+                    version = '2023-11-09 00:00:00',
                 ),
             ],
         )

@@ -51,8 +51,8 @@ class SignedDocument(osv.osv):
         result = {}
         for rec in self.browse(cursor, uid, ids, context):
             result[rec.id] = "{version} signed by {signer}".format(
-                version=self.document_version.name,
-                signer=self.signer.name,
+                version=rec.document_version.name,
+                signer=rec.signer.name,
             )
         return result
 

@@ -4,6 +4,8 @@ from osv import osv
 from som_users.decorators import www_entry_point
 from som_users.exceptions import PartnerNotExists
 
+from datetime import datetime
+
 
 class Users(osv.osv_memory):
 
@@ -78,11 +80,45 @@ class Users(osv.osv_memory):
         expected_exceptions=(PartnerNotExists,)
     )
     def sign_document(self, cursor, uid, username, document):
-        ''
+        document_type_obj = self.pool.get('signed.document.type')
+        document_version_obj = self.pool.get('signed.document.type.version')
+        signed_document_obj = self.pool.get('signed.document')
+
+        signer = self._get_customer(cursor, uid, username)
+        document_type_id = document_type_obj.search(cursor, uid, [
+            ('code', '=', document),
+        ])
+        print("document_type_id", document_type_id)
+        last_version_id = document_version_obj.search(cursor, uid, [
+            ('type', '=', document_type_id)
+        ], limit=1)
+
+        print("last_version_id", last_version_id)
+        print("signer:", signer.id)
+ 
+        #import pdb; pdb.set_trace()
+        signed_document_id = signed_document_obj.create(cursor, uid, dict(
+            signer = signer.id,
+            document_version = last_version_id[0],
+            signature_date = datetime.now().strftime('%Y-%m-%d'),
+        ))
+        print("signed_document_id", signed_document_id)
+        assert signed_document_id
 
     def _documents_signed_by_customer(self, cursor, uid, username):
-        return []
+        signed_document_obj = self.pool.get('signed.document')
 
+        signer = self._get_customer(cursor, uid, username)
+        signature_ids = signed_document_obj.search(cursor, uid, [
+            ('signer', '=', signer.id),
+        ])
+        return [
+          dict(
+              document = signature.document_version.type.code,
+              version = signature.document_version.date,
+          )
+          for signature in signed_document_obj.browse(cursor, uid, signature_ids)
+        ]
 
 
 Users()
