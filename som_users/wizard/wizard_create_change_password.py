@@ -20,15 +20,17 @@ class WizardCreateChangePassword(osv.osv_memory):
     def default_get(self, cursor, uid, fields, context=None):
         res = super(WizardCreateChangePassword, self).default_get(cursor, uid, fields, context)
 
+        partner_obj = self.pool.get('res.partner')
         active_ids = context.get('active_ids')
 
-        info = '{}: \n {}'.format(
+        info = '{} ({}): \n{}'.format(
             'Es generarant contrassenyes pels següents partners',
-            ','.join([str(int(x)) for x in active_ids])
+            len(active_ids),
+            '\n'.join([partner_obj.read(cursor, uid, x, ['name'])['name'] for x in active_ids])
             )
 
         res.update({
-            'info': info,
+            'initial_info': info,
         })
         return res
 
@@ -156,6 +158,7 @@ class WizardCreateChangePassword(osv.osv_memory):
     _columns = {
         'state': fields.char('State', size=16),
         'info': fields.text('Info', size=4000),
+        'initial_info': fields.text('Initial info', size=4000),
     }
 
     _defaults = {
