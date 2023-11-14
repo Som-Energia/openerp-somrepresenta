@@ -33,10 +33,7 @@ class Users(osv.osv_memory):
             )
         raise PartnerNotExists()
 
-    @www_entry_point(
-        expected_exceptions=PartnerNotExists
-    )
-    def get_profile(self, cursor, uid, username):
+    def _get_customer(self, cursor, uid, username):
         # Get user profile: for now recover customer profile
         partner_obj = self.pool.get('res.partner')
         search_params = [
@@ -48,7 +45,14 @@ class Users(osv.osv_memory):
         if not partner_id:
             raise PartnerNotExists()
 
-        partner = partner_obj.browse(cursor, uid, partner_id)[0]
+        return partner_obj.browse(cursor, uid, partner_id)[0]
+
+    @www_entry_point(
+        expected_exceptions=PartnerNotExists
+    )
+    def get_profile(self, cursor, uid, username):
+        # Get user profile: for now recover customer profile
+        partner = self._get_customer(cursor, uid, username)
 
         return dict(
             username=partner.vat,
@@ -67,8 +71,18 @@ class Users(osv.osv_memory):
             ],
             proxy_vat=partner.representante_id.vat if partner.representante_id else None,
             proxy_name=partner.representante_id.name if partner.representante_id else None,
-            signed_documents = {},
+            signed_documents = [],
         )
+
+    @www_entry_point(
+        expected_exceptions=(PartnerNotExists,)
+    )
+    def sign_document(self, cursor, uid, username, document):
+        ''
+
+    def _documents_signed_by_customer(self, cursor, uid, username):
+        return []
+
 
 
 Users()

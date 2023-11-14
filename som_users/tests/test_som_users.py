@@ -69,7 +69,7 @@ class SomUsersTests(testing.OOTestCase):
             username = 'ES48591264S',
             proxy_vat= None,
             proxy_name= None,
-            signed_documents = {},
+            signed_documents = [],
         )
 
         self.assertEqual(expected_result, result)
@@ -104,7 +104,7 @@ class SomUsersTests(testing.OOTestCase):
             username = 'ES48591264S',
             proxy_vat= None,
             proxy_name= None,
-            signed_documents = {},
+            signed_documents = [],
         )
         self.assertEqual(expected_result, result)
 
@@ -125,13 +125,19 @@ class SomUsersTests(testing.OOTestCase):
             username = 'ESW2796397D',
             proxy_vat= 'ES12345678X',
             proxy_name= 'Aplastado, Coyote',
-            signed_documents = {},
+            signed_documents = [],
         )
         self.assertEqual(expected_result, result)
 
-    def __test__(self):
+
+    def test__documents_signed_by_customer__no_documents_signed(self):
         username = 'ES48591264S'
-        self.users.sign_document(username, 'RGPD_OV_REPRESENTA')
+        result = self.users._documents_signed_by_customer(self.cursor, self.uid, username)
+        self.assertEqual([], result)
+
+    def _test__sign_document__returned_in_profile(self):
+        username = 'ES48591264S'
+        self.users.sign_document(self.cursor, self.uid, username, 'RGPD_OV_REPRESENTA')
 
         result = self.users.get_profile(self.cursor, self.uid, username)
         expected_result = dict(
@@ -145,7 +151,12 @@ class SomUsersTests(testing.OOTestCase):
             phones = ['933333333', '666666666'],
             roles = ['customer'],
             username = 'ES48591264S',
-            signed_documents = {'RGPD_OV_REPRESENTA': '2023-11-09'},
+            signed_documents = [
+                dict(
+                    document = 'RGPD_OV_REPRESENTA',
+                    version = '2023-11-09',
+                ),
+            ],
         )
 
         self.assertEqual(expected_result, result)
