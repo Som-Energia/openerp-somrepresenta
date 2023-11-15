@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 from destral import testing
 from destral.transaction import Transaction
 
+from som_users.exceptions import PartnerNotExists
+
 from .. import users
 
 
@@ -147,6 +149,17 @@ class SomUsersTests(testing.OOTestCase):
                 version = '2023-11-09 00:00:00',
             ),
         ], result)
+
+    def test__documents_signed_by_customer__wrong_customer(self):
+        username = 'NOTEXISTING'
+        self.users.sign_document(self.cursor, self.uid, username, 'RGPD_OV_REPRESENTA')
+
+        with self.assertRaises(PartnerNotExists) as ctx:
+            self.users._documents_signed_by_customer(self.cursor, self.uid, username)
+
+        self.assertEqual(format(ctx.exception), "Partner does not exist")
+
+
 
     def _test__sign_document__returned_in_profile(self):
         username = 'ES48591264S'
