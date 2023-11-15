@@ -220,6 +220,15 @@ class SomUsersTests(testing.OOTestCase):
 
         self.assertEqual(format(ctx.exception), "Partner does not exist")
 
+    def test__documents_signed_by_customer__filter_other_customer_signatures(self):
+        username = 'ES48591264S'
+        other = 'ES14763905K'
+        self.users.sign_document(self.cursor, self.uid, other, 'RGPD_OV_REPRESENTA')
+
+        result = self.users._documents_signed_by_customer(self.cursor, self.uid, username)
+
+        self.assertEqual([], result)
+
     def _test__sign_document__returned_in_profile(self):
         username = 'ES48591264S'
         self.users.sign_document(self.cursor, self.uid, username, 'RGPD_OV_REPRESENTA')
