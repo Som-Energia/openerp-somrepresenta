@@ -163,7 +163,25 @@ class SomUsersTests(testing.OOTestCase):
         result = self.users.sign_document(self.cursor, self.uid, username, 'RGPD_OV_REPRESENTA')
 
         self.assertEqual(result, dict(
-            result = 'ok',
+            signed_version = '2023-11-09 00:00:00',
+        ))
+
+    def test__sign_document__signs_last_document_version(self):
+        username = 'ES48591264S'
+        document_type_id = self.reference(
+            "som_signed_documents",
+            "type_ovrepresenta_rgpd"
+        )
+        document_version_obj = self.pool.get('signed.document.type.version')
+        document_version_obj.create(self.cursor, self.uid, dict(
+            type=document_type_id,
+            date='2040-03-02',
+        ))
+
+        result = self.users.sign_document(self.cursor, self.uid, username, 'RGPD_OV_REPRESENTA')
+
+        self.assertEqual(result, dict(
+            signed_version = '2040-03-02 00:00:00',
         ))
 
     def test__sign_document__wrong_customer(self):

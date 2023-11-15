@@ -91,8 +91,7 @@ class Users(osv.osv_memory):
 
         last_version_id = document_version_obj.search(cursor, uid, [
             ('type', '=', document_type_id)
-        ], limit=1)
-        print("last_version_id", last_version_id)
+        ], order='date desc', limit=1)
 
         if not last_version_id:
             raise NoDocumentVersions(document)
@@ -102,7 +101,8 @@ class Users(osv.osv_memory):
             document_version = last_version_id[0],
             signature_date = datetime.now().strftime('%Y-%m-%d'),
         ))
-        return dict(result='ok')
+        last_version = document_version_obj.read(cursor, uid, last_version_id, ['date'])
+        return dict(signed_version=last_version[0]['date'])
 
     def _documents_signed_by_customer(self, cursor, uid, username):
         signed_document_obj = self.pool.get('signed.document')
