@@ -84,14 +84,10 @@ class Users(osv.osv_memory):
         signed_document_obj = self.pool.get('signed.document')
 
         signer = self._get_customer(cursor, uid, username)
-        document_type_id = document_type_obj.search(cursor, uid, [
-            ('code', '=', document),
-        ])
 
         last_version_id = document_version_obj.search(cursor, uid, [
-            ('type', '=', document_type_id)
+            ('type.code', '=', document)
         ], order='date desc', limit=1)
-
         if not last_version_id:
             raise NoDocumentVersions(document)
 

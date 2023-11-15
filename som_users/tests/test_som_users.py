@@ -11,6 +11,8 @@ from .. import users
 
 class SomUsersTests(testing.OOTestCase):
 
+    base_costumer_vat = 'ES48591264S'
+
     def setUp(self):
         self.pool = self.openerp.pool
         self.imd = self.pool.get('ir.model.data')
@@ -33,16 +35,16 @@ class SomUsersTests(testing.OOTestCase):
         )[1]
 
     def test__get_user_login_info__user_exists_and_is_active(self):
-        res_partner_soci_vat = 'ES48591264S'
+        username = self.base_costumer_vat
 
-        result = self.users.identify_login(self.cursor, self.uid, res_partner_soci_vat)
+        result = self.users.identify_login(self.cursor, self.uid, username)
 
         expected_result = dict(
-            vat='ES48591264S',
+            vat=self.base_costumer_vat,
             name='Benedetti, Mario',
             email='test@test.test',
             roles=['customer'],
-            username='ES48591264S',
+            username=username,
         )
         self.assertEqual(expected_result, result)
 
@@ -61,11 +63,11 @@ class SomUsersTests(testing.OOTestCase):
         self.assertEqual(result['code'], 'PartnerNotExists')
 
     def test__get_profile(self):
-        res_partner_soci_vat = 'ES48591264S'
+        username = self.base_costumer_vat
 
-        result = self.users.get_profile(self.cursor, self.uid, res_partner_soci_vat)
+        result = self.users.get_profile(self.cursor, self.uid, username)
         expected_result = dict(
-            vat = 'ES48591264S',
+            vat = self.base_costumer_vat,
             name = 'Benedetti, Mario',
             email = 'test@test.test',
             address = 'Rincón de Haikus, 23',
@@ -74,7 +76,7 @@ class SomUsersTests(testing.OOTestCase):
             state = 'Granada',
             phones = ['933333333', '666666666'],
             roles = ['customer'],
-            username = 'ES48591264S',
+            username = username,
             proxy_vat= None,
             proxy_name= None,
             signed_documents = [],
@@ -83,13 +85,13 @@ class SomUsersTests(testing.OOTestCase):
         self.assertEqual(expected_result, result)
 
     def test__get_profile__without_phone_numbers(self):
-        res_partner_soci_vat = 'ES48591264S'
-
+        username = self.base_costumer_vat
+        # TODO: use reference()
         # get address id
         partner_id = self.res_partner.search(
             self.cursor,
             self.uid,
-            [('vat', '=', res_partner_soci_vat)]
+            [('vat', '=', self.base_costumer_vat)]
         )
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)[0]
         address_id = partner.address[0].id
@@ -98,9 +100,9 @@ class SomUsersTests(testing.OOTestCase):
         res_partner_address_model = self.pool.get('res.partner.address')
         res_partner_address_model.write(self.cursor, self.uid, address_id, {'phone': False, 'mobile': False})
 
-        result = self.users.get_profile(self.cursor, self.uid, res_partner_soci_vat)
+        result = self.users.get_profile(self.cursor, self.uid, username)
         expected_result = dict(
-            vat = 'ES48591264S',
+            vat = self.base_costumer_vat,
             name = 'Benedetti, Mario',
             email = 'test@test.test',
             address = 'Rincón de Haikus, 23',
@@ -109,7 +111,7 @@ class SomUsersTests(testing.OOTestCase):
             state = 'Granada',
             phones = [],
             roles = ['customer'],
-            username = 'ES48591264S',
+            username = username,
             proxy_vat= None,
             proxy_name= None,
             signed_documents = [],
@@ -138,7 +140,7 @@ class SomUsersTests(testing.OOTestCase):
         self.assertEqual(expected_result, result)
 
     def test__sign_document__all_ok(self):
-        username = 'ES48591264S'
+        username = self.base_costumer_vat
 
         result = self.users.sign_document(self.cursor, self.uid, username, 'RGPD_OV_REPRESENTA')
 
@@ -147,7 +149,7 @@ class SomUsersTests(testing.OOTestCase):
         ))
 
     def test__sign_document__signs_last_document_version(self):
-        username = 'ES48591264S'
+        username = self.base_costumer_vat
         document_type_id = self.reference(
             "som_signed_documents",
             "type_ovrepresenta_rgpd"
@@ -176,7 +178,7 @@ class SomUsersTests(testing.OOTestCase):
         ))
 
     def test__sign_document__document_without_version(self):
-        username = 'ES48591264S'
+        username = self.base_costumer_vat
 
         version_id = self.reference(
             "som_signed_documents",
@@ -195,12 +197,12 @@ class SomUsersTests(testing.OOTestCase):
         ))
 
     def test__documents_signed_by_customer__no_documents_signed(self):
-        username = 'ES48591264S'
+        username = self.base_costumer_vat
         result = self.users._documents_signed_by_customer(self.cursor, self.uid, username)
         self.assertEqual([], result)
 
     def test__documents_signed_by_customer__a_documents_signed(self):
-        username = 'ES48591264S'
+        username = self.base_costumer_vat
         self.users.sign_document(self.cursor, self.uid, username, 'RGPD_OV_REPRESENTA')
 
         result = self.users._documents_signed_by_customer(self.cursor, self.uid, username)
@@ -221,8 +223,8 @@ class SomUsersTests(testing.OOTestCase):
         self.assertEqual(format(ctx.exception), "Partner does not exist")
 
     def test__documents_signed_by_customer__filter_other_customer_signatures(self):
-        username = 'ES48591264S'
-        other = 'ES14763905K'
+        username = self.base_costumer_vat
+        other = 'ESW2796397D'
         self.users.sign_document(self.cursor, self.uid, other, 'RGPD_OV_REPRESENTA')
 
         result = self.users._documents_signed_by_customer(self.cursor, self.uid, username)
@@ -230,12 +232,12 @@ class SomUsersTests(testing.OOTestCase):
         self.assertEqual([], result)
 
     def test__sign_document__returned_in_profile(self):
-        username = 'ES48591264S'
+        username = self.base_costumer_vat
         self.users.sign_document(self.cursor, self.uid, username, 'RGPD_OV_REPRESENTA')
 
         result = self.users.get_profile(self.cursor, self.uid, username)
         expected_result = dict(
-            vat = 'ES48591264S',
+            vat = self.base_costumer_vat,
             name = 'Benedetti, Mario',
             email = 'test@test.test',
             address = 'Rincón de Haikus, 23',
@@ -244,7 +246,7 @@ class SomUsersTests(testing.OOTestCase):
             state = 'Granada',
             phones = ['933333333', '666666666'],
             roles = ['customer'],
-            username = 'ES48591264S',
+            username = username,
             proxy_vat = None,
             proxy_name = None,
             signed_documents = [
