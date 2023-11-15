@@ -245,6 +245,8 @@ class SomUsersTests(testing.OOTestCase):
             phones = ['933333333', '666666666'],
             roles = ['customer'],
             username = 'ES48591264S',
+            proxy_vat = None,
+            proxy_name = None,
             signed_documents = [
                 dict(
                     document = 'RGPD_OV_REPRESENTA',

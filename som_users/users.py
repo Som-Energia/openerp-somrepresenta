@@ -55,7 +55,6 @@ class Users(osv.osv_memory):
     def get_profile(self, cursor, uid, username):
         # Get user profile: for now recover customer profile
         partner = self._get_customer(cursor, uid, username)
-
         return dict(
             username=partner.vat,
             roles=['customer'],
