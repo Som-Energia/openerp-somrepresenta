@@ -20,3 +20,9 @@ class PartnerNotExists(SomUsersException):
         super(PartnerNotExists, self).__init__(
             text="Partner does not exist"
         )
+
+class NoDocumentVersions(SomUsersException):
+    def __init__(self, document):
+        super(NoDocumentVersions, self).__init__(
+            text="Document {} has no version available to sign".format(document)
+        )

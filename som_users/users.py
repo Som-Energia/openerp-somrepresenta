@@ -2,7 +2,7 @@
 from osv import osv
 
 from som_users.decorators import www_entry_point
-from som_users.exceptions import PartnerNotExists
+from som_users.exceptions import PartnerNotExists, NoDocumentVersions
 
 from datetime import datetime
 
@@ -77,7 +77,7 @@ class Users(osv.osv_memory):
         )
 
     @www_entry_point(
-        expected_exceptions=(PartnerNotExists,)
+        expected_exceptions=(PartnerNotExists, NoDocumentVersions)
     )
     def sign_document(self, cursor, uid, username, document):
         document_type_obj = self.pool.get('signed.document.type')
@@ -92,13 +92,17 @@ class Users(osv.osv_memory):
         last_version_id = document_version_obj.search(cursor, uid, [
             ('type', '=', document_type_id)
         ], limit=1)
+        print("last_version_id", last_version_id)
+
+        if not last_version_id:
+            raise NoDocumentVersions(document)
 
         signed_document_id = signed_document_obj.create(cursor, uid, dict(
             signer = signer.id,
             document_version = last_version_id[0],
             signature_date = datetime.now().strftime('%Y-%m-%d'),
         ))
-        assert signed_document_id
+        return dict(result='ok')
 
     def _documents_signed_by_customer(self, cursor, uid, username):
         signed_document_obj = self.pool.get('signed.document')

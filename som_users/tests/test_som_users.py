@@ -131,7 +131,6 @@ class SomUsersTests(testing.OOTestCase):
         )
         self.assertEqual(expected_result, result)
 
-
     def test__documents_signed_by_customer__no_documents_signed(self):
         username = 'ES48591264S'
         result = self.users._documents_signed_by_customer(self.cursor, self.uid, username)
@@ -152,13 +151,65 @@ class SomUsersTests(testing.OOTestCase):
 
     def test__documents_signed_by_customer__wrong_customer(self):
         username = 'NOTEXISTING'
-        self.users.sign_document(self.cursor, self.uid, username, 'RGPD_OV_REPRESENTA')
 
         with self.assertRaises(PartnerNotExists) as ctx:
             self.users._documents_signed_by_customer(self.cursor, self.uid, username)
 
         self.assertEqual(format(ctx.exception), "Partner does not exist")
 
+    def test__sign_document__all_ok(self):
+        username = 'ES48591264S'
+
+        result = self.users.sign_document(self.cursor, self.uid, username, 'RGPD_OV_REPRESENTA')
+
+        self.assertEqual(result, dict(
+            result = 'ok',
+        ))
+
+    def test__sign_document__wrong_customer(self):
+        username = 'NOTEXISTING'
+
+        result = self.users.sign_document(self.cursor, self.uid, username, 'RGPD_OV_REPRESENTA')
+
+        self.assertEqual(result, dict(
+            code='PartnerNotExists',
+            error='Partner does not exist',
+            trace=result.get('trace', "TRACE IS MISSING"),
+        ))
+
+    def reference(self, module, id):
+        ir_model_data_obj = self.pool.get("ir.model.data")
+        return ir_model_data_obj.get_object_reference(
+            self.cursor, self.uid, module, id,
+        )[1]
+
+
+    def test__sign_document__document_without_version(self):
+        username = 'ES48591264S'
+
+        version_id = self.reference(
+            "som_signed_documents",
+            "version_type_ovrepresenta_rgpd_2023"
+        )
+        print("version_ids", version_id)
+        document_version_obj = self.pool.get('signed.document.type.version')
+        document_version_obj.unlink(self.cursor, self.uid, version_id)
+
+        result = self.users.sign_document(self.cursor, self.uid, username, 'RGPD_OV_REPRESENTA')
+
+        self.assertEqual(result, dict(
+            code='NoDocumentVersions',
+            error='Document RGPD_OV_REPRESENTA has no version available to sign',
+            trace=(result or {}).get('trace', "TRACE IS MISSING"),
+        ))
+
+    def __test__documents_signed_by_customer__document_not_exists(self):
+        username = 'ES48591264S'
+        self.users.sign_document(self.cursor, self.uid, username, 'AN_UNEXISTING_DOCUMENT')
+
+        with self.assertRaises(PartnerNotExists) as ctx:
+            self.users._documents_signed_by_customer(self.cursor, self.uid, username)
+        self.assertEqual(format(ctx.exception), "D does not exist")
 
 
     def _test__sign_document__returned_in_profile(self):
