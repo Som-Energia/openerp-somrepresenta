@@ -229,7 +229,7 @@ class SomUsersTests(testing.OOTestCase):
 
         self.assertEqual([], result)
 
-    def _test__sign_document__returned_in_profile(self):
+    def test__sign_document__returned_in_profile(self):
         username = 'ES48591264S'
         self.users.sign_document(self.cursor, self.uid, username, 'RGPD_OV_REPRESENTA')
 
