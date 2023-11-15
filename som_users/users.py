@@ -88,21 +88,16 @@ class Users(osv.osv_memory):
         document_type_id = document_type_obj.search(cursor, uid, [
             ('code', '=', document),
         ])
-        print("document_type_id", document_type_id)
+
         last_version_id = document_version_obj.search(cursor, uid, [
             ('type', '=', document_type_id)
         ], limit=1)
 
-        print("last_version_id", last_version_id)
-        print("signer:", signer.id)
- 
-        #import pdb; pdb.set_trace()
         signed_document_id = signed_document_obj.create(cursor, uid, dict(
             signer = signer.id,
             document_version = last_version_id[0],
             signature_date = datetime.now().strftime('%Y-%m-%d'),
         ))
-        print("signed_document_id", signed_document_id)
         assert signed_document_id
 
     def _documents_signed_by_customer(self, cursor, uid, username):
