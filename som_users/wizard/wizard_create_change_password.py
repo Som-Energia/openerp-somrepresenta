@@ -111,7 +111,7 @@ class WizardCreateChangePassword(osv.osv_memory):
         return True
 
     @www_entry_point(
-        expected_exceptions=[FailSavePassword, FailSendEmail]
+        expected_exceptions=FailSendEmail
     )
     def action_create_change_password(self, cursor, uid, ids, context=None):
         if context is None:
@@ -124,15 +124,12 @@ class WizardCreateChangePassword(osv.osv_memory):
         for partner_id in partner_ids:
             partner = partner_o.browse(cursor, uid, partner_id)
             password = self.generatePassword()
-            try:
+            result = self.save_password(cursor, uid, partner_id, password)
+            if not result or result['code'] == 'FailSavePassword':
                 info = "{} ({})\n".format(str(int(partner_id)),'Error al guardar la contrasseya')
-                saved = self.save_password(cursor, uid, partner_id, password)
-                if not saved:
-                    error_info.append(info)
-                    continue
-            except FailSavePassword as e:
                 error_info.append(info)
                 continue
+
             try:
                 self.send_password_email(cursor, uid, partner)
             except FailSendEmail as e:
