@@ -5,6 +5,7 @@ import string
 import requests
 import json
 from tools import config
+from datetime import datetime
 
 from som_users.exceptions import FailSendEmail
 
@@ -98,6 +99,23 @@ class WizardCreateChangePassword(osv.osv_memory):
         except Exception as e:
             return False
 
+    def add_password_to_partner_comment(self, cursor, uid, partner_id, password):
+        partner_o = self.pool.get("res.partner")
+        comment = partner_o.read(cursor, uid, partner_id, ['comment'])['comment']
+        key = 'generated_ov_password'
+
+        now = datetime.now()
+        new_comment = '{}:{}({})\n'.format(key, password, now)
+
+        if comment:
+            comments = comment.split('\n')
+
+            #remove old password
+            comment = [x for x in comments if not key in x]
+            new_comment = '{}{}'.format(new_comment, '\n'.join(comment))
+
+        partner_o.write(cursor, uid, partner_id, {'comment': new_comment})
+
 
     def action_create_change_password(self, cursor, uid, ids, context=None):
         if context is None:
@@ -115,6 +133,7 @@ class WizardCreateChangePassword(osv.osv_memory):
                 info = "{} ({})\n".format(str(int(partner_id)),'Error al guardar la contrasseya')
                 error_info.append(info)
                 continue
+            self.add_password_to_partner_comment(cursor, uid, partner_id, password)
             try:
                 self.send_password_email(cursor, uid, partner)
             except FailSendEmail as e:

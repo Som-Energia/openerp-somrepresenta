@@ -221,3 +221,51 @@ class WizardCreateChangePasswordTests(testing.OOTestCase):
         result = self.wiz_o.save_password(self.cursor, self.uid, partner_id[0], password)
 
         self.assertFalse(result)
+
+    def test__add_password_to_partner_comment__comment_empty(self):
+        partner_id = self.res_partner.search(
+            self.cursor,
+            self.uid,
+            [('vat', '=', 'ES48591264S')]
+        )
+
+        password = 'test-password'
+
+        self.wiz_o.add_password_to_partner_comment(self.cursor, self.uid, partner_id[0], password)
+
+        partner = self.res_partner.browse(self.cursor, self.uid, partner_id[0])
+
+        self.assertTrue('generated_ov_password' in partner.comment)
+
+    def test__add_password_to_partner_comment__comment_not_empty(self):
+        partner_id = self.res_partner.search(
+            self.cursor,
+            self.uid,
+            [('vat', '=', 'ES48591264S')]
+        )
+
+        password = 'test-password'
+        self.res_partner.write(self.cursor, self.uid, partner_id[0], {'comment':'one_comment'})
+
+        self.wiz_o.add_password_to_partner_comment(self.cursor, self.uid, partner_id[0], password)
+
+        partner = self.res_partner.browse(self.cursor, self.uid, partner_id[0])
+
+        self.assertTrue('generated_ov_password' in partner.comment)
+
+    def test__add_password_to_partner_comment__comment_has_generated_password(self):
+        partner_id = self.res_partner.search(
+            self.cursor,
+            self.uid,
+            [('vat', '=', 'ES48591264S')]
+        )
+
+        password = 'new_test_password'
+        comment = 'one_comment\ngenerated_ov_password:test_password(today)'
+        self.res_partner.write(self.cursor, self.uid, partner_id[0], {'comment':comment})
+
+        self.wiz_o.add_password_to_partner_comment(self.cursor, self.uid, partner_id[0], password)
+
+        partner = self.res_partner.browse(self.cursor, self.uid, partner_id[0])
+
+        self.assertTrue('new_test_password' in partner.comment)
