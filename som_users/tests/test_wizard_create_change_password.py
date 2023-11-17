@@ -261,7 +261,7 @@ class WizardCreateChangePasswordTests(testing.OOTestCase):
         )
 
         password = 'new_test_password'
-        comment = 'one_comment\ngenerated_ov_password:test_password(today)'
+        comment = 'one_comment\ngenerated_ov_password=test_password(generated_ov_password)\n'
         self.res_partner.write(self.cursor, self.uid, partner_id[0], {'comment':comment})
 
         self.wiz_o.add_password_to_partner_comment(self.cursor, self.uid, partner_id[0], password)

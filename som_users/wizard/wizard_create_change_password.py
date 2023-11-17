@@ -5,7 +5,6 @@ import string
 import requests
 import json
 from tools import config
-from datetime import datetime
 
 from som_users.exceptions import FailSendEmail
 
@@ -36,7 +35,10 @@ class WizardCreateChangePassword(osv.osv_memory):
 
     def generatePassword(self):
         # Generate a list of random characters
-        characters = [random.choice(string.ascii_letters + string.digits + string.punctuation) for _ in range(10)]
+        import pudb; pu.db
+        characters = [random.choice(string.ascii_letters + string.digits) for _ in range(10)]
+        characters += [random.choice(string.punctuation) for _ in range(2)]
+
         # Shuffle the list of characters
         random.shuffle(characters)
         # Return the shuffled list of characters as a string
@@ -102,17 +104,20 @@ class WizardCreateChangePassword(osv.osv_memory):
     def add_password_to_partner_comment(self, cursor, uid, partner_id, password):
         partner_o = self.pool.get("res.partner")
         comment = partner_o.read(cursor, uid, partner_id, ['comment'])['comment']
-        key = 'generated_ov_password'
+        start_key = 'generated_ov_password='
+        end_key = '(generated_ov_password)\n'
 
-        now = datetime.now()
-        new_comment = '{}:{}({})\n'.format(key, password, now)
+        new_comment = '{}{}{}\n'.format(start_key, password, end_key)
 
         if comment:
-            comments = comment.split('\n')
+            if start_key in comment:
+                start_comments = comment.split(start_key)[0]
+                end_comments = comment.split(end_key)[1]
 
-            #remove old password
-            comment = [x for x in comments if not key in x]
-            new_comment = '{}{}'.format(new_comment, '\n'.join(comment))
+                #remove old password
+                new_comment = '{}{}{}'.format(new_comment, start_comments, end_comments)
+            else:
+                new_comment = '{}{}'.format(new_comment, comment)
 
         partner_o.write(cursor, uid, partner_id, {'comment': new_comment})
 
