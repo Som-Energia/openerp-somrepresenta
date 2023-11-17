@@ -35,8 +35,7 @@ class WizardCreateChangePassword(osv.osv_memory):
 
     def generatePassword(self):
         # Generate a list of random characters
-        import pudb; pu.db
-        characters = [random.choice(string.ascii_letters + string.digits) for _ in range(10)]
+        characters = [random.choice(string.ascii_letters + string.digits) for _ in range(8)]
         characters += [random.choice(string.punctuation) for _ in range(2)]
 
         # Shuffle the list of characters
@@ -107,7 +106,7 @@ class WizardCreateChangePassword(osv.osv_memory):
         start_key = 'generated_ov_password='
         end_key = '(generated_ov_password)\n'
 
-        new_comment = '{}{}{}\n'.format(start_key, password, end_key)
+        new_comment = '{}{}{}'.format(start_key, password, end_key)
 
         if comment:
             if start_key in comment:
