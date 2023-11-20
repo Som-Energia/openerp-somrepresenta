@@ -4,6 +4,7 @@ from destral.transaction import Transaction
 
 from .. import installation
 
+
 class SomInstallationsTests(testing.OOTestCase):
 
     def setUp(self):
@@ -15,13 +16,14 @@ class SomInstallationsTests(testing.OOTestCase):
 
         self.cursor = self.txn.cursor
         self.uid = self.txn.user
+        self.maxDiff = None
 
     def tearDown(self):
         self.txn.stop()
 
     def test__get_installation__user_not_exists(self):
         an_invalid_partner_vat = 123
-        import pudb; pu.db
-        result = self.installation.get_installation_by(self.cursor, self.uid, an_invalid_partner_vat)
 
-        self.assertEqual(result, 'User not found')
+        result = self.installation.get_installations_by(self.cursor, self.uid, an_invalid_partner_vat)
+
+        self.assertEqual(result['code'], 'PartnerNotExists')
