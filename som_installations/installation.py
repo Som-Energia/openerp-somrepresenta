@@ -2,18 +2,19 @@
 from osv import osv
 
 from som_users.decorators import www_entry_point
-
 from som_users.exceptions import PartnerNotExists
 
 from som_installations.exceptions import InstallationsNotExists, PolissaNotExists
 
 
-class Installation(osv.osv):
+class Installation(osv.osv_memory):
 
     _name = 'installation'
 
     @www_entry_point(
-        expected_exceptions=PartnerNotExists
+        expected_exceptions=(
+            PartnerNotExists, InstallationsNotExists, PolissaNotExists
+        )
     )
     def get_installations_by(self, cursor, uid, vat):
         partner_obj = self.pool.get('res.partner')
@@ -28,20 +29,17 @@ class Installation(osv.osv):
 
         installation_obj = self.pool.get('giscere.instalacio')
         search_params = [
-           ('titular','=', partner_id[0]),
+           ('titular','=', partner_id),
         ]
         installation_ids = installation_obj.search(cursor, uid, search_params)
         if not installation_ids:
             raise InstallationsNotExists()
 
-        installations = [
-            installation_obj.browse(cursor, uid, installation_id)[0]
-            for installation_id in installation_ids
-        ]
+        installations = installation_obj.browse(cursor, uid, installation_ids)
 
         return [
             dict(
-                contract_number=self._get_contract_number_by(installation.titular),
+                contract_number=self._get_contract_number_by(cursor, uid, partner_id),
                 installation_name=installation.name,
             )
             for installation in installations
@@ -59,7 +57,7 @@ class Installation(osv.osv):
 
         polissa = polissa_obj.browse(cursor, uid, polissa_id)[0]
 
-        return polissa.id
+        return polissa.name
 
 
 Installation()

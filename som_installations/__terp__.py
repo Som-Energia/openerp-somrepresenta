@@ -8,10 +8,13 @@
     "author": "Som Energia",
     "category": "www",
     "depends":[
-        "giscere_cil"
+        "giscere_cil",
+        "giscere_polissa",
+        "som_users",
     ],
     "init_xml": [],
     "demo_xml": [
+        "demo/giscere_instalacio_demo.xml",
     ],
     "update_xml":[
         "security/ir.model.access.csv",

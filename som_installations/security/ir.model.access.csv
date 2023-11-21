@@ -1,5 +1,2 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-"access_foreign_res_partner_r","res.partner","base.model_res_partner","base_extended.group_base_extended_r",1,0,0,0
-"access_foreign_res_partner_u","res.partner","base.model_res_partner","base_extended.group_base_extended_u",1,0,0,0
-"access_foreign_res_partner_w","res.partner","base.model_res_partner","base_extended.group_base_extended_w",1,0,0,0
-
+"access_partner_rcwd","installation","model_installation","base.group_user",1,1,1,1
