@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <openerp>
     <data>
+        <record id="res_country_state_0" model="res.country.state">
+            <field name="code">17</field>
+            <field name="country_id">67</field>
+            <field name="name">Girona</field>
+        </record>
+        <record id="res_municipi_0" model="res.municipi">
+            <field name="name">Girona</field>
+            <field name="subsistema_id">10</field>
+            <field name="ine">17079</field>
+        </record>
+        <record id="giscere_cil_0" model="giscere.cil">
+            <field name="name">ES1234000000000001JK1F001</field>
+            <field name="nv">Carrer Buenaventura Durruti</field>
+            <field name="pnp">666</field>
+            <field name="aclarador">aclaridor</field>
+            <field name="codi_unitat_fisica">Unitat del poble</field>
+            <field name="id_municipi" ref="res_municipi_0"/>
+            <field name="id_provincia" ref="res_country_state_0"/>
+            <field name="distribuidora_id">1</field>
+            <field name="dp">08080</field>
+        </record>
         <record id="giscere_instalacio_0" model="giscere.instalacio">
             <field name="subgrup">b11</field>
             <field name="uprs">1</field>
@@ -9,9 +30,9 @@
             <field name="name">Installation 0</field>
             <field name="titular" ref="som_users.res_partner_soci"/>
             <field name="codigo_ministerio">RE-00000</field>
-            <field name="utm-y">0,80284</field>
-            <field name="utm-x">41,54670</field>
-            <field name="cil">1</field>
+            <field name="utm_y">0,80284</field>
+            <field name="utm_x">41,54670</field>
+            <field name="cil" ref="giscere_cil_0"/>
             <field name="data_alta">2022-09-01</field>
             <field name="data_baixa"></field>
             <field name="descripcio">Description 0</field>
@@ -28,8 +49,8 @@
             <field name="name">Installation 1</field>
             <field name="titular" ref="som_users.res_partner_soci"/>
             <field name="codigo_ministerio">RE-00001</field>
-            <field name="utm-y">0,80284</field>
-            <field name="utm-x">41,54670</field>
+            <field name="utm_y">0,80284</field>
+            <field name="utm_x">41,54670</field>
             <field name="cil">1</field>
             <field name="data_alta">2022-09-02</field>
             <field name="data_baixa"></field>

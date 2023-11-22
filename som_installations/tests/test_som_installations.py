@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from destral import testing
 from destral.transaction import Transaction
 
@@ -44,3 +46,33 @@ class SomInstallationsTests(testing.OOTestCase):
         result = self.installation.get_installations_by(self.cursor, self.uid, an_invalid_partner_vat)
 
         self.assertEqual(result['code'], 'PartnerNotExists')
+
+    def test__get_installation_details_by__base(self):
+        an_installation_name = 'Installation 0'
+
+        result = self.installation.get_installation_details_by(self.cursor, self.uid, an_installation_name)
+
+        expected_result = dict(
+            installation_details=dict(
+                contract_number='000',
+                name = 'Installation 0',
+                address = 'Carrer Buenaventura Durruti 666 aclaridor 08080 (Girona)',
+                city = 'Girona',
+                postal_code='08080',
+                province='Girona',
+                coordinates = '41.54670,0.80284',
+                ministry_code = 'RE-00000',
+                technology = False,
+                cil='ES1234000000000001JK1F001',
+                rated_power=800.0,
+                type = 'IT-00000',
+            ),
+            contract_details=dict(
+                billing_mode=False,
+                discharge_date='2022-02-22',
+                remuneration_service=False,
+                representation_type='indirecta_cnmc',
+                status='esborrany',
+            ),
+        )
+        self.assertEqual(expected_result, result)
