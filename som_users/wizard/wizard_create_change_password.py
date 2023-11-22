@@ -10,7 +10,7 @@ from som_users.exceptions import FailSendEmail
 
 class WizardCreateChangePassword(osv.osv_memory):
 
-    """Classe per gestionar el canvi de contrassenya
+    """Classe per gestionar el canvi de contrasenya
     """
 
     _name = "wizard.create.change.password"
@@ -23,7 +23,7 @@ class WizardCreateChangePassword(osv.osv_memory):
         active_ids = context.get('active_ids')
 
         info = '{} ({}): \n{}'.format(
-            'Es generarant contrassenyes pels següents partners',
+            'Es generarant contrasenyes pels següents partners',
             len(active_ids),
             '\n'.join([partner_obj.read(cursor, uid, x, ['name'])['name'] for x in active_ids])
             )
@@ -128,13 +128,14 @@ class WizardCreateChangePassword(osv.osv_memory):
         partner_ids = context.get("active_ids")
         partner_o = self.pool.get("res.partner")
 
+        import pudb; pu.db
         error_info = []
         for partner_id in partner_ids:
             partner = partner_o.browse(cursor, uid, partner_id)
             password = self.generatePassword()
             result = self.save_password(cursor, uid, partner_id, password)
             if not result:
-                info = "{} ({})\n".format(str(int(partner_id)),'Error al guardar la contrasseya')
+                info = "{} ({})\n".format(str(int(partner_id)),'Error al guardar la contraseya')
                 error_info.append(info)
                 continue
             self.add_password_to_partner_comment(cursor, uid, partner_id, password)
@@ -151,11 +152,11 @@ class WizardCreateChangePassword(osv.osv_memory):
 
         if error_info:
             values['info'] = "{}: \n {}".format(
-                'Error generant contrassenyes pels següents partners',
+                'Error generant contrasenyes pels següents partners',
                 ','.join([x for x in error_info])
             )
         else:
-            values['info'] = "{}".format('Contrassenyes generades')
+            values['info'] = "{}".format('Contrasenyes generades')
 
         self.write(cursor, uid, ids, values)
         return True
