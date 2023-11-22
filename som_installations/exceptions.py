@@ -14,13 +14,19 @@ class SomInstallationsException(Exception):
         )
 
 
-class InstallationsNotExists(SomInstallationsException):
+class InstallationsNotFound(SomInstallationsException):
     def __init__(self):
-        super(InstallationsNotExists, self).__init__(
-            text="Installations does not exist")
+        super(InstallationsNotFound, self).__init__(
+            text="No installations found for this partner")
 
 
-class PolissaNotExists(SomInstallationsException):
+class InstallationNotFound(SomInstallationsException):
     def __init__(self):
-        super(PolissaNotExists, self).__init__(
-            text="Polissa does not exist")
+        super(InstallationNotFound, self).__init__(
+            text="The requested installation does not exist")
+
+
+class ContractNotExists(SomInstallationsException):
+    def __init__(self):
+        super(ContractNotExists, self).__init__(
+            text="Contract does not exist")

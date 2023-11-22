@@ -4,7 +4,11 @@ from osv import osv
 from som_users.decorators import www_entry_point
 from som_users.exceptions import PartnerNotExists
 
-from som_installations.exceptions import InstallationsNotExists, PolissaNotExists
+from som_installations.exceptions import (
+    InstallationNotFound,
+    InstallationsNotFound,
+    ContractNotExists
+)
 
 
 class Installation(osv.osv_memory):
@@ -13,7 +17,10 @@ class Installation(osv.osv_memory):
 
     @www_entry_point(
         expected_exceptions=(
-            PartnerNotExists, InstallationsNotExists, PolissaNotExists
+            PartnerNotExists,
+            InstallationsNotFound,
+            InstallationNotFound,
+            ContractNotExists
         )
     )
     def get_installations_by(self, cursor, uid, vat):
@@ -33,7 +40,7 @@ class Installation(osv.osv_memory):
         ]
         installation_ids = installation_obj.search(cursor, uid, search_params)
         if not installation_ids:
-            raise InstallationsNotExists()
+            raise InstallationsNotFound()
 
         installations = installation_obj.browse(cursor, uid, installation_ids)
 
@@ -52,7 +59,7 @@ class Installation(osv.osv_memory):
         ]
         installation_id = installation_obj.search(cursor, uid, installation_search_params)
         if not installation_id:
-            raise InstallationsNotExists()
+            raise InstallationNotFound()
 
         installation = installation_obj.browse(cursor, uid, installation_id)[0]
         installation_details = dict(
@@ -76,7 +83,7 @@ class Installation(osv.osv_memory):
         ]
         contract_id = polissa_obj.search(cursor, uid, contract_search_params)
         if not contract_id:
-            raise PolissaNotExists()
+            raise ContractNotExists()
 
         contract = polissa_obj.browse(cursor, uid, contract_id)[0]
         contract_details = dict(
@@ -99,7 +106,7 @@ class Installation(osv.osv_memory):
         ]
         contract_id = polissa_obj.search(cursor, uid, search_params)
         if not contract_id:
-            raise PolissaNotExists()
+            raise ContractNotExists()
         contract = polissa_obj.browse(cursor, uid, contract_id)[0]
         return contract.name
 
