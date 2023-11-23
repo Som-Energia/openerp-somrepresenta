@@ -1,23 +1,21 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Representa Business layer",
+    "name": "Signed documents registry",
     "description": """
-        Module for Representa Virtual Office integration
+        Module for registering signed documents
     """,
     "version": "0-dev",
     "author": "Som Energia",
-    "category": "www",
+    "category": "signature",
     "depends":[
         "base_extended",
-        "partner_representante",
-        "som_signed_documents",
     ],
     "init_xml": [],
     "demo_xml": [
-        "demo/res_partner_demo.xml",
     ],
     "update_xml":[
-        "security/ir.model.access.csv",
+        'data/som_signed_documents_data.xml',
+        'security/ir.model.access.csv'
     ],
     "active": False,
     "installable": True
