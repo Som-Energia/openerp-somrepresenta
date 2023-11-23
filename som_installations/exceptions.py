@@ -2,6 +2,7 @@ class SomInstallationsException(Exception):
     def __init__(self, text):
         self.exc_type = 'error'
         self.text = text
+        super(SomInstallationsException, self).__init__(self.text)
 
     @property
     def code(self):
