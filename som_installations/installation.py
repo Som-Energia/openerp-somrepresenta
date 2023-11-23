@@ -23,7 +23,7 @@ class Installation(osv.osv_memory):
             ContractNotExists
         )
     )
-    def get_installations_by(self, cursor, uid, vat):
+    def get_installations(self, cursor, uid, vat):
         partner_obj = self.pool.get('res.partner')
         search_params = [
            ('vat','=', vat),
@@ -46,13 +46,13 @@ class Installation(osv.osv_memory):
 
         return [
             dict(
-                contract_number=self._get_contract_number_by(cursor, uid, partner_id),
+                contract_number=self._get_contract_number(cursor, uid, partner_id),
                 installation_name=installation.name,
             )
             for installation in installations
         ]
 
-    def get_installation_details_by(self, cursor, uid, installation_name):
+    def get_installation_details(self, cursor, uid, installation_name):
         installation_obj = self.pool.get('giscere.instalacio')
         installation_search_params = [
            ('name','=', installation_name),
@@ -63,7 +63,7 @@ class Installation(osv.osv_memory):
 
         installation = installation_obj.browse(cursor, uid, installation_id)[0]
         installation_details = dict(
-            contract_number=self._get_contract_number_by(cursor, uid, installation.titular.id),
+            contract_number=self._get_contract_number(cursor, uid, installation.titular.id),
             name=installation.name,
             address=installation.cil.direccio,
             city=installation.cil.id_municipi.name,
@@ -79,7 +79,7 @@ class Installation(osv.osv_memory):
 
         polissa_obj = self.pool.get('giscere.polissa')
         contract_search_params = [
-           ('name','=', self._get_contract_number_by(cursor, uid, installation.titular.id)),
+           ('name','=', self._get_contract_number(cursor, uid, installation.titular.id)),
         ]
         contract_id = polissa_obj.search(cursor, uid, contract_search_params)
         if not contract_id:
@@ -106,7 +106,7 @@ class Installation(osv.osv_memory):
         """Hide all but the last 4 digits of an IBAN number"""
         return '**** **** **** **** **** {}'.format(iban[-4:])
 
-    def _get_contract_number_by(self, cursor, uid, partner_id):
+    def _get_contract_number(self, cursor, uid, partner_id):
         polissa_obj = self.pool.get('giscere.polissa')
         search_params = [
            ('titular','=', partner_id),

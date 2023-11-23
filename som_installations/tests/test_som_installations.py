@@ -23,10 +23,10 @@ class SomInstallationsTests(testing.OOTestCase):
     def tearDown(self):
         self.txn.stop()
 
-    def test__get_installations_by__user_exists_is_active_and_have_installations(self):
+    def test__get_installations__user_exists_is_active_and_have_installations(self):
         a_partner_vat = 'ES48591264S'
 
-        result = self.installation.get_installations_by(self.cursor, self.uid, a_partner_vat)
+        result = self.installation.get_installations(self.cursor, self.uid, a_partner_vat)
 
         expected_result = [
             dict(
@@ -40,17 +40,17 @@ class SomInstallationsTests(testing.OOTestCase):
         ]
         self.assertEqual(expected_result, result)
 
-    def test__get_installations_by__user_not_exists(self):
+    def test__get_installations__user_not_exists(self):
         an_invalid_partner_vat = 123
 
-        result = self.installation.get_installations_by(self.cursor, self.uid, an_invalid_partner_vat)
+        result = self.installation.get_installations(self.cursor, self.uid, an_invalid_partner_vat)
 
         self.assertEqual(result['code'], 'PartnerNotExists')
 
-    def test__get_installation_details_by__base(self):
+    def test__get_installation_details__base(self):
         an_installation_name = 'Installation 0'
 
-        result = self.installation.get_installation_details_by(self.cursor, self.uid, an_installation_name)
+        result = self.installation.get_installation_details(self.cursor, self.uid, an_installation_name)
 
         expected_result = dict(
             installation_details=dict(
