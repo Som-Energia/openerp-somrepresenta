@@ -88,8 +88,11 @@ class Installation(osv.osv_memory):
         contract = polissa_obj.browse(cursor, uid, contract_id)[0]
         contract_details = dict(
             billing_mode=contract.mode_facturacio,
-            remuneration_service=contract.representant_fee,
+            proxy_fee=contract.representant_fee,
+            cost_deviation=contract.desvios,
+            reduction_deviation=contract.efecte_cartera,
             representation_type=contract.representation_type,
+            iban=self._format_iban(contract.bank.printable_iban),
             discharge_date=contract.data_alta,
             status=contract.state,
         )
@@ -98,6 +101,10 @@ class Installation(osv.osv_memory):
             installation_details=installation_details,
             contract_details=contract_details
         )
+
+    def _format_iban(self, iban):
+        """Hide all but the last 4 digits of an IBAN number"""
+        return '**** **** **** **** **** {}'.format(iban[-4:])
 
     def _get_contract_number_by(self, cursor, uid, partner_id):
         polissa_obj = self.pool.get('giscere.polissa')

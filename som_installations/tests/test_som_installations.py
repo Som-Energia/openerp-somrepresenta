@@ -68,10 +68,13 @@ class SomInstallationsTests(testing.OOTestCase):
                 type = 'IT-00000',
             ),
             contract_details=dict(
-                billing_mode=False,
-                discharge_date='2022-02-22',
-                remuneration_service=False,
+                billing_mode='index',
+                proxy_fee=1.5,
+                cost_deviation='included',
+                reduction_deviation=100,
                 representation_type='indirecta_cnmc',
+                iban='**** **** **** **** **** 5257',
+                discharge_date='2022-02-22',
                 status='esborrany',
             ),
         )

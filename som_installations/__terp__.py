@@ -10,6 +10,9 @@
     "depends":[
         "giscere_cil",
         "giscere_polissa",
+        "poweremail",
+        "giscere_facturacio",
+        "base_iban",
         "som_users",
     ],
     "init_xml": [],
