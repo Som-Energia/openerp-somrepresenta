@@ -35,7 +35,7 @@ class Users(osv.osv_memory):
             )
         raise PartnerNotExists()
 
-    def _get_customer(self, cursor, uid, username):
+    def get_customer(self, cursor, uid, username):
         # Get user profile: for now recover customer profile
         partner_obj = self.pool.get('res.partner')
         search_params = [
@@ -54,7 +54,7 @@ class Users(osv.osv_memory):
     )
     def get_profile(self, cursor, uid, username):
         # Get user profile: for now recover customer profile
-        partner = self._get_customer(cursor, uid, username)
+        partner = self.get_customer(cursor, uid, username)
         return dict(
             username=partner.vat,
             roles=['customer'],
@@ -83,7 +83,7 @@ class Users(osv.osv_memory):
         document_version_obj = self.pool.get('signed.document.type.version')
         signed_document_obj = self.pool.get('signed.document')
 
-        signer = self._get_customer(cursor, uid, username)
+        signer = self.get_customer(cursor, uid, username)
 
         last_version_id = document_version_obj.search(cursor, uid, [
             ('type.code', '=', document)
@@ -102,7 +102,7 @@ class Users(osv.osv_memory):
     def _documents_signed_by_customer(self, cursor, uid, username):
         signed_document_obj = self.pool.get('signed.document')
 
-        signer = self._get_customer(cursor, uid, username)
+        signer = self.get_customer(cursor, uid, username)
         signature_ids = signed_document_obj.search(cursor, uid, [
             ('signer', '=', signer.id),
         ])
