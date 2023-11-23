@@ -24,19 +24,11 @@ class Installation(osv.osv_memory):
         )
     )
     def get_installations(self, cursor, uid, vat):
-        partner_obj = self.pool.get('res.partner')
-        search_params = [
-           ('vat','=', vat),
-           ('active','=', True),
-           ('customer','=', True),
-        ]
-        partner_id = partner_obj.search(cursor, uid, search_params)
-        if not partner_id:
-            raise PartnerNotExists()
-
+        users_obj = self.pool.get('users')
+        partner = users_obj.get_customer(cursor, uid, vat)
         installation_obj = self.pool.get('giscere.instalacio')
         search_params = [
-           ('titular','=', partner_id),
+           ('titular','=', partner.id),
         ]
         installation_ids = installation_obj.search(cursor, uid, search_params)
         if not installation_ids:
@@ -46,7 +38,7 @@ class Installation(osv.osv_memory):
 
         return [
             dict(
-                contract_number=self._get_contract_number(cursor, uid, partner_id),
+                contract_number=self._get_contract_number(cursor, uid, partner.id),
                 installation_name=installation.name,
             )
             for installation in installations
