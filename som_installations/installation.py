@@ -67,7 +67,7 @@ class Installation(osv.osv_memory):
             city=installation.cil.id_municipi.name,
             postal_code=installation.cil.dp,
             province=installation.cil.id_provincia.name,
-            coordinates=installation.utm_x.replace(',', '.') + ',' + installation.utm_y.replace(',', '.') if installation.utm_x and installation.utm_y else False,
+            coordinates=self._format_coordinates(installation),
             technology=installation.tecnologia,
             cil=installation.cil.name,
             rated_power=installation.potencia_nominal,
@@ -99,6 +99,12 @@ class Installation(osv.osv_memory):
             installation_details=installation_details,
             contract_details=contract_details
         )
+
+    def _format_coordinates(self, installation):
+        coordinates = None
+        if installation.utm_x and installation.utm_y:
+            coordinates = installation.utm_x.replace(',', '.') + ',' + installation.utm_y.replace(',', '.')
+        return coordinates
 
     def _format_iban(self, iban):
         """Hide all but the last 4 digits of an IBAN number"""

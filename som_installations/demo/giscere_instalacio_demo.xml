@@ -79,6 +79,25 @@
             <field name="unitat_oferta">2</field>
             <field name="data_creacio">2022-02-21</field>
         </record>
+        <record id="giscere_instalacio_3" model="giscere.instalacio">
+            <field name="subgrup">b11</field>
+            <field name="uprs">1</field>
+            <field name="codi_previsio">SR00003</field>
+            <field name="potencia_nominal">801</field>
+            <field name="name">Installation 3</field>
+            <field name="titular" ref="som_users.res_partner_soci"/>
+            <field name="codigo_ministerio">RE-00003</field>
+            <field name="utm_y"></field>
+            <field name="utm_x"></field>
+            <field name="cil">1</field>
+            <field name="data_alta">2022-09-02</field>
+            <field name="data_baixa"></field>
+            <field name="descripcio">Description 3</field>
+            <field name="solicitud_ree">20201203132064</field>
+            <field name="tipo">IT-00001</field>
+            <field name="unitat_oferta">2</field>
+            <field name="data_creacio">2022-02-21</field>
+        </record>
         <record id="res_partner_bank_0" model="res.partner.bank">
             <field name="iban">ES3421008161215236295257</field>
             <field name="printable_iban">ES34 2100 8161 2152 3629 5257</field>

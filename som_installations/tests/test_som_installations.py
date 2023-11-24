@@ -37,6 +37,10 @@ class SomInstallationsTests(testing.OOTestCase):
                 contract_number='000',
                 installation_name='Installation 1',
             ),
+            dict(
+                contract_number='000',
+                installation_name='Installation 3',
+            ),
         ]
         self.assertEqual(expected_result, result)
 
@@ -101,3 +105,11 @@ class SomInstallationsTests(testing.OOTestCase):
         result = self.installation.get_installation_details(self.cursor, self.uid, an_installation_name)
 
         self.assertEqual(result['code'], 'ContractNotExists')
+
+    def test__get_installation_details__coordinates_are_empty(self):
+        an_installation_name_without_coordinates = 'Installation 3'
+
+        result = self.installation.get_installation_details(self.cursor, self.uid, an_installation_name_without_coordinates)
+
+        expected_coordinates = None
+        self.assertEqual(expected_coordinates, result['installation_details']['coordinates'])
