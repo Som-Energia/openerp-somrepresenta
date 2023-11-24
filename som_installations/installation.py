@@ -44,6 +44,12 @@ class Installation(osv.osv_memory):
             for installation in installations
         ]
 
+    @www_entry_point(
+        expected_exceptions=(
+            InstallationNotFound,
+            ContractNotExists
+        )
+    )
     def get_installation_details(self, cursor, uid, installation_name):
         installation_obj = self.pool.get('giscere.instalacio')
         installation_search_params = [

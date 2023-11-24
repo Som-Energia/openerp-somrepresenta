@@ -133,7 +133,7 @@ class SomUsersTests(testing.OOTestCase):
             phones = ['933333333', '666666666'],
             roles = ['customer'],
             username = 'ESW2796397D',
-            proxy_vat= 'ES12345678X',
+            proxy_vat= 'ES36464471H',
             proxy_name= 'Aplastado, Coyote',
             signed_documents = [],
         )
@@ -258,5 +258,3 @@ class SomUsersTests(testing.OOTestCase):
         )
 
         self.assertEqual(expected_result, result)
-
-
