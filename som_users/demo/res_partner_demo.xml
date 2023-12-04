@@ -26,7 +26,7 @@
         <!-- Partner exists, is active and is customer and legal entity-->
         <record id="res_partner_soci_legal_proxy" model="res.partner">
             <field name="name">Aplastado, Coyote</field>
-            <field name="vat">ES12345678X</field>
+            <field name="vat">ES36464471H</field>
             <field name="active" eval="True"/>
         </record>
         <record id="res_partner_soci_legal" model="res.partner">
@@ -79,6 +79,13 @@
             <field name="mobile">666666666</field>
             <field name="customer" eval="False"/>
             <field name="partner_id" ref="res_partner_not_customer"/>
+        </record>
+        <!-- Partner exists, is active and does not have contract -->
+        <record id="res_partner_soci_without_contract" model="res.partner">
+            <field name="name">Liluye Bina, Onawa</field>
+            <field name="ref">999</field>
+            <field name="vat">ES85190129S</field>
+            <field name="active" eval="True"/>
         </record>
     </data>
 </openerp>
