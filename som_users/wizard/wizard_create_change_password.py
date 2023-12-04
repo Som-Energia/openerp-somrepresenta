@@ -43,7 +43,7 @@ class WizardCreateChangePassword(osv.osv_memory):
         # Return the shuffled list of characters as a string
         return ''.join(characters)
 
-    def send_password_email(self, cursor, uid, partner):
+    def send_password_email(self, cursor, uid, partner, context=None):
         ir_model_data = self.pool.get('ir.model.data')
         power_email_tmpl_obj = self.pool.get('poweremail.templates')
 
@@ -100,7 +100,7 @@ class WizardCreateChangePassword(osv.osv_memory):
         except Exception as e:
             return False
 
-    def add_password_to_partner_comment(self, cursor, uid, partner_id, password):
+    def add_password_to_partner_comment(self, cursor, uid, partner_id, password, context=None):
         partner_o = self.pool.get("res.partner")
         comment = partner_o.read(cursor, uid, partner_id, ['comment'])['comment']
         start_key = 'generated_ov_password='
@@ -134,7 +134,7 @@ class WizardCreateChangePassword(osv.osv_memory):
             password = self.generatePassword()
             result = self.save_password(cursor, uid, partner_id, password)
             if not result:
-                info = "{} ({})\n".format(str(int(partner_id)),'Error al guardar la contraseya')
+                info = "{} ({})\n".format(str(int(partner_id)),'Error al guardar la contrasenya')
                 error_info.append(info)
                 continue
             self.add_password_to_partner_comment(cursor, uid, partner_id, password)

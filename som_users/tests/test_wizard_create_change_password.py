@@ -40,7 +40,7 @@ class WizardCreateChangePasswordTests(testing.OOTestCase):
         wiz = self.wiz_o.read(self.cursor, self.uid, [wiz_id])[0]
 
         self.assertEqual(wiz['state'], 'done')
-        self.assertEqual(wiz['info'], 'Contrassenyes generades')
+        self.assertEqual(wiz['info'], 'Contrasenyes generades')
 
     @mock.patch("som_users.wizard.wizard_create_change_password.WizardCreateChangePassword.send_password_email")
     @mock.patch("som_users.wizard.wizard_create_change_password.WizardCreateChangePassword.save_password")
@@ -62,9 +62,9 @@ class WizardCreateChangePasswordTests(testing.OOTestCase):
 
         self.assertEqual(wiz['state'], 'done')
         self.assertEqual(wiz['info'], '{}: \n {} ({})\n'.format(
-            'Error generant contrassenyes pels següents partners',
+            'Error generant contrasenyes pels següents partners',
             int(partner_id[0]),
-            'Error al guardar la contrasseya'
+            'Error al guardar la contrasenya'
             )
         )
         mock_send_password_email.assert_not_called()
@@ -95,7 +95,7 @@ class WizardCreateChangePasswordTests(testing.OOTestCase):
 
         self.assertEqual(wiz['state'], 'done')
         self.assertEqual(wiz['info'], '{}: \n {} ({})\n'.format(
-            'Error generant contrassenyes pels següents partners',
+            'Error generant contrasenyes pels següents partners',
             int(partner_id[0]),
             "Error al generar/enviar l'email")
         )
@@ -118,7 +118,7 @@ class WizardCreateChangePasswordTests(testing.OOTestCase):
         wiz = self.wiz_o.read(self.cursor, self.uid, [wiz_id])[0]
 
         self.assertEqual(wiz['state'], 'done')
-        self.assertEqual(wiz['info'], 'Contrassenyes generades')
+        self.assertEqual(wiz['info'], 'Contrasenyes generades')
 
     @mock.patch("som_users.wizard.wizard_create_change_password.WizardCreateChangePassword.send_password_email")
     @mock.patch("som_users.wizard.wizard_create_change_password.WizardCreateChangePassword.save_password")
@@ -140,8 +140,8 @@ class WizardCreateChangePasswordTests(testing.OOTestCase):
 
         self.assertEqual(wiz['state'], 'done')
         self.assertEqual(wiz['info'], '{}: \n {}'.format(
-            'Error generant contrassenyes pels següents partners',
-            ','.join(['{} ({})\n'.format(str(int(x)),'Error al guardar la contrasseya') for x in partner_ids])
+            'Error generant contrasenyes pels següents partners',
+            ','.join(['{} ({})\n'.format(str(int(x)),'Error al guardar la contrasenya') for x in partner_ids])
             )
         )
 
@@ -170,8 +170,8 @@ class WizardCreateChangePasswordTests(testing.OOTestCase):
 
         self.assertEqual(wiz['state'], 'done')
         self.assertEqual(wiz['info'], '{}: \n {}'.format(
-            'Error generant contrassenyes pels següents partners',
-            ','.join(['{} ({})\n'.format(str(int(x)),'Error al guardar la contrasseya') for x in partner_ids if x % 2 == 0])
+            'Error generant contrasenyes pels següents partners',
+            ','.join(['{} ({})\n'.format(str(int(x)),'Error al guardar la contrasenya') for x in partner_ids if x % 2 == 0])
             )
         )
 
@@ -201,7 +201,7 @@ class WizardCreateChangePasswordTests(testing.OOTestCase):
 
         self.assertEqual(wiz['state'], 'done')
         self.assertEqual(wiz['info'], '{}: \n {}'.format(
-            'Error generant contrassenyes pels següents partners',
+            'Error generant contrasenyes pels següents partners',
             ','.join(['{} ({})\n'.format(str(int(x)),"Error al generar/enviar l'email") for x in partner_ids if x % 2 == 0])
             )
         )

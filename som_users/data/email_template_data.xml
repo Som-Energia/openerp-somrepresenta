@@ -11,7 +11,7 @@
             <field name="smtpport">587</field>
         </record>
         <record model="poweremail.templates" id="email_create_change_password">
-            <field name="name">Email crear o canviar contrassenya</field>
+            <field name="name">Email crear o canviar contrasenya</field>
             <field name="object_name" model="ir.model" search="[('name', '=', 'Partner')]"/>
             <field eval="0" name="save_to_drafts"/>
             <field name="model_int_name">res.partner</field>
