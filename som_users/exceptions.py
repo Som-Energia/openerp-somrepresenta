@@ -1,7 +1,8 @@
 class SomUsersException(Exception):
-    def __init__(self, text):
+    def __init__(self, text, message=None):
         self.exc_type = 'error'
         self.text = text
+        self.message = message
         super(SomUsersException, self).__init__(self.text)
 
     @property
@@ -12,6 +13,7 @@ class SomUsersException(Exception):
         return dict(
             code=self.code,
             error=self.text,
+            message=self.message
         )
 
 
@@ -25,4 +27,18 @@ class NoDocumentVersions(SomUsersException):
     def __init__(self, document):
         super(NoDocumentVersions, self).__init__(
             text="Document {} has no version available to sign".format(document)
+            text="Partner does not exist")
+
+class FailSendEmail(SomUsersException):
+    def __init__(self, message):
+        super(FailSendEmail, self).__init__(
+            text="Error sending email",
+            message=message
+        )
+
+class FailSavePassword(SomUsersException):
+    def __init__(self, message):
+        super(FailSavePassword, self).__init__(
+            text="Error saving password",
+            message=message
         )
