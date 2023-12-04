@@ -24,7 +24,7 @@
             <field eval="0" name="send_on_create"/>
             <field name="lang">${object.lang}</field>
             <field eval="0" name="send_on_write"/>
-            <field name="def_bcc">support.17062.b8d9f4469fa4d856@helpscout.net</field>
+            <field name="def_bcc"></field>
             <field name="enforce_from_account" model="poweremail.core_accounts" search="[('name','=', 'Som Energia - Representació')]"/>
             <field name="def_body_text"><![CDATA[
                 <!doctype html>

@@ -128,7 +128,6 @@ class WizardCreateChangePassword(osv.osv_memory):
         partner_ids = context.get("active_ids")
         partner_o = self.pool.get("res.partner")
 
-        import pudb; pu.db
         error_info = []
         for partner_id in partner_ids:
             partner = partner_o.browse(cursor, uid, partner_id)
