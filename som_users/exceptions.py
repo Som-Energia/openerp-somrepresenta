@@ -27,7 +27,7 @@ class NoDocumentVersions(SomUsersException):
     def __init__(self, document):
         super(NoDocumentVersions, self).__init__(
             text="Document {} has no version available to sign".format(document)
-            text="Partner does not exist")
+        )
 
 class FailSendEmail(SomUsersException):
     def __init__(self, message):
