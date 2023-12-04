@@ -23,13 +23,17 @@ class Installation(osv.osv_memory):
             ContractNotExists
         )
     )
-    def get_installations(self, cursor, uid, vat):
+    def get_installations(self, cursor, uid, vat, context=None):
+        if context is None:
+            context = {}
+
         users_obj = self.pool.get('users')
         partner = users_obj.get_customer(cursor, uid, vat)
         installation_obj = self.pool.get('giscere.instalacio')
         search_params = [
            ('titular','=', partner.id),
         ]
+
         installation_ids = installation_obj.search(cursor, uid, search_params)
         if not installation_ids:
             raise InstallationsNotFound()
@@ -50,7 +54,10 @@ class Installation(osv.osv_memory):
             ContractNotExists
         )
     )
-    def get_installation_details(self, cursor, uid, installation_name):
+    def get_installation_details(self, cursor, uid, installation_name, context=None):
+        if context is None:
+            context = {}
+
         installation_obj = self.pool.get('giscere.instalacio')
         installation_search_params = [
            ('name','=', installation_name),
@@ -110,7 +117,10 @@ class Installation(osv.osv_memory):
         """Hide all but the last 4 digits of an IBAN number"""
         return '**** **** **** **** **** {}'.format(iban[-4:])
 
-    def _get_contract_number(self, cursor, uid, partner_id):
+    def _get_contract_number(self, cursor, uid, partner_id, context=None):
+        if context is None:
+            context = {}
+
         polissa_obj = self.pool.get('giscere.polissa')
         search_params = [
            ('titular','=', partner_id),
