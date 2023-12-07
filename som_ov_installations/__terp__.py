@@ -13,7 +13,7 @@
         "poweremail",
         "giscere_facturacio",
         "base_iban",
-        "som_users",
+        "som_ov_users",
     ],
     "init_xml": [],
     "demo_xml": [

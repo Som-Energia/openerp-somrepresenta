@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from destral import testing
 from destral.transaction import Transaction
 
-from .. import installation
+from .. import som_ov_installations
 
 
 class SomInstallationsTests(testing.OOTestCase):
@@ -12,7 +12,7 @@ class SomInstallationsTests(testing.OOTestCase):
     def setUp(self):
         self.pool = self.openerp.pool
         self.imd = self.pool.get('ir.model.data')
-        self.installation = self.pool.get('installation')
+        self.installation = self.pool.get('som.ov.installations')
 
         self.txn = Transaction().start(self.database)
 

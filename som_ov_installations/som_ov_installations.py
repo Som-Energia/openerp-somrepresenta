@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 from osv import osv
 
-from som_users.decorators import www_entry_point
-from som_users.exceptions import PartnerNotExists
+from som_ov_users.decorators import www_entry_point
+from som_ov_users.exceptions import PartnerNotExists
 
-from som_installations.exceptions import (
+from exceptions import (
     InstallationNotFound,
     InstallationsNotFound,
     ContractNotExists
 )
 
 
-class Installation(osv.osv_memory):
+class SomOvInstallations(osv.osv_memory):
 
-    _name = 'installation'
+    _name = 'som.ov.installations'
 
     @www_entry_point(
         expected_exceptions=(
@@ -27,7 +27,7 @@ class Installation(osv.osv_memory):
         if context is None:
             context = {}
 
-        users_obj = self.pool.get('users')
+        users_obj = self.pool.get('som.ov.users')
         partner = users_obj.get_customer(cursor, uid, vat)
         installation_obj = self.pool.get('giscere.instalacio')
         search_params = [
@@ -132,4 +132,4 @@ class Installation(osv.osv_memory):
         return contract.name
 
 
-Installation()
+SomOvInstallations()

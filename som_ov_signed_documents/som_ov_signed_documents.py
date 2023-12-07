@@ -43,9 +43,9 @@ class SignedDocumentTypeVersion(osv.osv):
 SignedDocumentTypeVersion()
 
 
-class SignedDocument(osv.osv):
+class SomOvSignedDocument(osv.osv):
 
-    _name = "signed.document"
+    _name = "som.ov.signed.document"
         
     def _get_name(self, cursor, uid, ids, field_name, arg, context=None):
         result = {}
@@ -67,4 +67,4 @@ class SignedDocument(osv.osv):
         ('code_uniq', 'unique("code")', _('The name of the document type code must be unique!')),
     ]
 
-SignedDocument()
+SomOvSignedDocument()

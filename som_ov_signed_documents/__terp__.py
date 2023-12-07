@@ -14,7 +14,7 @@
     "demo_xml": [
     ],
     "update_xml":[
-        'data/som_signed_documents_data.xml',
+        'data/som_ov_signed_documents_data.xml',
         'security/ir.model.access.csv'
     ],
     "active": False,
