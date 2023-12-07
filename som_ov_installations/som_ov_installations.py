@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 from osv import osv
+import logging
 
 from som_ov_users.decorators import www_entry_point
 from som_ov_users.exceptions import PartnerNotExists
 
 from exceptions import (
-    InstallationNotFound,
+    ContractWithoutInstallation,
     InstallationsNotFound,
     ContractNotExists
 )
 
+logger = logging.getLogger(__name__)
 
 class SomOvInstallations(osv.osv_memory):
 
@@ -19,7 +21,7 @@ class SomOvInstallations(osv.osv_memory):
         expected_exceptions=(
             PartnerNotExists,
             InstallationsNotFound,
-            InstallationNotFound,
+            ContractWithoutInstallation,
             ContractNotExists
         )
     )
@@ -29,62 +31,40 @@ class SomOvInstallations(osv.osv_memory):
 
         users_obj = self.pool.get('som.ov.users')
         partner = users_obj.get_customer(cursor, uid, vat)
+        polissa_obj = self.pool.get('giscere.polissa')
         installation_obj = self.pool.get('giscere.instalacio')
         search_params = [
            ('titular','=', partner.id),
         ]
 
-        installation_ids = installation_obj.search(cursor, uid, search_params)
-        if not installation_ids:
+        contract_ids = polissa_obj.search(cursor, uid, search_params)
+        if not contract_ids:
             raise InstallationsNotFound()
 
-        installations = installation_obj.browse(cursor, uid, installation_ids)
+        contracts = polissa_obj.browse(cursor, uid, contract_ids)
 
         return [
             dict(
-                contract_number=self._get_contract_number(cursor, uid, partner.id),
-                installation_name=installation.name,
+                contract_number=contract.name,
+                installation_name=installation_name,
             )
-            for installation in installations
+                for contract, installation_name in (
+                (contract, self._get_installation_name_by_cil(cursor, uid, contract.cil.id))
+                for contract in contracts
+            )
+            if installation_name
         ]
 
     @www_entry_point(
         expected_exceptions=(
-            InstallationNotFound,
+            ContractWithoutInstallation,
             ContractNotExists
         )
     )
-    def get_installation_details(self, cursor, uid, installation_name, context=None):
-        if context is None:
-            context = {}
-
-        installation_obj = self.pool.get('giscere.instalacio')
-        installation_search_params = [
-           ('name','=', installation_name),
-        ]
-        installation_id = installation_obj.search(cursor, uid, installation_search_params)
-        if not installation_id:
-            raise InstallationNotFound()
-
-        installation = installation_obj.browse(cursor, uid, installation_id)[0]
-        installation_details = dict(
-            contract_number=self._get_contract_number(cursor, uid, installation.titular.id),
-            name=installation.name,
-            address=installation.cil.direccio,
-            city=installation.cil.id_municipi.name,
-            postal_code=installation.cil.dp,
-            province=installation.cil.id_provincia.name,
-            coordinates=self._format_coordinates(installation),
-            technology=installation.tecnologia,
-            cil=installation.cil.name,
-            rated_power=installation.potencia_nominal,
-            type=installation.tipo,
-            ministry_code=installation.codigo_ministerio,
-        )
-
+    def get_installation_details(self, cursor, uid, contract_number, context=None):
         polissa_obj = self.pool.get('giscere.polissa')
         contract_search_params = [
-           ('name','=', self._get_contract_number(cursor, uid, installation.titular.id)),
+           ('name','=', contract_number),
         ]
         contract_id = polissa_obj.search(cursor, uid, contract_search_params)
         if not contract_id:
@@ -102,10 +82,35 @@ class SomOvInstallations(osv.osv_memory):
             status=contract.state,
         )
 
+        installation_obj = self.pool.get('giscere.instalacio')
+        installation_search_params = [
+           ('cil','=', contract.cil.id),
+        ]
+        installation_id = installation_obj.search(cursor, uid, installation_search_params)
+        if not installation_id:
+            raise ContractWithoutInstallation(contract_number)
+
+        installation = installation_obj.browse(cursor, uid, installation_id)[0]
+        installation_details = dict(
+            contract_number=contract_number,
+            name=installation.name,
+            address=installation.cil.direccio,
+            city=installation.cil.id_municipi.name,
+            postal_code=installation.cil.dp,
+            province=installation.cil.id_provincia.name,
+            coordinates=self._format_coordinates(installation),
+            technology=installation.tecnologia,
+            cil=installation.cil.name,
+            rated_power=installation.potencia_nominal,
+            type=installation.tipo,
+            ministry_code=installation.codigo_ministerio,
+        )
+
         return dict(
             installation_details=installation_details,
             contract_details=contract_details
         )
+
 
     def _format_coordinates(self, installation):
         coordinates = None
@@ -130,6 +135,17 @@ class SomOvInstallations(osv.osv_memory):
             raise ContractNotExists()
         contract = polissa_obj.browse(cursor, uid, contract_id)[0]
         return contract.name
-
+ 
+    def _get_installation_name_by_cil(self, cursor, uid, cil_id):
+        installation_obj = self.pool.get('giscere.instalacio')
+        search_params = [
+           ('cil','=', cil_id),
+        ]
+        installation_ids = installation_obj.search(cursor, uid, search_params)
+        installations = installation_obj.read(cursor, uid, installation_ids, ['name'])
+        if not installations:
+            logger.error('No installation with this cil {}'.format(cil_id))
+            return None
+        return installations[0]['name']
 
 SomOvInstallations()

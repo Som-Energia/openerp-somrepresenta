@@ -23,67 +23,127 @@ class SomInstallationsTests(testing.OOTestCase):
     def tearDown(self):
         self.txn.stop()
 
-    def test__get_installations__user_exists_is_active_and_have_installations(self):
-        a_partner_vat = 'ES48591264S'
+    base_vat = 'ES48591264S'
+    legal_vat = 'ESW2796397D'
+    missing_vat = 'ES11111111H'
+    no_contracts_vat = 'ES36464471H'
+    no_installation_vat = 'TODO'
+    no_coordinates__contract_number = '103'
 
-        result = self.installation.get_installations(self.cursor, self.uid, a_partner_vat)
+    def test__get_installations__base(self):
+        vat = self.base_vat
+
+        result = self.installation.get_installations(self.cursor, self.uid, vat)
 
         expected_result = [
             dict(
-                contract_number='000',
-                installation_name='Installation 0',
-            ),
-            dict(
-                contract_number='000',
-                installation_name='Installation 1',
-            ),
-            dict(
-                contract_number='000',
+                contract_number='103',
                 installation_name='Installation 3',
             ),
         ]
         self.assertEqual(expected_result, result)
 
+    def test__get_installations__multiple_installations(self):
+        vat = self.legal_vat
+
+        result = self.installation.get_installations(self.cursor, self.uid, vat)
+
+        expected_result = [
+            dict(
+                contract_number='100',
+                installation_name='Installation 0',
+            ),
+            dict(
+                contract_number='101',
+                installation_name='Installation 1',
+            ),
+            dict(
+                contract_number='102',
+                installation_name='Installation 2',
+            ),
+        ]
+        self.assertEqual(expected_result, result)
+
     def test__get_installations__user_not_exists(self):
-        an_invalid_partner_vat = 123
+        vat = self.missing_vat
 
-        result = self.installation.get_installations(self.cursor, self.uid, an_invalid_partner_vat)
+        result = self.installation.get_installations(self.cursor, self.uid, vat)
 
-        self.assertEqual(result['code'], 'PartnerNotExists')
+        self.assertEqual(result, dict(
+            code='PartnerNotExists',
+            error='Partner does not exist',
+            trace=result.get('trace', "TRACE IS MISSING"),
+        ))
 
+    # def test__get_installations__user_inactive(self):
 
-    def test__get_installations__user_exists_is_active_and_have_not_installations(self):
-        a_partner_without_installations_vat = 'ES36464471H'
+    def reference(self, module, id):
+        return self.imd.get_object_reference(
+            self.cursor, self.uid, module, id,
+        )[1]
 
-        result = self.installation.get_installations(self.cursor, self.uid, a_partner_without_installations_vat)
+    def test__get_installations__user_have_not_installations(self):
+        vat = self.legal_vat
 
-        self.assertEqual(result['code'], 'InstallationsNotFound')
+        installation_obj = self.pool.get('giscere.instalacio')
+        installation_id = self.reference('som_ov_installations', 'giscere_instalacio_1')
+
+        installation_obj.unlink(self.cursor, self.uid, [installation_id])
+
+        result = self.installation.get_installations(self.cursor, self.uid, vat)
+        # TODO: Assert an error log has been generated
+        self.assertEqual(result, [
+            dict(
+                contract_number='100',
+                installation_name='Installation 0',
+            ),
+            # This is the one removed
+            #dict(
+            #    contract_number='101',
+            #    installation_name='Installation 1',
+            #),
+            dict(
+                contract_number='102',
+                installation_name='Installation 2',
+            ),
+        ])
+
+    def test__get_installations__contract_with_no_related_installation(self):
+        vat = self.no_contracts_vat
+
+        result = self.installation.get_installations(self.cursor, self.uid, vat)
+
+        self.assertEqual(result, dict(
+            code='InstallationsNotFound',
+            error='No installations found for this partner',
+            trace=result.get('trace', "TRACE IS MISSING"),
+        ))
 
     def test__get_installation_details__base(self):
-        an_installation_name = 'Installation 0'
+        contract_number = '101'
 
-        result = self.installation.get_installation_details(self.cursor, self.uid, an_installation_name)
+        result = self.installation.get_installation_details(self.cursor, self.uid, contract_number)
 
         expected_result = dict(
             installation_details=dict(
-                contract_number='000',
-                name = 'Installation 0',
-                address = 'Carrer Buenaventura Durruti 666 aclaridor 08080 (Girona)',
+                contract_number='101',
+                name = 'Installation 1',
+                address = 'Carrer Buenaventura Durruti 2 aclaridor 08080 (Girona)',
                 city = 'Girona',
                 postal_code='08080',
                 province='Girona',
                 coordinates = '41.54670,0.80284',
-                ministry_code = 'RE-00000',
+                ministry_code = 'RE-00001',
                 technology = False,
-                cil='ES1234000000000001JK1F001',
-                rated_power=800.0,
-                type = 'IT-00000',
+                cil='ES1234000000000001JK1F002',
+                rated_power=801.0,
+                type = 'IT-00001',
             ),
             contract_details=dict(
                 billing_mode='index',
                 proxy_fee=1.5,
                 cost_deviation='included',
-                reduction_deviation=100,
+                reduction_deviation=100.0,
                 representation_type='indirecta_cnmc',
                 iban='**** **** **** **** **** 5257',
                 discharge_date='2022-02-22',
@@ -92,24 +152,43 @@ class SomInstallationsTests(testing.OOTestCase):
         )
         self.assertEqual(expected_result, result)
 
-    def test__get_installation_details__installation_not_exists(self):
-        a_non_existing_installation_name = 'a_non_existing_installation_name'
-
-        result = self.installation.get_installation_details(self.cursor, self.uid, a_non_existing_installation_name)
-
-        self.assertEqual(result['code'], 'InstallationNotFound')
-
     def test__get_installation_details__contract_not_exists(self):
-        an_installation_name = 'Installation 2'
+        contract_number = 'non_existing_contract_number'
 
-        result = self.installation.get_installation_details(self.cursor, self.uid, an_installation_name)
+        result = self.installation.get_installation_details(self.cursor, self.uid, contract_number)
 
         self.assertEqual(result['code'], 'ContractNotExists')
+        self.assertEqual(result, dict(
+            code='ContractNotExists',
+            error='Contract does not exist',
+            trace=result.get('trace', "TRACE IS MISSING"),
+        ))
+
+    def test__get_installation_details__contract_with_no_installation(self):
+        installation_obj = self.pool.get('giscere.instalacio')
+        installation_id = self.reference('som_ov_installations', 'giscere_instalacio_1')
+
+        installation_obj.unlink(self.cursor, self.uid, [installation_id])
+
+        contract_number = '101'
+
+        result = self.installation.get_installation_details(self.cursor, self.uid, contract_number)
+
+        self.assertEqual(result, dict(
+            code='ContractWithoutInstallation',
+            error="No installation found for contract '101'",
+            contract_number='101',
+            trace=result.get('trace', "TRACE IS MISSING"),
+        ))
 
     def test__get_installation_details__coordinates_are_empty(self):
-        an_installation_name_without_coordinates = 'Installation 3'
+        contract_number = self.no_coordinates__contract_number
 
-        result = self.installation.get_installation_details(self.cursor, self.uid, an_installation_name_without_coordinates)
+        result = self.installation.get_installation_details(self.cursor, self.uid, contract_number)
 
         expected_coordinates = None
         self.assertEqual(expected_coordinates, result['installation_details']['coordinates'])
+
+    #def test_get_installation_details__other_people_installation
+    #def test_get_installation_details__other_people_installation
+    #def test_get_installations___inactive_contracts_included_same_installation

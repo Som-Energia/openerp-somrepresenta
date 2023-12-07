@@ -29,8 +29,7 @@ class SomUsersTests(testing.OOTestCase):
         self.txn.stop()
 
     def reference(self, module, id):
-        ir_model_data_obj = self.pool.get("ir.model.data")
-        return ir_model_data_obj.get_object_reference(
+        return self.imd.get_object_reference(
             self.cursor, self.uid, module, id,
         )[1]
 
