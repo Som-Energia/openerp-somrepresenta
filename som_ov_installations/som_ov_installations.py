@@ -21,8 +21,6 @@ class SomOvInstallations(osv.osv_memory):
         expected_exceptions=(
             PartnerNotExists,
             InstallationsNotFound,
-            ContractWithoutInstallation,
-            ContractNotExists
         )
     )
     def get_installations(self, cursor, uid, vat, context=None):
