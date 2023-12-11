@@ -79,8 +79,8 @@ class SomOvUsers(osv.osv_memory):
         expected_exceptions=(PartnerNotExists, NoDocumentVersions)
     )
     def sign_document(self, cursor, uid, username, document):
-        document_type_obj = self.pool.get('signed.document.type')
-        document_version_obj = self.pool.get('signed.document.type.version')
+        document_type_obj = self.pool.get('som.ov.signed.document.type')
+        document_version_obj = self.pool.get('som.ov.signed.document.type.version')
         signed_document_obj = self.pool.get('som.ov.signed.document')
 
         signer = self.get_customer(cursor, uid, username)

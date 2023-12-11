@@ -154,7 +154,7 @@ class SomUsersTests(testing.OOTestCase):
             "som_ov_signed_documents",
             "type_ovrepresenta_rgpd"
         )
-        document_version_obj = self.pool.get('signed.document.type.version')
+        document_version_obj = self.pool.get('som.ov.signed.document.type.version')
         document_version_obj.create(self.cursor, self.uid, dict(
             type=document_type_id,
             date='2040-03-02',
@@ -185,7 +185,7 @@ class SomUsersTests(testing.OOTestCase):
             "version_type_ovrepresenta_rgpd_2023"
         )
         print("version_ids", version_id)
-        document_version_obj = self.pool.get('signed.document.type.version')
+        document_version_obj = self.pool.get('som.ov.signed.document.type.version')
         document_version_obj.unlink(self.cursor, self.uid, version_id)
 
         result = self.users.sign_document(self.cursor, self.uid, username, 'RGPD_OV_REPRESENTA')
