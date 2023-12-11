@@ -10,7 +10,7 @@
     "depends":[
         "base_extended",
         "partner_representante",
-        "som_signed_documents",
+        "som_ov_signed_documents",
         "poweremail",
     ],
     "init_xml": [],

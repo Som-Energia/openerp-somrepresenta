@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 from osv import osv
 
-from som_users.decorators import www_entry_point
-from som_users.exceptions import PartnerNotExists, NoDocumentVersions
+from decorators import www_entry_point
+from exceptions import PartnerNotExists, NoDocumentVersions
 
 from datetime import datetime
 
 
-class Users(osv.osv_memory):
+class SomOvUsers(osv.osv_memory):
 
-    _name = "users"
+    _name = "som.ov.users"
 
     @www_entry_point(
         expected_exceptions=PartnerNotExists
@@ -79,9 +79,9 @@ class Users(osv.osv_memory):
         expected_exceptions=(PartnerNotExists, NoDocumentVersions)
     )
     def sign_document(self, cursor, uid, username, document):
-        document_type_obj = self.pool.get('signed.document.type')
-        document_version_obj = self.pool.get('signed.document.type.version')
-        signed_document_obj = self.pool.get('signed.document')
+        document_type_obj = self.pool.get('som.ov.signed.document.type')
+        document_version_obj = self.pool.get('som.ov.signed.document.type.version')
+        signed_document_obj = self.pool.get('som.ov.signed.document')
 
         signer = self.get_customer(cursor, uid, username)
 
@@ -100,7 +100,7 @@ class Users(osv.osv_memory):
         return dict(signed_version=last_version[0]['date'])
 
     def _documents_signed_by_customer(self, cursor, uid, username):
-        signed_document_obj = self.pool.get('signed.document')
+        signed_document_obj = self.pool.get('som.ov.signed.document')
 
         signer = self.get_customer(cursor, uid, username)
         signature_ids = signed_document_obj.search(cursor, uid, [
@@ -115,4 +115,4 @@ class Users(osv.osv_memory):
         ]
 
 
-Users()
+SomOvUsers()

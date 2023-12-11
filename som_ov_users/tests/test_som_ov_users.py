@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+# from __future__ import unicode_literals
 
 from destral import testing
 from destral.transaction import Transaction
 
-from som_users.exceptions import PartnerNotExists
+from som_ov_users.exceptions import PartnerNotExists
 
-from .. import users
+from .. import som_ov_users
 
 
 class SomUsersTests(testing.OOTestCase):
@@ -17,7 +17,7 @@ class SomUsersTests(testing.OOTestCase):
         self.pool = self.openerp.pool
         self.imd = self.pool.get('ir.model.data')
         self.res_partner = self.pool.get('res.partner')
-        self.users = self.pool.get('users')
+        self.users = self.pool.get('som.ov.users')
 
         self.txn = Transaction().start(self.database)
 
@@ -151,10 +151,10 @@ class SomUsersTests(testing.OOTestCase):
     def test__sign_document__signs_last_document_version(self):
         username = self.base_costumer_vat
         document_type_id = self.reference(
-            "som_signed_documents",
+            "som_ov_signed_documents",
             "type_ovrepresenta_rgpd"
         )
-        document_version_obj = self.pool.get('signed.document.type.version')
+        document_version_obj = self.pool.get('som.ov.signed.document.type.version')
         document_version_obj.create(self.cursor, self.uid, dict(
             type=document_type_id,
             date='2040-03-02',
@@ -181,11 +181,11 @@ class SomUsersTests(testing.OOTestCase):
         username = self.base_costumer_vat
 
         version_id = self.reference(
-            "som_signed_documents",
+            "som_ov_signed_documents",
             "version_type_ovrepresenta_rgpd_2023"
         )
         print("version_ids", version_id)
-        document_version_obj = self.pool.get('signed.document.type.version')
+        document_version_obj = self.pool.get('som.ov.signed.document.type.version')
         document_version_obj.unlink(self.cursor, self.uid, version_id)
 
         result = self.users.sign_document(self.cursor, self.uid, username, 'RGPD_OV_REPRESENTA')

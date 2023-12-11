@@ -1,0 +1,4 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_signed_document_type_rcwd","som.ov.signed.document.type","model_som_ov_signed_document_type","base.group_user",1,1,1,1
+"access_signed_document_type_version_rcwd","som.ov.signed.document.type.version","model_som_ov_signed_document_type_version","base.group_user",1,1,1,1
+"access_signed_document_rcwd","som.ov.signed.document","model_som_ov_signed_document","base.group_user",1,1,1,1
