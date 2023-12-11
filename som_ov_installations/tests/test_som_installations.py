@@ -121,8 +121,9 @@ class SomInstallationsTests(testing.OOTestCase):
 
     def test__get_installation_details__base(self):
         contract_number = '101'
+        vat = self.legal_vat
 
-        result = self.installation.get_installation_details(self.cursor, self.uid, contract_number)
+        result = self.installation.get_installation_details(self.cursor, self.uid, vat, contract_number)
 
         expected_result = dict(
             installation_details=dict(
@@ -154,10 +155,10 @@ class SomInstallationsTests(testing.OOTestCase):
 
     def test__get_installation_details__contract_not_exists(self):
         contract_number = 'non_existing_contract_number'
+        vat = self.legal_vat
 
-        result = self.installation.get_installation_details(self.cursor, self.uid, contract_number)
+        result = self.installation.get_installation_details(self.cursor, self.uid, vat, contract_number)
 
-        self.assertEqual(result['code'], 'ContractNotExists')
         self.assertEqual(result, dict(
             code='ContractNotExists',
             error='Contract does not exist',
@@ -171,8 +172,9 @@ class SomInstallationsTests(testing.OOTestCase):
         installation_obj.unlink(self.cursor, self.uid, [installation_id])
 
         contract_number = '101'
+        vat = self.legal_vat
 
-        result = self.installation.get_installation_details(self.cursor, self.uid, contract_number)
+        result = self.installation.get_installation_details(self.cursor, self.uid, vat, contract_number)
 
         self.assertEqual(result, dict(
             code='ContractWithoutInstallation',
@@ -183,12 +185,30 @@ class SomInstallationsTests(testing.OOTestCase):
 
     def test__get_installation_details__coordinates_are_empty(self):
         contract_number = self.no_coordinates__contract_number
+        vat = self.base_vat
 
-        result = self.installation.get_installation_details(self.cursor, self.uid, contract_number)
+        result = self.installation.get_installation_details(self.cursor, self.uid, vat, contract_number)
 
         expected_coordinates = None
         self.assertEqual(expected_coordinates, result['installation_details']['coordinates'])
 
-    #def test_get_installation_details__other_people_installation
-    #def test_get_installation_details__other_people_installation
+    def test__get_installation_details__not_owner(self):
+        contract_number = '101' # belongs to legal_vat
+        vat = self.base_vat
+
+        result = self.installation.get_installation_details(self.cursor, self.uid, vat, contract_number)
+
+        self.assertEqual(result, dict(
+            code='UnauthorizedAccess',
+            error="User {vat} cannot access the Contract '{contract_number}'".format(
+                vat=vat,
+                contract_number=contract_number
+            ),
+            username=vat,
+            resource_type="Contract",
+            resource_name=contract_number,
+            trace=result.get('trace', "TRACE IS MISSING"),
+        ))
+
+
     #def test_get_installations___inactive_contracts_included_same_installation

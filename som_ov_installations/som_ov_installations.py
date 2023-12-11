@@ -8,7 +8,8 @@ from som_ov_users.exceptions import PartnerNotExists
 from exceptions import (
     ContractWithoutInstallation,
     InstallationsNotFound,
-    ContractNotExists
+    ContractNotExists,
+    UnauthorizedAccess,
 )
 
 logger = logging.getLogger(__name__)
@@ -56,10 +57,11 @@ class SomOvInstallations(osv.osv_memory):
     @www_entry_point(
         expected_exceptions=(
             ContractWithoutInstallation,
-            ContractNotExists
+            ContractNotExists,
+            UnauthorizedAccess,
         )
     )
-    def get_installation_details(self, cursor, uid, contract_number, context=None):
+    def get_installation_details(self, cursor, uid, vat, contract_number, context=None):
         polissa_obj = self.pool.get('giscere.polissa')
         contract_search_params = [
            ('name','=', contract_number),
@@ -69,6 +71,16 @@ class SomOvInstallations(osv.osv_memory):
             raise ContractNotExists()
 
         contract = polissa_obj.browse(cursor, uid, contract_id)[0]
+
+        users_obj = self.pool.get('som.ov.users')
+        partner = users_obj.get_customer(cursor, uid, vat)
+        if partner.id != contract.titular.id:
+            raise UnauthorizedAccess(
+                username=vat,
+                resource_type='Contract',
+                resource_name=contract_number,
+            )
+
         contract_details = dict(
             billing_mode=contract.mode_facturacio,
             proxy_fee=contract.representant_fee,
