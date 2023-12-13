@@ -4,7 +4,7 @@
 from destral import testing
 from destral.transaction import Transaction
 
-from som_ov_users.exceptions import PartnerNotExists
+from som_ov_users.exceptions import NoSuchUser
 
 from .. import som_ov_users
 
@@ -52,14 +52,14 @@ class SomUsersTests(testing.OOTestCase):
 
         result = self.users.identify_login(self.cursor, self.uid, res_partner_address_soci_not_active_vat)
 
-        self.assertEqual(result['code'], 'PartnerNotExists')
+        self.assertEqual(result['code'], 'NoSuchUser')
 
     def test__get_user_login_info__user_does_not_exists(self):
         res_partner_soci_not_exists_vat = 'ES12345678A'
 
         result = self.users.identify_login(self.cursor, self.uid, res_partner_soci_not_exists_vat)
 
-        self.assertEqual(result['code'], 'PartnerNotExists')
+        self.assertEqual(result['code'], 'NoSuchUser')
 
     def test__get_profile(self):
         username = self.base_costumer_vat
@@ -171,8 +171,8 @@ class SomUsersTests(testing.OOTestCase):
         result = self.users.sign_document(self.cursor, self.uid, username, 'RGPD_OV_REPRESENTA')
 
         self.assertEqual(result, dict(
-            code='PartnerNotExists',
-            error='Partner does not exist',
+            code='NoSuchUser',
+            error='User does not exist',
             trace=result.get('trace', "TRACE IS MISSING"),
         ))
 
@@ -216,10 +216,10 @@ class SomUsersTests(testing.OOTestCase):
     def test__documents_signed_by_customer__wrong_customer(self):
         username = 'NOTEXISTING'
 
-        with self.assertRaises(PartnerNotExists) as ctx:
+        with self.assertRaises(NoSuchUser) as ctx:
             self.users._documents_signed_by_customer(self.cursor, self.uid, username)
 
-        self.assertEqual(format(ctx.exception), "Partner does not exist")
+        self.assertEqual(format(ctx.exception), "User does not exist")
 
     def test__documents_signed_by_customer__filter_other_customer_signatures(self):
         username = self.base_costumer_vat

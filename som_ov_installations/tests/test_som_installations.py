@@ -70,8 +70,8 @@ class SomInstallationsTests(testing.OOTestCase):
         result = self.installation.get_installations(self.cursor, self.uid, vat)
 
         self.assertEqual(result, dict(
-            code='PartnerNotExists',
-            error='Partner does not exist',
+            code='NoSuchUser',
+            error='User does not exist',
             trace=result.get('trace', "TRACE IS MISSING"),
         ))
 
@@ -113,11 +113,7 @@ class SomInstallationsTests(testing.OOTestCase):
 
         result = self.installation.get_installations(self.cursor, self.uid, vat)
 
-        self.assertEqual(result, dict(
-            code='InstallationsNotFound',
-            error='No installations found for this partner',
-            trace=result.get('trace', "TRACE IS MISSING"),
-        ))
+        self.assertEqual(result, [])
 
     def test__get_installation_details__base(self):
         contract_number = '101'
