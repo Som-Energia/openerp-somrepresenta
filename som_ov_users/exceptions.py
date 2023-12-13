@@ -15,10 +15,10 @@ class SomUsersException(Exception):
         )
 
 
-class PartnerNotExists(SomUsersException):
+class NoSuchUser(SomUsersException):
     def __init__(self):
-        super(PartnerNotExists, self).__init__(
-            text="Partner does not exist"
+        super(NoSuchUser, self).__init__(
+            text="User does not exist"
         )
 
 class NoDocumentVersions(SomUsersException):

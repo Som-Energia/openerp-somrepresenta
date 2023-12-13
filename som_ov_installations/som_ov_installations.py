@@ -3,11 +3,10 @@ from osv import osv
 import logging
 
 from som_ov_users.decorators import www_entry_point
-from som_ov_users.exceptions import PartnerNotExists
+from som_ov_users.exceptions import NoSuchUser
 
 from exceptions import (
     ContractWithoutInstallation,
-    InstallationsNotFound,
     ContractNotExists,
     UnauthorizedAccess,
 )
@@ -20,8 +19,7 @@ class SomOvInstallations(osv.osv_memory):
 
     @www_entry_point(
         expected_exceptions=(
-            PartnerNotExists,
-            InstallationsNotFound,
+            NoSuchUser,
         )
     )
     def get_installations(self, cursor, uid, vat, context=None):
@@ -38,7 +36,7 @@ class SomOvInstallations(osv.osv_memory):
 
         contract_ids = polissa_obj.search(cursor, uid, search_params)
         if not contract_ids:
-            raise InstallationsNotFound()
+            return []
 
         contracts = polissa_obj.browse(cursor, uid, contract_ids)
 

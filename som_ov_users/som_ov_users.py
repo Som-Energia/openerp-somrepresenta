@@ -2,7 +2,7 @@
 from osv import osv
 
 from decorators import www_entry_point
-from exceptions import PartnerNotExists, NoDocumentVersions
+from exceptions import NoSuchUser, NoDocumentVersions
 
 from datetime import datetime
 
@@ -12,7 +12,7 @@ class SomOvUsers(osv.osv_memory):
     _name = "som.ov.users"
 
     @www_entry_point(
-        expected_exceptions=PartnerNotExists
+        expected_exceptions=NoSuchUser
     )
     def identify_login(self, cursor, uid, login):
         #TODO: get res.users login info
@@ -33,7 +33,7 @@ class SomOvUsers(osv.osv_memory):
                 roles=['customer'],
                 username=partner.vat,
             )
-        raise PartnerNotExists()
+        raise NoSuchUser()
 
     def get_customer(self, cursor, uid, username):
         # Get user profile: for now recover customer profile
@@ -45,12 +45,12 @@ class SomOvUsers(osv.osv_memory):
         ]
         partner_id = partner_obj.search(cursor, uid, search_params)
         if not partner_id:
-            raise PartnerNotExists()
+            raise NoSuchUser()
 
         return partner_obj.browse(cursor, uid, partner_id)[0]
 
     @www_entry_point(
-        expected_exceptions=PartnerNotExists
+        expected_exceptions=NoSuchUser
     )
     def get_profile(self, cursor, uid, username):
         # Get user profile: for now recover customer profile
@@ -76,7 +76,7 @@ class SomOvUsers(osv.osv_memory):
         )
 
     @www_entry_point(
-        expected_exceptions=(PartnerNotExists, NoDocumentVersions)
+        expected_exceptions=(NoSuchUser, NoDocumentVersions)
     )
     def sign_document(self, cursor, uid, username, document):
         document_type_obj = self.pool.get('som.ov.signed.document.type')

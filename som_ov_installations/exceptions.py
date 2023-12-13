@@ -15,12 +15,6 @@ class SomInstallationsException(Exception):
         )
 
 
-class InstallationsNotFound(SomInstallationsException):
-    def __init__(self):
-        super(InstallationsNotFound, self).__init__(
-            text="No installations found for this partner")
-
-
 class ContractWithoutInstallation(SomInstallationsException):
     def __init__(self, contract_number):
         super(ContractWithoutInstallation, self).__init__(
