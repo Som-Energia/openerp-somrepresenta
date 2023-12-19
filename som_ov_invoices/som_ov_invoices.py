@@ -42,7 +42,7 @@ class SomOvInvoices(osv.osv_memory):
                 first_period_date=invoice.data_inici,
                 last_period_date=invoice.data_final,
                 amount=invoice.amount_total,  
-                liquidation=False,           
+                liquidation=None,
             )
             for invoice in invoices
         ]
