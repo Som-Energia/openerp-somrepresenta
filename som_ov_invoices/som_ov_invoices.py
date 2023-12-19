@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from osv import osv
 from som_ov_users.decorators import www_entry_point
-from som_ov_users.exceptions import PartnerNotExists
+from som_ov_users.exceptions import NoSuchUser
 
 class SomOvInvoices(osv.osv_memory):
 
@@ -15,7 +15,7 @@ class SomOvInvoices(osv.osv_memory):
 
     @www_entry_point(
         expected_exceptions=(
-            PartnerNotExists,
+            NoSuchUser,
         )
     )
     def get_invoices(self, cursor, uid, vat, context=None):
