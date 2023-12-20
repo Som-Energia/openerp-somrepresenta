@@ -11,6 +11,7 @@
             <field name="date_invoice">2022-10-31</field>
 			<field name="address_invoice_id" ref="som_ov_users.res_partner_address_soci"/>
             <field name="amount_total">28.77</field>
+            <field name="state">open</field>
         </record>
         <record id="account_invoice_1" model="account.invoice">
 			<field name="currency_id" ref="base.EUR"/>
@@ -22,6 +23,7 @@
             <field name="date_invoice">2022-10-31</field>
 			<field name="address_invoice_id" ref="som_ov_users.res_partner_address_legal_entity"/>
             <field name="amount_total">14.35</field>
+            <field name="state">draft</field>
         </record>
         <record id="giscere_facturacio_factura_0" model="giscere.facturacio.factura">
             <field name="name">Factura 0</field>
@@ -47,7 +49,7 @@
             <field name="invoice_id" ref="account_invoice_1"/>
             <field name="cil_id" ref="som_ov_installations.giscere_cil_2"/>
             <field name="facturacio" eval="1"/>
-            <field name="llista_preu" eval="1"/>            
+            <field name="llista_preu" eval="1"/>
         </record>
     </data>
 </openerp>

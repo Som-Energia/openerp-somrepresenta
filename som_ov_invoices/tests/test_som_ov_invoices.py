@@ -23,6 +23,8 @@ class SomOvInvoicesTests(testing.OOTestCase):
         self.txn.stop()
 
     base_vat = 'ES48591264S'
+    legal_vat = 'ESW2796397D'
+    base_invoice = 'Proforma Test invoice 0'
 
     def test__get_invoices__base(self):
         vat = self.base_vat
@@ -38,7 +40,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
                 first_period_date='2022-10-01',
                 last_period_date='2022-10-31',
                 amount=28.77,
-                liquidation=False,
+                liquidation=None,
             ),
         ]
         self.assertEqual(expected_result, result)
