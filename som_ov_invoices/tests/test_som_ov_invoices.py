@@ -44,3 +44,21 @@ class SomOvInvoicesTests(testing.OOTestCase):
             ),
         ]
         self.assertEqual(expected_result, result)
+
+    def test__get_invoices__no_draft(self):
+        vat = self.legal_vat
+
+        result = self.invoice.get_invoices(self.cursor, self.uid, vat)
+
+        self.assertEqual(result, [])
+
+    def test__download_invoice_pdf__ok(self):
+        vat = self.base_vat
+        invoice_number = self.base_invoice
+
+        result = self.invoice.download_invoice_pdf(self.cursor, self.uid, vat, invoice_number)
+
+        self.assertEqual(result['filename'], 'invoice_{}_pdf'.format(invoice_number))
+        self.assertEqual(result['content_type'], 'application/pdf')
+
+
