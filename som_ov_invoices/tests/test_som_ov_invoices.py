@@ -24,7 +24,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
 
     base_vat = 'ES48591264S'
     legal_vat = 'ESW2796397D'
-    base_invoice = 'Proforma Test invoice 0'
+    base_invoice = 'F0'
 
     def test__get_invoices__base(self):
         vat = self.base_vat
@@ -34,7 +34,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
         expected_result = [
             dict(
                 contract_number='103',
-                invoice_number='Factura 0',
+                invoice_number='F0',
                 concept='market',
                 emission_date='2022-10-31',
                 first_period_date='2022-10-01',
@@ -58,7 +58,6 @@ class SomOvInvoicesTests(testing.OOTestCase):
 
         result = self.invoice.download_invoice_pdf(self.cursor, self.uid, vat, invoice_number)
 
-        self.assertEqual(result['filename'], 'invoice_{}_pdf'.format(invoice_number))
+        self.assertEqual(result['filename'], 'factura-F0-20221031-103-market-20221001-20221031.pdf')
         self.assertEqual(result['content_type'], 'application/pdf')
-
 

@@ -63,8 +63,6 @@ class SomOvInvoices(osv.osv_memory):
         if context is None:
             context = {}
 
-        import pudb; pu.db
-
         users_obj = self.pool.get('som.ov.users')
         partner = users_obj.get_customer(cursor, uid, vat)
         invoice_obj = self.pool.get('giscere.facturacio.factura')
