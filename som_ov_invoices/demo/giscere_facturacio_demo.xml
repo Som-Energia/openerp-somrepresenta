@@ -27,6 +27,7 @@
         </record>
         <record id="giscere_facturacio_factura_0" model="giscere.facturacio.factura">
             <field name="name">Factura 0</field>
+            <field name="number">F0</field>
             <field name="data_inici">2022-10-01</field>
             <field name="data_final">2022-10-31</field>
             <field name="date_invoice">2022-10-31</field>
@@ -40,6 +41,7 @@
         </record>
         <record id="giscere_facturacio_factura_1" model="giscere.facturacio.factura">
             <field name="name">Factura 1</field>
+            <field name="number">F1</field>
             <field name="data_inici">2022-10-01</field>
             <field name="data_final">2022-10-31</field>
             <field name="date_invoice">2022-10-31</field>
