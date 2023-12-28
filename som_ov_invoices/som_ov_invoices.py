@@ -5,7 +5,7 @@ import base64
 
 from som_ov_users.decorators import www_entry_point
 from som_ov_users.exceptions import NoSuchUser
-from exceptions import NoSuchInvoice, UnauthorizedAccess
+from exceptions import NoSuchInvoice
 
 class SomOvInvoices(osv.osv_memory):
 
@@ -56,7 +56,6 @@ class SomOvInvoices(osv.osv_memory):
         expected_exceptions=(
             NoSuchUser,
             NoSuchInvoice,
-            UnauthorizedAccess,
         )
     )
     def download_invoice_pdf(self, cursor, uid, vat, invoice_number, context=None):
@@ -76,13 +75,6 @@ class SomOvInvoices(osv.osv_memory):
             raise NoSuchInvoice(invoice_number)
 
         invoice = invoice_obj.browse(cursor, uid, invoice_id)[0]
-
-        if partner.id != invoice.partner_id.id:
-            raise UnauthorizedAccess(
-                username=vat,
-                resource_type='Invoice',
-                resource_name=invoice_number,
-            )
 
         report_factura_obj = netsvc.LocalService('report.giscere.factura')
         result, result_format = report_factura_obj.create(cursor, uid, invoice_id, {})

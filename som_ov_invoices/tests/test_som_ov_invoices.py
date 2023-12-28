@@ -25,6 +25,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
     base_vat = 'ES48591264S'
     legal_vat = 'ESW2796397D'
     base_invoice = 'F0'
+    missing_vat = 'ES11111111H'
 
     def test__get_invoices__base(self):
         vat = self.base_vat
@@ -51,6 +52,42 @@ class SomOvInvoicesTests(testing.OOTestCase):
         result = self.invoice.get_invoices(self.cursor, self.uid, vat)
 
         self.assertEqual(result, [])
+
+    def test__get_invoices__user_not_exists(self):
+        vat = self.missing_vat
+
+        result = self.invoice.get_invoices(self.cursor, self.uid, vat)
+
+        self.assertEqual(result, dict(
+            code='NoSuchUser',
+            error='User does not exist',
+            trace=result.get('trace', "TRACE IS MISSING"),
+        ))
+
+    def test__download_invoice_pdf__user_not_exists(self):
+        vat = self.missing_vat
+        invoice_number = self.base_invoice
+
+        result = self.invoice.download_invoice_pdf(self.cursor, self.uid, vat, invoice_number)
+
+        self.assertEqual(result, dict(
+            code='NoSuchUser',
+            error='User does not exist',
+            trace=result.get('trace', "TRACE IS MISSING"),
+        ))
+
+    def test__download_invoice_pdf__not_such_invoice_for_vat(self):
+        vat = self.legal_vat
+        invoice_number = 'No such invoice'
+
+        result = self.invoice.download_invoice_pdf(self.cursor, self.uid, vat, invoice_number)
+
+        self.assertEqual(result, dict(
+            code='NoSuchInvoice',
+            error="No invoice found with number 'No such invoice'",
+            invoice_number='No such invoice',
+            trace=result.get('trace', "TRACE IS MISSING"),
+        ))
 
     def test__download_invoice_pdf__ok(self):
         vat = self.base_vat
