@@ -25,6 +25,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
     base_vat = 'ES48591264S'
     legal_vat = 'ESW2796397D'
     base_invoice = 'F0'
+    legal_invoice = 'F1'
     missing_vat = 'ES11111111H'
 
     def test__get_invoices__base(self):
@@ -86,6 +87,24 @@ class SomOvInvoicesTests(testing.OOTestCase):
             code='NoSuchInvoice',
             error="No invoice found with number 'No such invoice'",
             invoice_number='No such invoice',
+            trace=result.get('trace', "TRACE IS MISSING"),
+        ))
+
+    def test__get_invoice__not_owner(self):
+        invoice_number = self.legal_invoice
+        vat = self.base_vat
+
+        result = self.invoice.download_invoice_pdf(self.cursor, self.uid, vat, invoice_number)
+
+        self.assertEqual(result, dict(
+            code='UnauthorizedAccess',
+            error="User {vat} cannot access the Invoice '{invoice_number}'".format(
+                vat=vat,
+                invoice_number=invoice_number
+            ),
+            username=vat,
+            resource_type="Invoice",
+            resource_name=invoice_number,
             trace=result.get('trace', "TRACE IS MISSING"),
         ))
 
