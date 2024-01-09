@@ -19,6 +19,7 @@
     ],
     "update_xml":[
         "wizard/wizard_create_change_password_view.xml",
+        "wizard/wizard_create_staff_users_view.xml",
         "data/email_template_data.xml",
         "security/ir.model.access.csv",
     ],
