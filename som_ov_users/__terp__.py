@@ -16,6 +16,7 @@
     "init_xml": [],
     "demo_xml": [
         "demo/res_partner_demo.xml",
+        "demo/res_users_demo.xml",
     ],
     "update_xml":[
         "wizard/wizard_create_change_password_view.xml",
