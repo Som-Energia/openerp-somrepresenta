@@ -30,10 +30,26 @@ class SomOvUsers(osv.osv_memory):
                 vat=partner.vat,
                 name=partner.name,
                 email=partner.address[0].email,
-                roles=['customer'],
+                roles=['staff'] if self.user_is_staff(cursor, uid, partner_id) else ['customer'],
                 username=partner.vat,
             )
         raise NoSuchUser()
+
+    def user_is_staff(self, cursor, uid, partner_id):
+        address_obj = self.pool.get('res.partner.address')
+        search_params = [
+            ('partner_id','=', partner_id),
+        ]
+        partner_adddress_ids = address_obj.search(cursor, uid, search_params)
+        if partner_adddress_ids:
+            user_obj = self.pool.get('res.users')
+            search_params = [
+                ('address_id','=', partner_adddress_ids[0]),
+            ]
+            user = user_obj.search(cursor, uid, search_params)
+            if user:
+                return True
+        return False
 
     def get_customer(self, cursor, uid, username):
         # Get user profile: for now recover customer profile
@@ -57,7 +73,7 @@ class SomOvUsers(osv.osv_memory):
         partner = self.get_customer(cursor, uid, username)
         return dict(
             username=partner.vat,
-            roles=['customer'],
+            roles=['staff'] if self.user_is_staff(cursor, uid, partner.id) else ['customer'],
             vat=partner.vat,
             name=partner.name,
             email=partner.address[0].email,

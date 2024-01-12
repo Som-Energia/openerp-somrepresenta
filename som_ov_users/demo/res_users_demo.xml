@@ -8,5 +8,23 @@
             <field name="password">$9$NB3wTRKd$PL7sNc2PQsY.foLPazpkr.</field>
             <field name="active" eval="True"/>
         </record>
+
+        <!-- User exists, is active and is staff -->
+        <record id="res_partner_res_users_already_staff" model="res.partner">
+            <field name="name">Hari, Mata</field>
+            <field name="vat">G78525763</field>
+        </record>
+        <record id="res_partner_address_res_users_already_staff" model="res.partner.address">
+            <field name="name">Hari, Mata</field>
+            <field name="email">matahari@somenergia.coop</field>
+            <field name="partner_id" ref="res_partner_res_users_already_staff"/>
+        </record>
+        <record id="res_users_already_staff" model="res.users">
+            <field name="name">Hari, Mata</field>
+            <field name="login">matahari</field>
+            <field name="password">$9$NB3wTRKF$PL9sNc2PQsY.foYLazpkr.</field>
+            <field name="address_id" ref="res_partner_address_res_users_already_staff"/>
+            <field name="active" eval="True"/>
+        </record>
     </data>
 </openerp>
