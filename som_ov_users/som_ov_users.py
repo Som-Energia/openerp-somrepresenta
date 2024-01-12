@@ -20,7 +20,7 @@ class SomOvUsers(osv.osv_memory):
         search_params = [
             ('vat','=', login),
             ('active','=', True),
-            ('customer','=', True)
+            ('customer','=', True) # Get only providers
         ]
         partner_id = partner_obj.search(cursor, uid, search_params)
         if partner_id:
@@ -30,7 +30,7 @@ class SomOvUsers(osv.osv_memory):
                 vat=partner.vat,
                 name=partner.name,
                 email=partner.address[0].email,
-                roles=['staff'] if self.user_is_staff(cursor, uid, partner_id) else ['customer'],
+                roles=['staff'] if self.user_is_staff(cursor, uid, partner.id) else ['customer'],
                 username=partner.vat,
             )
         raise NoSuchUser()
