@@ -42,6 +42,27 @@ class WizardCreateStaffUsersTests(testing.OOTestCase):
         self.assertEqual(wiz['state'], 'done')
         self.assertEqual(wiz['info'], 'Usuaria staff creada')
 
+    def test__action_create_staff_users__res_user_is_already_staff(self):
+        user_id = self.res_users.search(
+            self.cursor,
+            self.uid,
+            [('login', '=', 'matahari')]
+        )[0]
+        irrelevant_context = {}
+        wiz_id = self.wiz_o.create(self.cursor, self.uid, {}, context=irrelevant_context)
+        self.wiz_o.write(self.cursor, self.uid, [wiz_id], {
+            "user_to_staff": user_id,
+            "email": 'an_email',
+            "vat": 'a_vat_number'
+         }, irrelevant_context)
+
+        self.wiz_o.action_create_staff_users(self.cursor, self.uid, [wiz_id], context=irrelevant_context)
+
+        wiz = self.wiz_o.read(self.cursor, self.uid, [wiz_id])[0]
+        self.assertEqual(wiz['state'], 'done')
+        self.assertEqual(wiz['info'], 'Aquesta usuaria ja és staff')
+
+
     def test__action_create_staff_users__res_user_does_not_exists(self):
         a_non_existing_user_id = 999999999
         irrelevant_context = {}

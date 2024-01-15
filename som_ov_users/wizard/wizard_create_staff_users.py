@@ -52,6 +52,10 @@ class WizardCreateStaffUsers(osv.osv_memory):
                 self._update_wizard_status(cursor, uid, ids, 'done', 'Usuaria staff creada')
                 return True
 
+            if user['address_id']:
+                self._update_wizard_status(cursor, uid, ids, 'done', 'Aquesta usuaria ja és staff')
+                return True
+
         self._update_wizard_status(cursor, uid, ids, 'done', 'No s\'ha trobat cap usuaria')
         return True
 
