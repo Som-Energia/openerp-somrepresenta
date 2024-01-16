@@ -15,7 +15,6 @@ class SomOvUsers(osv.osv_memory):
         expected_exceptions=NoSuchUser
     )
     def identify_login(self, cursor, uid, login):
-        #TODO: get res.users login info
         partner_obj = self.pool.get('res.partner')
         search_params = [
             ('vat','=', login),

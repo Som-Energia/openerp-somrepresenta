@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from osv.osv import except_osv
+
 from destral import testing
 from destral.transaction import Transaction
 
@@ -33,7 +35,7 @@ class WizardCreateStaffUsersTests(testing.OOTestCase):
         self.wiz_o.write(self.cursor, self.uid, [wiz_id], {
             "user_to_staff": user_id,
             "email": 'an_email',
-            "vat": 'a_vat_number'
+            "vat": 'ES16232335Q'
          }, irrelevant_context)
 
         self.wiz_o.action_create_staff_users(self.cursor, self.uid, [wiz_id], context=irrelevant_context)
@@ -78,3 +80,21 @@ class WizardCreateStaffUsersTests(testing.OOTestCase):
         wiz = self.wiz_o.read(self.cursor, self.uid, [wiz_id])[0]
         self.assertEqual(wiz['state'], 'done')
         self.assertEqual(wiz['info'], 'No s\'ha trobat cap usuaria')
+
+    def test__action_create_staff_users__with_wrong_vat(self):
+        user_id = self.res_users.search(
+            self.cursor,
+            self.uid,
+            [('login', '=', 'lamaali')]
+        )[0]
+        irrelevant_context = {}
+        wiz_id = self.wiz_o.create(self.cursor, self.uid, {}, context=irrelevant_context)
+        self.wiz_o.write(self.cursor, self.uid, [wiz_id], {
+            "user_to_staff": user_id,
+            "email": 'an_email',
+            "vat": 'a_wrong_vat_number'
+         }, irrelevant_context)
+
+        with self.assertRaises(except_osv) as ctx:
+            self.wiz_o.action_create_staff_users(self.cursor, self.uid, [wiz_id], context=irrelevant_context)
+        self.assertEqual(ctx.exception.name, 'Error validant el VAT!')

@@ -18,7 +18,8 @@ class WizardCreateStaffUsers(osv.osv_memory):
 
         partner_data = {
             'name': wizard_data.user_to_staff.name,
-            'vat': wizard_data.vat,
+            'vat': self._validate_vat(cursor, uid, wizard_data.vat),
+            'lang': 'ca_ES',
         }
         partner_id = partner_obj.create(cursor, uid, partner_data)
 
@@ -26,10 +27,20 @@ class WizardCreateStaffUsers(osv.osv_memory):
             'name': wizard_data.user_to_staff.name,
             'email': wizard_data.email,
             'partner_id': partner_id,
+            'street': 'Carrer Pic de Peguera, 9',
+            'zip': '17002',
+            'city': 'Girona',
+            'state_id': 20,
         }
         address_id = address_obj.create(cursor, uid, address_data)
 
         return address_id
+
+    def _validate_vat(self, cursor, uid, vat):
+        partner_obj = self.pool.get("res.partner")
+        if not partner_obj.is_vat(vat) or vat[:2] != 'ES':
+            raise osv.except_osv('Error validant el VAT!', 'El VAT no és vàlid')
+        return vat.upper()
 
     def action_create_staff_users(self, cursor, uid, ids, context=None):
         if context is None:
