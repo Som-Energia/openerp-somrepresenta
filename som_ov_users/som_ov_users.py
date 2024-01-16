@@ -29,12 +29,12 @@ class SomOvUsers(osv.osv_memory):
                 vat=partner.vat,
                 name=partner.name,
                 email=partner.address[0].email,
-                roles=['staff'] if self.user_is_staff(cursor, uid, partner.id) else ['customer'],
+                roles=['staff'] if self.partner_is_staff(cursor, uid, partner.id) else ['customer'],
                 username=partner.vat,
             )
         raise NoSuchUser()
 
-    def user_is_staff(self, cursor, uid, partner_id):
+    def partner_is_staff(self, cursor, uid, partner_id):
         address_obj = self.pool.get('res.partner.address')
         search_params = [
             ('partner_id','=', partner_id),
@@ -72,7 +72,7 @@ class SomOvUsers(osv.osv_memory):
         partner = self.get_customer(cursor, uid, username)
         return dict(
             username=partner.vat,
-            roles=['staff'] if self.user_is_staff(cursor, uid, partner.id) else ['customer'],
+            roles=['staff'] if self.partner_is_staff(cursor, uid, partner.id) else ['customer'],
             vat=partner.vat,
             name=partner.name,
             email=partner.address[0].email,
