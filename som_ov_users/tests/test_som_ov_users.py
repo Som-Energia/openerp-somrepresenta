@@ -12,6 +12,7 @@ from .. import som_ov_users
 class SomUsersTests(testing.OOTestCase):
 
     base_costumer_vat = 'ES48591264S'
+    base_staff_vat = 'G78525763'
 
     def setUp(self):
         self.pool = self.openerp.pool
@@ -43,6 +44,20 @@ class SomUsersTests(testing.OOTestCase):
             name='Benedetti, Mario',
             email='test@test.test',
             roles=['customer'],
+            username=username,
+        )
+        self.assertEqual(expected_result, result)
+
+    def test__get_user_login_info__user_exists_is_active_and_staff(self):
+        username = self.base_staff_vat
+
+        result = self.users.identify_login(self.cursor, self.uid, username)
+
+        expected_result = dict(
+            vat=self.base_staff_vat,
+            name='Hari, Mata',
+            email='matahari@somenergia.coop',
+            roles=['staff'],
             username=username,
         )
         self.assertEqual(expected_result, result)
@@ -134,6 +149,27 @@ class SomUsersTests(testing.OOTestCase):
             username = 'ESW2796397D',
             proxy_vat= 'ES36464471H',
             proxy_name= 'Aplastado, Coyote',
+            signed_documents = [],
+        )
+        self.assertEqual(expected_result, result)
+
+    def test__get_profile__user_is_staff(self):
+        username = self.base_staff_vat
+
+        result = self.users.get_profile(self.cursor, self.uid, username)
+        expected_result = dict(
+            vat = username,
+            name = 'Hari, Mata',
+            email = 'matahari@somenergia.coop',
+            address = 'Carrer Pic de Peguera, 9',
+            city = 'Girona',
+            zip = '17002',
+            state = 'Girona',
+            phones = [],
+            roles = ['staff'],
+            username = username,
+            proxy_vat= None,
+            proxy_name= None,
             signed_documents = [],
         )
         self.assertEqual(expected_result, result)
@@ -257,3 +293,25 @@ class SomUsersTests(testing.OOTestCase):
         )
 
         self.assertEqual(expected_result, result)
+
+    def test__user_is_staff__is_staff(self):
+        partner_id = self.res_partner.search(
+            self.cursor,
+            self.uid,
+            [('vat', '=', 'G78525763')]
+        )[0]
+
+        result = self.users.user_is_staff(self.cursor, self.uid, partner_id)
+
+        self.assertTrue(result)
+
+    def test__user_is_staff__is_not_staff(self):
+        partner_id = self.res_partner.search(
+            self.cursor,
+            self.uid,
+            [('vat', '=', self.base_costumer_vat)]
+        )[0]
+
+        result = self.users.user_is_staff(self.cursor, self.uid, partner_id)
+
+        self.assertFalse(result)
