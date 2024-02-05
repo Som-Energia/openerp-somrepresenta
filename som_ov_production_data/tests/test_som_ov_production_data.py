@@ -34,8 +34,8 @@ class SomOvProductionDataTests(testing.OOTestCase):
                 {
                     'contract_name': '100',
                     'estimated': [False, True, False],
-                    'first_timestamp': '2022-01-01T00:00:00+00:00',
-                    'last_timestamp': '2022-01-01T02:00:00+00:00',
+                    'first_timestamp': '2022-01-01 00:00:00',
+                    'last_timestamp': '2022-01-01 02:00:00',
                     'maturity': ['H2', 'H3', None],
                     'measured': [80.0, 22.0, None]
                 },
