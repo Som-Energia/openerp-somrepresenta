@@ -23,6 +23,21 @@ class SomOvInstallations(osv.osv_memory):
         )
     )
     def get_installations(self, cursor, uid, vat, context=None):
+        contracts = self.get_user_contracts(cursor, uid, vat, context)
+
+        return [
+            dict(
+                contract_number=contract.name,
+                installation_name=installation_name,
+            )
+                for contract, installation_name in (
+                (contract, self._get_installation_name_by_cil(cursor, uid, contract.cil.id))
+                for contract in contracts
+            )
+            if installation_name
+        ]
+
+    def get_user_contracts(self, cursor, uid, vat, context):
         if context is None:
             context = {}
 
@@ -38,19 +53,8 @@ class SomOvInstallations(osv.osv_memory):
         if not contract_ids:
             return []
 
-        contracts = polissa_obj.browse(cursor, uid, contract_ids)
+        return polissa_obj.browse(cursor, uid, contract_ids)
 
-        return [
-            dict(
-                contract_number=contract.name,
-                installation_name=installation_name,
-            )
-                for contract, installation_name in (
-                (contract, self._get_installation_name_by_cil(cursor, uid, contract.cil.id))
-                for contract in contracts
-            )
-            if installation_name
-        ]
 
     @www_entry_point(
         expected_exceptions=(
