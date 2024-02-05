@@ -43,6 +43,35 @@ class SomOvProductionData(osv.osv_memory):
         return installation_obj.get_user_contracts(cursor, uid, username, context)
 
     def _get_production_measures(self, cursor, contract, first_timestamp, last_timestamp):
+        """
+        SQL query breakdown:
+
+            1. Common Table Expressions (CTEs):
+                * `filtered_data`: Filters data from `giscere_mhcil` based on specified criteria
+                  (cil, first_timestamp, and last_timestamp).
+                * `filled_data`: Generates a series of timestamps between `first_timestamp`
+                  and `last_timestamp`, and fills in NULL values for `ae`, `maturity`, and
+                  `type_measure` where there are gaps in data.
+                * `final_data`: Joins the filtered and filled data, ensuring no gaps exist.
+                * `ranked_data`: Assigns a rank to each record based on the maturity level.
+
+            2. Main Query:
+                * Selects aggregated data as a JSON object.
+                * Aggregates data by `timestamp`.
+                * Includes the following information in the JSON object:
+                    * `contract_name`: Contract name parameter.
+                    * `first_timestamp`: Start timestamp parameter.
+                    * `last_timestamp`: End timestamp parameter.
+                    * `estimated`: Array indicating whether the measurement is estimated (E)
+                      or measured (M), ordered by timestamp.
+                    * `measured`: Array of actual measurements, ordered by timestamp.
+                    * `maturity`: Array of maturity levels, ordered by timestamp.
+
+            3. Final Filtering:
+                * Filters the results to only include records where `maturity_rank` is equal to 1,
+                  meaning it selects the records with the highest maturity rank for each timestamp.
+
+        """
         cursor.execute(
             '''
                 WITH filtered_data AS (
@@ -113,7 +142,6 @@ class SomOvProductionData(osv.osv_memory):
                     ranked_data
                 WHERE
                     maturity_rank = 1;
-
             ''',
             {
                 'cil': contract.cil.name,
