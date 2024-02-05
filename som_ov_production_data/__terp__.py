@@ -9,10 +9,14 @@
     "category": "www",
     "depends":[
         "giscere_mhcil",
+        "giscere_polissa",
         "som_ov_users",
+        "som_ov_installations",
     ],
     "init_xml": [],
-    "demo_xml": [],
+    "demo_xml": [
+        'demo/giscere_mhcil_demo.xml',
+    ],
     "update_xml":[
         "security/ir.model.access.csv",
     ],
