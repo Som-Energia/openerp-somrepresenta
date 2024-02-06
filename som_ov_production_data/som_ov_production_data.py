@@ -27,9 +27,11 @@ class SomOvProductionData(osv.osv_memory):
 
         contracts = self._get_user_contracts(cursor, uid, username, context)
         production_measures = dict(data=[
-            self._get_production_measures(cursor, contract, first_timestamp_utc, last_timestamp_utc)
+            self._get_production_measures(cursor, contract, first_timestamp_utc, last_timestamp_utc)[0][0]
             for contract in contracts
         ])
+        for contract_data in production_measures['data']:
+            contract_data['foreseen_kwh'] = [None] * len(contract_data['measure_kwh'])
 
         return production_measures
 
