@@ -24,8 +24,8 @@ class SomOvProductionDataTests(testing.OOTestCase):
         result = self.production_data.measures(
             self.cursor, self.uid,
             username='ESW2796397D',
-            first_timestamp='2022-01-01T00:00:00Z',
-            last_timestamp='2022-01-01T02:00:00Z',
+            first_timestamp_utc='2022-01-01T00:00:00Z',
+            last_timestamp_utc='2022-01-01T02:00:00Z',
             context=None
         )
 
@@ -34,10 +34,10 @@ class SomOvProductionDataTests(testing.OOTestCase):
                 {
                     'contract_name': '100',
                     'estimated': [False, True, False],
-                    'first_timestamp': '2022-01-01T00:00:00Z',
-                    'last_timestamp': '2022-01-01T02:00:00Z',
+                    'first_timestamp_utc': '2022-01-01T00:00:00Z',
+                    'last_timestamp_utc': '2022-01-01T02:00:00Z',
                     'maturity': ['H2', 'H3', None],
-                    'measured': [80.0, 22.0, None]
+                    'measure_kwh': [80.0, 22.0, None]
                 },
             )
         ]

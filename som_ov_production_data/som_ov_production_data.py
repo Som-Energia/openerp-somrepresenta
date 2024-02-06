@@ -17,8 +17,8 @@ class SomOvProductionData(osv.osv_memory):
     def measures(
         self, cursor, uid,
         username,
-        first_timestamp,
-        last_timestamp,
+        first_timestamp_utc,
+        last_timestamp_utc,
         context=None
     ):
 
@@ -27,7 +27,7 @@ class SomOvProductionData(osv.osv_memory):
 
         contracts = self._get_user_contracts(cursor, uid, username, context)
         production_measures = dict(data=[
-            self._get_production_measures(cursor, contract, first_timestamp, last_timestamp)
+            self._get_production_measures(cursor, contract, first_timestamp_utc, last_timestamp_utc)
             for contract in contracts
         ])
 
@@ -37,15 +37,15 @@ class SomOvProductionData(osv.osv_memory):
         installation_obj = self.pool.get('som.ov.installations')
         return installation_obj.get_user_contracts(cursor, uid, username, context)
 
-    def _get_production_measures(self, cursor, contract, first_timestamp, last_timestamp):
+    def _get_production_measures(self, cursor, contract, first_timestamp_utc, last_timestamp_utc):
         """
         SQL query breakdown:
 
             1. Common Table Expressions (CTEs):
                 * `filtered_data`: Filters data from `giscere_mhcil` based on specified criteria
-                  (cil, first_timestamp, and last_timestamp).
-                * `filled_data`: Generates a series of timestamps between `first_timestamp`
-                  and `last_timestamp`, and fills in NULL values for `ae`, `maturity`, and
+                  (cil, first_timestamp_utc, and last_timestamp_utc).
+                * `filled_data`: Generates a series of timestamps between `first_timestamp_utc`
+                  and `last_timestamp_utc`, and fills in NULL values for `ae`, `maturity`, and
                   `type_measure` where there are gaps in data.
                 * `final_data`: Joins the filtered and filled data, ensuring no gaps exist.
                 * `ranked_data`: Assigns a rank to each record based on the maturity level.
@@ -55,11 +55,11 @@ class SomOvProductionData(osv.osv_memory):
                 * Aggregates data by `timestamp`.
                 * Includes the following information in the JSON object:
                     * `contract_name`: Contract name parameter.
-                    * `first_timestamp`: Start timestamp parameter.
-                    * `last_timestamp`: End timestamp parameter.
+                    * `first_timestamp_utc`: Start timestamp parameter.
+                    * `last_timestamp_utc`: End timestamp parameter.
                     * `estimated`: Array indicating whether the measurement is estimated (E)
                       or measured (M), ordered by timestamp.
-                    * `measured`: Array of actual measurements, ordered by timestamp.
+                    * `measure_kwh`: Array of actual measurements, ordered by timestamp.
                     * `maturity`: Array of maturity levels, ordered by timestamp.
 
             3. Final Filtering:
@@ -79,7 +79,7 @@ class SomOvProductionData(osv.osv_memory):
                         giscere_mhcil
                     WHERE
                         cil = %(cil)s
-                        AND "timestamp" BETWEEN %(first_timestamp)s AND %(last_timestamp)s
+                        AND "timestamp" BETWEEN %(first_timestamp_utc)s AND %(last_timestamp_utc)s
                 ),
                 filled_data AS (
                     SELECT
@@ -89,8 +89,8 @@ class SomOvProductionData(osv.osv_memory):
                         NULL AS type_measure
                     FROM
                         generate_series(
-                            %(first_timestamp)s,
-                            %(last_timestamp)s,
+                            %(first_timestamp_utc)s,
+                            %(last_timestamp_utc)s,
                             INTERVAL '1 HOUR'
                         ) generate_series
                     LEFT JOIN
@@ -127,10 +127,10 @@ class SomOvProductionData(osv.osv_memory):
                 SELECT
                     JSON_BUILD_OBJECT(
                         'contract_name', %(contract_name)s,
-                        'first_timestamp', %(first_timestamp)s,
-                        'last_timestamp', %(last_timestamp)s,
+                        'first_timestamp_utc', %(first_timestamp_utc)s,
+                        'last_timestamp_utc', %(last_timestamp_utc)s,
                         'estimated', ARRAY_AGG(CASE WHEN type_measure IN ('E', 'M') THEN true ELSE false END ORDER BY "timestamp" ASC),
-                        'measured', ARRAY_AGG(ae ORDER BY "timestamp" ASC),
+                        'measure_kwh', ARRAY_AGG(ae ORDER BY "timestamp" ASC),
                         'maturity', ARRAY_AGG(maturity ORDER BY "timestamp" ASC)
                     ) AS data
                 FROM
@@ -141,8 +141,8 @@ class SomOvProductionData(osv.osv_memory):
             {
                 'cil': contract.cil.name,
                 'contract_name': contract.name,
-                'first_timestamp': first_timestamp,
-                'last_timestamp': last_timestamp
+                'first_timestamp_utc': first_timestamp_utc,
+                'last_timestamp_utc': last_timestamp_utc
             }
         )
 
