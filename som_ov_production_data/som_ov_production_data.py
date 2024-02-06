@@ -11,19 +11,14 @@ class SomOvProductionData(osv.osv_memory):
 
     _name = "som.ov.production.data"
 
-    def _get_current_date():
-        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-    DEFAULT_FIRST_TIMESTAMP = _get_current_date()
-    DEFAULT_LAST_TIMESTAMP = None
     MEASURE_MATURITY_LEVELS = ('H2', 'H3', 'HP', 'HC')
 
     @www_entry_point()
     def measures(
         self, cursor, uid,
         username,
-        first_timestamp=DEFAULT_FIRST_TIMESTAMP,
-        last_timestamp=DEFAULT_LAST_TIMESTAMP,
+        first_timestamp,
+        last_timestamp,
         context=None
     ):
 
