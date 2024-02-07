@@ -5,6 +5,9 @@ from datetime import datetime
 from collections import defaultdict
 
 from som_ov_users.decorators import www_entry_point
+from som_ov_users.exceptions import (
+    NoSuchUser,
+)
 
 
 class SomOvProductionData(osv.osv_memory):
@@ -13,7 +16,9 @@ class SomOvProductionData(osv.osv_memory):
 
     MEASURE_MATURITY_LEVELS = ('H2', 'H3', 'HP', 'HC')
 
-    @www_entry_point()
+    @www_entry_point((
+        NoSuchUser,
+    ))
     def measures(
         self, cursor, uid,
         username,
