@@ -129,7 +129,7 @@ class SomOvProductionData(osv.osv_memory):
             '''
                 WITH filtered_data AS (
                     SELECT
-                        "timestamp",
+                        "timestamp" AT TIME ZONE 'UTC' AS "timestamp",
                         ae,
                         maturity,
                         type_measure
@@ -137,7 +137,7 @@ class SomOvProductionData(osv.osv_memory):
                         giscere_mhcil
                     WHERE
                         cil = %(cil)s
-                        AND "timestamp" BETWEEN %(first_timestamp_utc)s AND %(last_timestamp_utc)s
+                        AND "timestamp" AT TIME ZONE 'UTC' BETWEEN %(first_timestamp_utc)s AND %(last_timestamp_utc)s
                 ),
                 filled_data AS (
                     SELECT
