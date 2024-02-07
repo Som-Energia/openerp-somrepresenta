@@ -37,7 +37,6 @@ class SomOvProductionData(osv.osv_memory):
             contract_data['foreseen_kwh'] = self._get_forecast_measures(cursor, uid, contract.cil.id, first_timestamp_utc, last_timestamp_utc, context)
             measures['data'].append(contract_data)
 
-
         return measures
 
     def _get_user_contracts(self, cursor, uid, username, context):
@@ -48,7 +47,7 @@ class SomOvProductionData(osv.osv_memory):
         installation_obj = self.pool.get('giscere.instalacio')
         installation_id = installation_obj.search(cursor, uid, [('cil', '=', cil_id)])
         installation = installation_obj.browse(cursor, uid, installation_id)[0]
-        forecast_code = installation.codi_previsio
+        forecast_code = installation.codi_previsio or "NOT_EXISTING_PLANT"
         cursor.execute(
             '''
                 WITH filtered_data AS (

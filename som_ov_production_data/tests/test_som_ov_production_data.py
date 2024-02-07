@@ -20,6 +20,11 @@ class SomOvProductionDataTests(testing.OOTestCase):
     def tearDown(self):
         self.txn.stop()
 
+    def reference(self, module, id):
+        return self.imd.get_object_reference(
+            self.cursor, self.uid, module, id,
+        )[1]
+
     def test__measures__base(self):
         result = self.production_data.measures(
             self.cursor, self.uid,
@@ -123,4 +128,53 @@ class SomOvProductionDataTests(testing.OOTestCase):
         self.assertNotIn('error', result, str(result))
         self.assertEqual(result['data'][0], expected_result)
         self.assertEqual(len(result['data']), 3)
+
+    def test__measures__user_without_contracts(self):
+        result = self.production_data.measures(
+            self.cursor, self.uid,
+            username='ES36464471H',
+            first_timestamp_utc='2021-12-31T23:00:00Z',
+            last_timestamp_utc='2022-01-01T02:00:00Z',
+            context=None
+        )
+
+        expected_result = {
+            'contract_name': '100',
+            'estimated': [],
+            'first_timestamp_utc': '2018-12-31T23:00:00Z',
+            'last_timestamp_utc': '2019-01-01T02:00:00Z',
+            'maturity': [],
+            'measure_kwh': [],
+            'foreseen_kwh': [],
+        }
+        self.assertNotIn('error', result, str(result))
+        self.assertEqual(len(result['data']), 0)
+
+    def test__measures__installation_without_forecast_code(self):
+        installation_obj = self.pool.get('giscere.instalacio')
+        installation_id  = self.reference(
+            'som_ov_installations',
+            'giscere_instalacio_0',
+        )
+        installation_obj.write(self.cursor, self.uid, installation_id, dict(codi_previsio=None))
+
+        result = self.production_data.measures(
+            self.cursor, self.uid,
+            username='ESW2796397D',
+            first_timestamp_utc='2022-01-01T00:00:00Z',
+            last_timestamp_utc='2022-01-01T01:00:00Z',
+            context=None
+        )
+
+        expected_result = {
+            'contract_name': '100',
+            'estimated': [False, True],
+            'first_timestamp_utc': '2022-01-01T00:00:00Z',
+            'last_timestamp_utc': '2022-01-01T01:00:00Z',
+            'maturity': ['H2', 'H3'],
+            'measure_kwh': [80.0, 22.0],
+            'foreseen_kwh': [None, None], # THIS CHANGES
+        }
+        self.assertNotIn('error', result, str(result))
+        self.assertEqual(result['data'][0], expected_result)
 
