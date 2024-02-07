@@ -80,3 +80,47 @@ class SomOvProductionDataTests(testing.OOTestCase):
             trace=result.get('trace', 'NO TRACE AVAILABLE'),
         ))
 
+    def test__measures__no_data(self):
+        result = self.production_data.measures(
+            self.cursor, self.uid,
+            username='ESW2796397D',
+            first_timestamp_utc='2018-12-31T23:00:00Z',
+            last_timestamp_utc='2019-01-01T02:00:00Z',
+            context=None
+        )
+
+        expected_result = {
+            'contract_name': '100',
+            'estimated': [None, None, None, None],
+            'first_timestamp_utc': '2018-12-31T23:00:00Z',
+            'last_timestamp_utc': '2019-01-01T02:00:00Z',
+            'maturity': [None, None, None, None],
+            'measure_kwh': [None, None, None, None],
+            'foreseen_kwh': [None, None, None, None],
+        }
+        self.assertNotIn('error', result, str(result))
+        self.assertEqual(result['data'][0], expected_result)
+        self.assertEqual(len(result['data']), 3)
+
+    def test__measures__crossed_dates(self):
+        result = self.production_data.measures(
+            self.cursor, self.uid,
+            username='ESW2796397D',
+            first_timestamp_utc='2018-12-31T23:00:00Z',
+            last_timestamp_utc='2016-01-01T02:00:00Z',
+            context=None
+        )
+
+        expected_result = {
+            'contract_name': '100',
+            'estimated': [],
+            'first_timestamp_utc': '2018-12-31T23:00:00Z',
+            'last_timestamp_utc': '2016-01-01T02:00:00Z',
+            'maturity': [],
+            'measure_kwh': [],
+            'foreseen_kwh': [],
+        }
+        self.assertNotIn('error', result, str(result))
+        self.assertEqual(result['data'][0], expected_result)
+        self.assertEqual(len(result['data']), 3)
+

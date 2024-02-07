@@ -87,7 +87,7 @@ class SomOvProductionData(osv.osv_memory):
                         filled_data fd2 ON fd."timestamp" = fd2."timestamp"
                 )
                 SELECT
-                    ARRAY_AGG(generacio ORDER BY "timestamp" ASC) AS foreseen_kwh
+                    COALESCE(ARRAY_AGG(generacio ORDER BY "timestamp" ASC), ARRAY[]::numeric[]) AS foreseen_kwh
                 FROM
                     final_data;
             ''',
@@ -192,13 +192,13 @@ class SomOvProductionData(osv.osv_memory):
                         'contract_name', %(contract_name)s,
                         'first_timestamp_utc', %(first_timestamp_utc)s,
                         'last_timestamp_utc', %(last_timestamp_utc)s,
-                        'estimated', ARRAY_AGG(CASE
+                        'estimated', COALESCE(ARRAY_AGG(CASE
                             WHEN type_measure IN ('E', 'M') THEN true
                             WHEN type_measure IN ('R', 'L') THEN false
                             ELSE NULL
-                        END ORDER BY "timestamp" ASC),
-                        'measure_kwh', ARRAY_AGG(ae ORDER BY "timestamp" ASC),
-                        'maturity', ARRAY_AGG(maturity ORDER BY "timestamp" ASC)
+                        END ORDER BY "timestamp" ASC), ARRAY[]::boolean[]),
+                        'measure_kwh', COALESCE(ARRAY_AGG(ae ORDER BY "timestamp" ASC), ARRAY[]::numeric[]),
+                        'maturity', COALESCE(ARRAY_AGG(maturity ORDER BY "timestamp" ASC), ARRAY[]::text[])
                     ) AS data
                 FROM
                     ranked_data
