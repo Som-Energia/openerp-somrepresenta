@@ -26,18 +26,74 @@ class SomOvProductionData(osv.osv_memory):
             context = {}
 
         contracts = self._get_user_contracts(cursor, uid, username, context)
-        production_measures = dict(data=[
-            self._get_production_measures(cursor, contract, first_timestamp_utc, last_timestamp_utc)[0][0]
-            for contract in contracts
-        ])
-        for contract_data in production_measures['data']:
-            contract_data['foreseen_kwh'] = [None] * len(contract_data['measure_kwh'])
+        measures = {'data': []}
+        for contract in contracts:
+            contract_data = self._get_production_measures(cursor, contract, first_timestamp_utc, last_timestamp_utc)[0][0]
+            contract_data['foreseen_kwh'] = self._get_forecast_measures(cursor, uid, contract.cil.id, first_timestamp_utc, last_timestamp_utc, context)
+            measures['data'].append(contract_data)
 
-        return production_measures
+
+        return measures
 
     def _get_user_contracts(self, cursor, uid, username, context):
         installation_obj = self.pool.get('som.ov.installations')
         return installation_obj.get_user_contracts(cursor, uid, username, context)
+
+    def _get_forecast_measures(self, cursor, uid, cil_id, first_timestamp_utc, last_timestamp_utc, context):
+        installation_obj = self.pool.get('giscere.instalacio')
+        installation_id = installation_obj.search(cursor, uid, [('cil', '=', cil_id)])
+        installation = installation_obj.browse(cursor, uid, installation_id)[0]
+        forecast_code = installation.codi_previsio
+        cursor.execute(
+            '''
+                WITH filtered_data AS (
+                    SELECT
+                        gp."timestamp" AT TIME ZONE 'UTC' AS "timestamp",
+                        gp.generacio
+                    FROM
+                        giscere_previsio_publicada gp
+                    WHERE
+                        gp.publicada = TRUE
+                        AND gp.codi_previsio = %(forecast_code)s
+                        AND gp."timestamp" AT TIME ZONE 'UTC' BETWEEN %(first_timestamp_utc)s AND %(last_timestamp_utc)s
+                ),
+                filled_data AS (
+                    SELECT
+                        generate_series AS "timestamp",
+                        NULL::numeric AS generacio
+                    FROM
+                        generate_series(
+                            %(first_timestamp_utc)s,
+                            %(last_timestamp_utc)s,
+                            INTERVAL '1 HOUR'
+                        ) generate_series
+                    LEFT JOIN
+                        filtered_data fd ON generate_series.generate_series = fd."timestamp"
+                    WHERE
+                        fd."timestamp" IS NULL
+                ),
+                final_data AS (
+                    SELECT
+                        COALESCE(fd."timestamp", fd2."timestamp") AS "timestamp",
+                        COALESCE(fd.generacio, fd2.generacio) AS generacio
+                    FROM
+                        filtered_data fd
+                    FULL JOIN
+                        filled_data fd2 ON fd."timestamp" = fd2."timestamp"
+                )
+                SELECT
+                    ARRAY_AGG(generacio ORDER BY "timestamp" ASC) AS foreseen_kwh
+                FROM
+                    final_data;
+            ''',
+            {
+                'forecast_code': forecast_code,
+                'first_timestamp_utc': first_timestamp_utc,
+                'last_timestamp_utc': last_timestamp_utc
+            }
+        )
+
+        return cursor.fetchone()[0]
 
     def _get_production_measures(self, cursor, contract, first_timestamp_utc, last_timestamp_utc):
         """

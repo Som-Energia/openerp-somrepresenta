@@ -36,7 +36,7 @@ class SomOvProductionDataTests(testing.OOTestCase):
             'last_timestamp_utc': '2022-01-01T02:00:00Z',
             'maturity': ['H2', 'H3', None],
             'measure_kwh': [80.0, 22.0, None],
-            'foreseen_kwh': [None, None, None],
+            'foreseen_kwh': [10.0, 22.0, None],
         }
         self.assertNotIn('error', result, str(result))
         self.assertEqual(result['data'][0], expected_result)

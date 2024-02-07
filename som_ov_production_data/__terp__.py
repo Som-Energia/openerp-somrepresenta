@@ -15,7 +15,8 @@
     ],
     "init_xml": [],
     "demo_xml": [
-        'demo/giscere_mhcil_demo.xml',
+        "demo/giscere_mhcil_demo.xml",
+        "demo/giscere_previsio_publicada_demo.xml"
     ],
     "update_xml":[
         "security/ir.model.access.csv",
