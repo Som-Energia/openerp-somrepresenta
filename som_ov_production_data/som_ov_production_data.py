@@ -187,7 +187,11 @@ class SomOvProductionData(osv.osv_memory):
                         'contract_name', %(contract_name)s,
                         'first_timestamp_utc', %(first_timestamp_utc)s,
                         'last_timestamp_utc', %(last_timestamp_utc)s,
-                        'estimated', ARRAY_AGG(CASE WHEN type_measure IN ('E', 'M') THEN true ELSE false END ORDER BY "timestamp" ASC),
+                        'estimated', ARRAY_AGG(CASE
+                            WHEN type_measure IN ('E', 'M') THEN true
+                            WHEN type_measure IN ('R', 'L') THEN false
+                            ELSE NULL
+                        END ORDER BY "timestamp" ASC),
                         'measure_kwh', ARRAY_AGG(ae ORDER BY "timestamp" ASC),
                         'maturity', ARRAY_AGG(maturity ORDER BY "timestamp" ASC)
                     ) AS data

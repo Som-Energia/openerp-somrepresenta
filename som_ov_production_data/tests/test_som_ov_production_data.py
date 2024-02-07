@@ -31,7 +31,7 @@ class SomOvProductionDataTests(testing.OOTestCase):
 
         expected_result = {
             'contract_name': '100',
-            'estimated': [False, True, False],
+            'estimated': [False, True, None],
             'first_timestamp_utc': '2022-01-01T00:00:00Z',
             'last_timestamp_utc': '2022-01-01T02:00:00Z',
             'maturity': ['H2', 'H3', None],
