@@ -30,12 +30,10 @@ class SomOvProductionDataTests(testing.OOTestCase):
         )[1]
 
     def test__measures__base(self):
-        result = self.production_data.measures(
-            self.cursor, self.uid,
+        result = self._sut(
             username=self.base_username,
             first_timestamp_utc='2022-01-01T00:00:00Z',
             last_timestamp_utc='2022-01-01T01:00:00Z',
-            context=None
         )
 
         expected_result = {
@@ -51,14 +49,11 @@ class SomOvProductionDataTests(testing.OOTestCase):
         self.assertEqual(result['data'][0], expected_result)
         self.assertEqual(len(result['data']), 3)
 
-
     def test__measures__gaps_filled_with_none(self):
-        result = self.production_data.measures(
-            self.cursor, self.uid,
+        result = self._sut(
             username=self.base_username,
             first_timestamp_utc='2021-12-31T23:00:00Z',
             last_timestamp_utc='2022-01-01T02:00:00Z',
-            context=None
         )
 
         expected_result = {
@@ -75,12 +70,10 @@ class SomOvProductionDataTests(testing.OOTestCase):
         self.assertEqual(len(result['data']), 3)
 
     def test__measures__no_such_user(self):
-        result = self.production_data.measures(
-            self.cursor, self.uid,
+        result = self._sut(
             username='username_not_exists',
-            first_timestamp_utc='2021-12-31T23:00:00Z',
-            last_timestamp_utc='2022-01-01T02:00:00Z',
-            context=None
+            first_timestamp_utc='2022-01-01T00:00:00Z',
+            last_timestamp_utc='2022-01-01T01:00:00Z',
         )
 
         self.assertEqual(result, dict(
@@ -90,12 +83,10 @@ class SomOvProductionDataTests(testing.OOTestCase):
         ))
 
     def test__measures__no_data(self):
-        result = self.production_data.measures(
-            self.cursor, self.uid,
+        result = self._sut(
             username=self.base_username,
             first_timestamp_utc='2018-12-31T23:00:00Z',
             last_timestamp_utc='2019-01-01T02:00:00Z',
-            context=None
         )
 
         expected_result = {
@@ -112,12 +103,10 @@ class SomOvProductionDataTests(testing.OOTestCase):
         self.assertEqual(len(result['data']), 3)
 
     def test__measures__crossed_dates(self):
-        result = self.production_data.measures(
-            self.cursor, self.uid,
+        result = self._sut(
             username=self.base_username,
             first_timestamp_utc='2018-12-31T23:00:00Z',
-            last_timestamp_utc='2016-01-01T02:00:00Z',
-            context=None
+            last_timestamp_utc='2016-01-01T02:00:00Z'
         )
 
         expected_result = {
@@ -134,12 +123,10 @@ class SomOvProductionDataTests(testing.OOTestCase):
         self.assertEqual(len(result['data']), 3)
 
     def test__measures__user_without_contracts(self):
-        result = self.production_data.measures(
-            self.cursor, self.uid,
+        result = self._sut(
             username=self.username_without_contracts,
-            first_timestamp_utc='2021-12-31T23:00:00Z',
-            last_timestamp_utc='2022-01-01T02:00:00Z',
-            context=None
+            first_timestamp_utc='2022-01-01T00:00:00Z',
+            last_timestamp_utc='2022-01-01T01:00:00Z',
         )
 
         self.assertNotIn('error', result, str(result))
@@ -153,12 +140,10 @@ class SomOvProductionDataTests(testing.OOTestCase):
         )
         installation_obj.write(self.cursor, self.uid, installation_id, dict(codi_previsio=None))
 
-        result = self.production_data.measures(
-            self.cursor, self.uid,
+        result = self._sut(
             username=self.base_username,
             first_timestamp_utc='2022-01-01T00:00:00Z',
             last_timestamp_utc='2022-01-01T01:00:00Z',
-            context=None
         )
 
         expected_result = {
@@ -174,12 +159,10 @@ class SomOvProductionDataTests(testing.OOTestCase):
         self.assertEqual(result['data'][0], expected_result)
 
     def test__mesasures__time_series(self):
-        result = self.production_data.measures(
-            self.cursor, self.uid,
+        result = self._sut(
             username=self.base_username,
             first_timestamp_utc='2020-01-01T00:00:00Z',
             last_timestamp_utc='2024-01-01T00:00:00Z',
-            context=None
         )
 
         expected_timestamp_range_total_hours_ = 35065
@@ -187,3 +170,12 @@ class SomOvProductionDataTests(testing.OOTestCase):
         self.assertEqual(len(result['data'][0]['estimated']), expected_timestamp_range_total_hours_)
         self.assertEqual(len(result['data'][0]['measure_kwh']), expected_timestamp_range_total_hours_)
         self.assertEqual(len(result['data'][0]['foreseen_kwh']), expected_timestamp_range_total_hours_)
+
+    def _sut(self, username, first_timestamp_utc, last_timestamp_utc):
+        return self.production_data.measures(
+            self.cursor, self.uid,
+            username=username,
+            first_timestamp_utc=first_timestamp_utc,
+            last_timestamp_utc=last_timestamp_utc,
+            context=None
+        )
