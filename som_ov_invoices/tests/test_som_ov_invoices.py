@@ -114,6 +114,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
 
         result = self.invoice.download_invoice_pdf(self.cursor, self.uid, vat, invoice_number)
 
+        self.assertNotIn('error', result, str(result))
         self.assertEqual(result['filename'], 'factura-F0-20221031-103-market-20221001-20221031.pdf')
         self.assertEqual(result['content_type'], 'application/pdf')
 

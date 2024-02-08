@@ -86,22 +86,19 @@ class SomOvInvoices(osv.osv_memory):
         report_factura_obj = netsvc.LocalService('report.giscere.factura')
         result, result_format = report_factura_obj.create(cursor, uid, invoice_id, {})
 
-        return dict(
-            content = base64.b64encode(result),
-            filename = (
-                'factura-{invoice_number}-{emission_date}-'
-                '{contract_number}-{concept}{liquidation_portion}-'
-                '{first_period_date}-{last_period_date}.pdf'
-            ).format(
-                contract_number=invoice.polissa_id.name,
-                invoice_number=invoice.number,
-                concept=self.CONCEPT_TYPE[invoice.tipo_factura],
-                emission_date=invoice.date_invoice.replace('-', ''),
-                first_period_date=invoice.data_inici.replace('-', ''),
-                last_period_date=invoice.data_final.replace('-', ''),
-                liquidation_portion="" # TODO
-            ),
-            content_type = 'application/{}'.format(result_format),
+        filename = (
+            '{invoice_code}_{cil}.pdf'
+        ).format(
+            invoice_code=invoice.number,
+            cil=invoice.cil_id.name,
         )
 
+        return dict(
+            content=base64.b64encode(result),
+            filename=filename,
+            content_type='application/{}'.format(result_format),
+        )
+
+
 SomOvInvoices()
+
