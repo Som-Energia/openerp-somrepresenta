@@ -4,7 +4,11 @@ from destral.transaction import Transaction
 
 from .. import som_ov_production_data
 
+
 class SomOvProductionDataTests(testing.OOTestCase):
+
+    base_username = 'ESW2796397D'
+    username_without_contracts = 'ES36464471H'
 
     def setUp(self):
         self.pool = self.openerp.pool
@@ -28,7 +32,7 @@ class SomOvProductionDataTests(testing.OOTestCase):
     def test__measures__base(self):
         result = self.production_data.measures(
             self.cursor, self.uid,
-            username='ESW2796397D',
+            username=self.base_username,
             first_timestamp_utc='2022-01-01T00:00:00Z',
             last_timestamp_utc='2022-01-01T01:00:00Z',
             context=None
@@ -51,7 +55,7 @@ class SomOvProductionDataTests(testing.OOTestCase):
     def test__measures__gaps_filled_with_none(self):
         result = self.production_data.measures(
             self.cursor, self.uid,
-            username='ESW2796397D',
+            username=self.base_username,
             first_timestamp_utc='2021-12-31T23:00:00Z',
             last_timestamp_utc='2022-01-01T02:00:00Z',
             context=None
@@ -88,7 +92,7 @@ class SomOvProductionDataTests(testing.OOTestCase):
     def test__measures__no_data(self):
         result = self.production_data.measures(
             self.cursor, self.uid,
-            username='ESW2796397D',
+            username=self.base_username,
             first_timestamp_utc='2018-12-31T23:00:00Z',
             last_timestamp_utc='2019-01-01T02:00:00Z',
             context=None
@@ -110,7 +114,7 @@ class SomOvProductionDataTests(testing.OOTestCase):
     def test__measures__crossed_dates(self):
         result = self.production_data.measures(
             self.cursor, self.uid,
-            username='ESW2796397D',
+            username=self.base_username,
             first_timestamp_utc='2018-12-31T23:00:00Z',
             last_timestamp_utc='2016-01-01T02:00:00Z',
             context=None
@@ -132,7 +136,7 @@ class SomOvProductionDataTests(testing.OOTestCase):
     def test__measures__user_without_contracts(self):
         result = self.production_data.measures(
             self.cursor, self.uid,
-            username='ES36464471H',
+            username=self.username_without_contracts,
             first_timestamp_utc='2021-12-31T23:00:00Z',
             last_timestamp_utc='2022-01-01T02:00:00Z',
             context=None
@@ -151,7 +155,7 @@ class SomOvProductionDataTests(testing.OOTestCase):
 
         result = self.production_data.measures(
             self.cursor, self.uid,
-            username='ESW2796397D',
+            username=self.base_username,
             first_timestamp_utc='2022-01-01T00:00:00Z',
             last_timestamp_utc='2022-01-01T01:00:00Z',
             context=None
@@ -172,7 +176,7 @@ class SomOvProductionDataTests(testing.OOTestCase):
     def test__mesasures__time_series(self):
         result = self.production_data.measures(
             self.cursor, self.uid,
-            username='ESW2796397D',
+            username=self.base_username,
             first_timestamp_utc='2020-01-01T00:00:00Z',
             last_timestamp_utc='2024-01-01T00:00:00Z',
             context=None
