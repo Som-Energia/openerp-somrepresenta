@@ -138,15 +138,6 @@ class SomOvProductionDataTests(testing.OOTestCase):
             context=None
         )
 
-        expected_result = {
-            'contract_name': '100',
-            'estimated': [],
-            'first_timestamp_utc': '2018-12-31T23:00:00Z',
-            'last_timestamp_utc': '2019-01-01T02:00:00Z',
-            'maturity': [],
-            'measure_kwh': [],
-            'foreseen_kwh': [],
-        }
         self.assertNotIn('error', result, str(result))
         self.assertEqual(len(result['data']), 0)
 
