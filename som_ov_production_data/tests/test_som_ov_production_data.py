@@ -178,3 +178,17 @@ class SomOvProductionDataTests(testing.OOTestCase):
         self.assertNotIn('error', result, str(result))
         self.assertEqual(result['data'][0], expected_result)
 
+    def test__mesasures__time_series(self):
+        result = self.production_data.measures(
+            self.cursor, self.uid,
+            username='ESW2796397D',
+            first_timestamp_utc='2020-01-01T00:00:00Z',
+            last_timestamp_utc='2024-01-01T00:00:00Z',
+            context=None
+        )
+
+        expected_timestamp_range_total_hours_ = 35065
+        self.assertNotIn('error', result, str(result))
+        self.assertEqual(len(result['data'][0]['estimated']), expected_timestamp_range_total_hours_)
+        self.assertEqual(len(result['data'][0]['measure_kwh']), expected_timestamp_range_total_hours_)
+        self.assertEqual(len(result['data'][0]['foreseen_kwh']), expected_timestamp_range_total_hours_)
