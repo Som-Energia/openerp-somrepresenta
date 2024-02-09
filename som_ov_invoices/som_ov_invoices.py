@@ -7,13 +7,14 @@ from som_ov_users.decorators import www_entry_point
 from som_ov_users.exceptions import NoSuchUser
 from exceptions import NoSuchInvoice, UnauthorizedAccess
 
+
 class SomOvInvoices(osv.osv_memory):
 
     _name = 'som.ov.invoices'
-    
+
     CONCEPT_TYPE = {
         '01': 'market',
-        '02': 'specific_retribution', 
+        '02': 'specific_retribution',
         '03': 'services',
     }
 
@@ -46,7 +47,8 @@ class SomOvInvoices(osv.osv_memory):
                 emission_date=invoice.date_invoice,
                 first_period_date=invoice.data_inici,
                 last_period_date=invoice.data_final,
-                amount=invoice.amount_total,  
+                amount=invoice.amount_total,
+                state=invoice.state,
                 liquidation=None,
             )
             for invoice in invoices
@@ -101,4 +103,3 @@ class SomOvInvoices(osv.osv_memory):
 
 
 SomOvInvoices()
-
