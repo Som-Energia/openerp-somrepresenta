@@ -14,8 +14,6 @@ class SomOvProductionData(osv.osv_memory):
 
     _name = "som.ov.production.data"
 
-    MEASURE_MATURITY_LEVELS = ('H2', 'H3', 'HP', 'HC')
-
     @www_entry_point((
         NoSuchUser,
     ))
