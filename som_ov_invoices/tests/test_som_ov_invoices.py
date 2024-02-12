@@ -43,6 +43,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
                 last_period_date='2022-10-31',
                 amount=28.77,
                 liquidation=None,
+                payment_status='open',
             ),
         ]
         self.assertEqual(expected_result, result)
@@ -117,4 +118,3 @@ class SomOvInvoicesTests(testing.OOTestCase):
         self.assertNotIn('error', result, str(result))
         self.assertEqual(result['filename'], 'factura-F0-20221031-103-market-20221001-20221031.pdf')
         self.assertEqual(result['content_type'], 'application/pdf')
-
