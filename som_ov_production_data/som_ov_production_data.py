@@ -176,10 +176,10 @@ class SomOvProductionData(osv.osv_memory):
                         *,
                         RANK() OVER (PARTITION BY "timestamp" ORDER BY
                             CASE
-                                WHEN maturity = 'H2' THEN 1
-                                WHEN maturity = 'H3' THEN 2
-                                WHEN maturity = 'HP' THEN 3
-                                WHEN maturity = 'HC' THEN 4
+                                WHEN maturity = 'HC' THEN 1
+                                WHEN maturity = 'HP' THEN 2
+                                WHEN maturity = 'H3' THEN 3
+                                WHEN maturity = 'H2' THEN 4
                                 ELSE 5
                             END
                         ) AS maturity_rank

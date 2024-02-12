@@ -38,11 +38,11 @@ class SomOvProductionDataTests(testing.OOTestCase):
 
         expected_result = {
             'contract_name': '100',
-            'estimated': [False, True],
+            'estimated': [True, True],
             'first_timestamp_utc': '2022-01-01T00:00:00Z',
             'last_timestamp_utc': '2022-01-01T01:00:00Z',
-            'maturity': ['H2', 'H3'],
-            'measure_kwh': [80.0, 22.0],
+            'maturity': ['HC', 'H3'],
+            'measure_kwh': [0.0, 22.0],
             'foreseen_kwh': [10.0, 22.0],
         }
         self.assertNotIn('error', result, str(result))
@@ -58,11 +58,11 @@ class SomOvProductionDataTests(testing.OOTestCase):
 
         expected_result = {
             'contract_name': '100',
-            'estimated': [None, False, True, None],
+            'estimated': [None, True, True, None],
             'first_timestamp_utc': '2021-12-31T23:00:00Z',
             'last_timestamp_utc': '2022-01-01T02:00:00Z',
-            'maturity': [None, 'H2', 'H3', None],
-            'measure_kwh': [None, 80.0, 22.0, None],
+            'maturity': [None, 'HC', 'H3', None],
+            'measure_kwh': [None, 0.0, 22.0, None],
             'foreseen_kwh': [None, 10.0, 22.0, None],
         }
         self.assertNotIn('error', result, str(result))
@@ -148,11 +148,11 @@ class SomOvProductionDataTests(testing.OOTestCase):
 
         expected_result = {
             'contract_name': '100',
-            'estimated': [False, True],
+            'estimated': [True, True],
             'first_timestamp_utc': '2022-01-01T00:00:00Z',
             'last_timestamp_utc': '2022-01-01T01:00:00Z',
-            'maturity': ['H2', 'H3'],
-            'measure_kwh': [80.0, 22.0],
+            'maturity': ['HC', 'H3'],
+            'measure_kwh': [0.0, 22.0],
             'foreseen_kwh': [None, None], # THIS CHANGES
         }
         self.assertNotIn('error', result, str(result))
