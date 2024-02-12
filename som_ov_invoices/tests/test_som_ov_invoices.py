@@ -43,7 +43,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
                 last_period_date='2022-10-31',
                 amount=28.77,
                 liquidation=None,
-                state='open',
+                payment_status='open',
             ),
         ]
         self.assertEqual(expected_result, result)
