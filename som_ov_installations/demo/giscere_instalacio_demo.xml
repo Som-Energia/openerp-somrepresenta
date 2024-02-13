@@ -72,6 +72,7 @@
             <field name="solicitud_ree">20201203132064</field>
             <field name="tipo">IT-00000</field>
             <field name="unitat_oferta">2</field>
+            <field name="unitat_fisica">1</field>
             <field name="data_creacio">2022-02-22</field>
         </record>
         <record id="giscere_instalacio_1" model="giscere.instalacio">
@@ -91,6 +92,7 @@
             <field name="solicitud_ree">20201203132064</field>
             <field name="tipo">IT-00001</field>
             <field name="unitat_oferta">2</field>
+            <field name="unitat_fisica">1</field>
             <field name="data_creacio">2022-02-21</field>
         </record>
         <record id="giscere_instalacio_2" model="giscere.instalacio">
@@ -110,6 +112,7 @@
             <field name="solicitud_ree">20201203132064</field>
             <field name="tipo">IT-00001</field>
             <field name="unitat_oferta">2</field>
+            <field name="unitat_fisica">1</field>
             <field name="data_creacio">2022-02-21</field>
         </record>
         <record id="giscere_instalacio_3" model="giscere.instalacio">
@@ -129,6 +132,7 @@
             <field name="solicitud_ree">20201203132064</field>
             <field name="tipo">IT-00001</field>
             <field name="unitat_oferta">2</field>
+            <field name="unitat_fisica">1</field>
             <field name="data_creacio">2022-02-21</field>
         </record>
         <record id="res_partner_bank_0" model="res.partner.bank">
