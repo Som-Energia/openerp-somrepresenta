@@ -3,49 +3,84 @@
 All decisions are revocable.
 Annotate reasons and also drawbacks to consider the novelty of new arguments.
 
-## Architecture
+## Layer Architecture
 
-- **Wrap domain logic under erp entry points**
-    - Single call to erp is more efficient than many combined search, read...
-    - Removes the need of extended transactions covering several ops
-    - Decouples OV from the ERP internals, enabling refactors in ERP without having to consider code in OV
+- **Using Gisce-ERP as data backend and business modeling:**
+    - ET is already used to it
+    - We can benefit from Gisce and the ERP team expertise
+    - A lot of work on business modeling is already done
+    - DGG: Seems as a given fact, ok for us, isn't it?
+- **Encapsulate domain logic under erp entry points**
+    - Single call to erp is more efficient than calling many low level erp ops: search, read... (as we do in webforms-api and oficinavirtual)
+    - Removes the need of WST.
+        - Extended transactions covering several rpc ops (like we did in webforms-api, and oficinavirtual)
+    - Explicits to ERP maintainers which are the functions we are using from OV
+    - Decouples OV from the ERP internal implementation, enabling refactors in ERP without having to consider code in OV
+    - Low level erp ops would be harder to mock for testing or doubling
+- **Not attacking the erp directly from UI/browser, use a proxy api**
+    - Security: Avoids arbitrary ERP code executions from outside the militarized zone
+    - Since ERP users are not our final users, this intermediate layer enables specific Authorization for OV
+    - Eases a data validation layer, that would be harder to implement in the ERP
+    - Enables ERP doubling with a dummy implementation for development/testing purposes
+- **Name the layers ui-api-erp**
+    - _backend_ and _frontend_ are ambiguous: Having three tiers, api layer is erp _frontend_ and ui _backend_
+    - :sad: erp also provides an api -> just name it "erp api".
+    - TODO: current ui and api are in `frontend`/`backend` directories, rename them?
+- **Using React as ui technology:**
+    - Team technology for the role and fits the needs
+- **UI layer includes application logic:**
+    - Application logic: page navigation within the app
+    - We are using React SPA like routing for that
+- **UI layer includes representation logic:**
+    - Representation decissions are made depending on the device context
+    - Ie. Whether to represent an enum using a color, icon or a longer or shorter text.
+    - Ie. Whether to represent a list of data as a table or as a list of cards depending on the device
+    - Ie. Whether to represent a date in a short or long localized form
+- **UI layer includes i18n and l11n logic:**
+    - Single point of translation
+    - Representation decisions lead to different localization formats (short, long dates...)
+    - erp and api layers can use a single representation, ignoring localization and translation
+- **Using FastAPI as api technology:**
+    - Kraken was considered, 
+        - Its _specific domain language_ was another skill to learn and source of edge cases
+        - Also we found hard to implement validation without having the validation server yet
+    - FastAPI is Python, we all know it we are using it for existing projects
+        - Provides flexibility for the edge cases
+        - Still we can keep it simple
+        - Data validation and documentation out of the box
+- **Keep api layer thin:**
+    - As we move business logic towards ERP, and application and representation logic towars UI, this layer should be no more than a thin proxy
+    - Exceptions:
+        - Bidirectional data validation (Pydantic)
+        - API documentation (FastAPI)
+        - Authentication (will be thinner when we have Auth Server)
+        - ERP Doubling for testing purposes
+- **API should have a dummy mode to double the ERP:**
+    - This will allow parallel development of the ui and erp layers
+    - Defining the double first, sets an initial executable agreement about the interfacesa
+    - Enables decoupled ui testing
 - **Use ERP team conventions for inner ERP names (data models, inner methods and fields...)**
     - They eventually will be maintained by ERP, and better to adhere to their conventions
     - :sad: Legacy and reused erp models have crap names that do not relate to the concept we meant
+
 - **Use OV domain vocabulary for external ERP objects (ov entry points, returning field names, expected errors...)**
     - We are using models with different semantics inside and outside ERP
         - ie. OV users are both `res_partners` (clients?) and `res_users` (staff)
     - Different naming also will decouple semantically internal representation.
-- **Split model objects and api objects.**
-    - Because their different nature use a naming prefix/decorator to mark external entrypoints.
-    - TODO: Review Proposal
-- **Double ERP data source with a dummy data source:**
-    - Starting with a dummy api, enables parallel development of the ui and erp sides
-    - Dummy serves as prototype for the used protocol
-    - Enables decoupled testing
-- **Name the layers ui-api-erp**
-    - Using _frontend_ may mean both api and ui
-    - Using _backend_ may mean both api and erp
-    - :sad: erp also provides an api -> just name it
-    - TODO: current ui and api are in `frontend`/`backend` directories
-- **Keep api layer thin:**
-    - As we move business logic towards ERP, this layer should do no more than a proxy
-    - Exceptions:
-        - Bidirectional data validation
-        - API documentation (FastAPI)
-        - Authentication (will be thinner when we have Auth Server)
-        - ERP Doubling for testing purposes
-- **Let input validation to FastApi**
-    - Documentation and model serialization comes for free
-- **Use same or similar schemas in erp and api layers**
+- **Try to use same or similar schemas in erp and api layers**
     - We can reuse the same schema to validate ERP outputs and API outputs
     - In most cases the api layer will be just a forwarding
+- Proposal DGG: **Split model objects and api objects.**
+    - Because their different nature use a naming prefix/decorator to mark external entrypoints.
+    - TODO: Review Proposal
+- **Let input validation to FastApi**
+    - Documentation and model serialization comes for free
 - **Name the data backend as data source**
     - Avoid also _backend_
     - May not be erp (dummy)
     - :-( Voki: i do not like "data source". What about domain, business... (i named it "data source" myself, but i don't like it)
 - **Enumerations are not passed arround translatable human strings but as internal enum name string:**
-    - The ui may choose to represent the enum value as an icon or color or use to take decissions to show/hide dependent attributes, if the value comes as translated string is hard to match the cases
+    - The ui may choose to represent the enum value as an icon or color or use to take decissions to show/hide dependent attributes, if the value comes as translated string is harder to make decissions depending on the value
     - Usually the translations are only needed at the user service layer
     - :-( Sometimes the backend also needs the translation (to make reports, sending emails...), in those cases the translations have to be done in both sides
 
