@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## 0.2.0 (2024-02-13)
 
 - New som.ov.production.data.measures() entry point to obtain production measures
 - New invoice field `payment_status`
