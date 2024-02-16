@@ -36,6 +36,17 @@ class SomOvInvoicesTests(testing.OOTestCase):
         expected_result = [
             dict(
                 contract_number='103',
+                invoice_number='F2',
+                concept='market',
+                emission_date='2022-09-30',
+                first_period_date='2022-09-01',
+                last_period_date='2022-09-30',
+                amount=29.77,
+                liquidation=None,
+                payment_status='paid',
+            ),
+            dict(
+                contract_number='103',
                 invoice_number='F0',
                 concept='market',
                 emission_date='2022-10-31',
@@ -46,6 +57,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
                 payment_status='open',
             ),
         ]
+
         self.assertEqual(expected_result, result)
 
     def test__get_invoices__no_draft(self):
@@ -54,6 +66,13 @@ class SomOvInvoicesTests(testing.OOTestCase):
         result = self.invoice.get_invoices(self.cursor, self.uid, vat)
 
         self.assertEqual(result, [])
+
+    def test__get_invoices__open_and_paid(self):
+        vat = self.base_vat
+
+        result = self.invoice.get_invoices(self.cursor, self.uid, vat)
+
+        self.assertEqual(len(result), 2)
 
     def test__get_invoices__user_not_exists(self):
         vat = self.missing_vat

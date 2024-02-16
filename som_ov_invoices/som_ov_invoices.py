@@ -33,7 +33,7 @@ class SomOvInvoices(osv.osv_memory):
 
         search_params = [
            ('partner_id','=', partner.id),
-           ('state', '!=', 'draft'),
+           ('state', 'in', ['open', 'paid']),
         ]
 
         invoice_ids = invoice_obj.search(cursor, uid, search_params)
