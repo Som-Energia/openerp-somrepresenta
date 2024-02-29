@@ -132,7 +132,7 @@ class SomOvInvoices(osv.osv_memory):
         if context is None:
             context = {}
 
-        invoice_id = self.validate_invoices(cursor, uid, vat, invoice_numbers)
+        invoice_ids = self.validate_invoices(cursor, uid, vat, invoice_numbers)
 
         report_factura_obj = netsvc.LocalService('report.giscere.factura')
 
@@ -142,7 +142,7 @@ class SomOvInvoices(osv.osv_memory):
         )
 
         for invoice_id in invoice_ids:
-            result, result_formst, filename = self.do_invoice_pdf(cursor, uid, report_factura_obj, invoice_id)
+            result, result_format, filename = self.do_invoice_pdf(cursor, uid, report_factura_obj, invoice_id)
             zipfile_.writestr(filename, result)
 
         zipfile_.close()
