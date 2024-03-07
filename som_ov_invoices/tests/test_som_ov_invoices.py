@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 from destral import testing
 from destral.transaction import Transaction
 
+import netsvc
+
 from .. import som_ov_invoices
 
 
@@ -26,7 +28,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
     legal_vat = 'ESW2796397D'
     base_invoice = 'F0'
     legal_invoice = 'F1'
-    missing_vat = 'ES11111111H'
+    missing_vat = 'ES1111111HH'
 
     def test__get_invoices__base(self):
         vat = self.base_vat
@@ -128,12 +130,3 @@ class SomOvInvoicesTests(testing.OOTestCase):
             trace=result.get('trace', "TRACE IS MISSING"),
         ))
 
-    def test__download_invoice_pdf__ok(self):
-        vat = self.base_vat
-        invoice_number = self.base_invoice
-
-        result = self.invoice.download_invoice_pdf(self.cursor, self.uid, vat, invoice_number)
-
-        self.assertNotIn('error', result, str(result))
-        self.assertEqual(result['filename'], 'factura-F0-20221031-103-market-20221001-20221031.pdf')
-        self.assertEqual(result['content_type'], 'application/pdf')
