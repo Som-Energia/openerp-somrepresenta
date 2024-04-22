@@ -44,9 +44,9 @@ class SomOvInstallations(osv.osv_memory):
         users_obj = self.pool.get('som.ov.users')
         partner = users_obj.get_customer(cursor, uid, vat)
         polissa_obj = self.pool.get('giscere.polissa')
-        installation_obj = self.pool.get('giscere.instalacio')
         search_params = [
            ('titular','=', partner.id),
+           ('state','=','activa'),
         ]
 
         contract_ids = polissa_obj.search(cursor, uid, search_params)
@@ -67,6 +67,7 @@ class SomOvInstallations(osv.osv_memory):
         polissa_obj = self.pool.get('giscere.polissa')
         contract_search_params = [
            ('name','=', contract_number),
+           ('state', '=', 'activa'),
         ]
         contract_id = polissa_obj.search(cursor, uid, contract_search_params)
         if not contract_id:

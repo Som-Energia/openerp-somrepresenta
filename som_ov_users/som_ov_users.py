@@ -77,7 +77,7 @@ class SomOvUsers(osv.osv_memory):
             name=partner.name,
             email=partner.address[0].email,
             address=partner.address[0].street,
-            city=partner.address[0].city,
+            city=partner.address[0].city if partner.address[0].city else None,
             zip=partner.address[0].zip,
             state=partner.address[0].state_id.name,
             phones=[
@@ -94,7 +94,6 @@ class SomOvUsers(osv.osv_memory):
         expected_exceptions=(NoSuchUser, NoDocumentVersions)
     )
     def sign_document(self, cursor, uid, username, document):
-        document_type_obj = self.pool.get('som.ov.signed.document.type')
         document_version_obj = self.pool.get('som.ov.signed.document.type.version')
         signed_document_obj = self.pool.get('som.ov.signed.document')
 
