@@ -114,7 +114,7 @@ class SomOvInvoices(osv.osv_memory):
 
         report_factura_obj = netsvc.LocalService('report.giscere.factura')
 
-        result, result_formst, filename = self.do_invoice_pdf(cursor, uid, report_factura_obj, invoice_id)
+        result, result_format, filename = self.do_invoice_pdf(cursor, uid, report_factura_obj, invoice_id)
 
         return dict(
             content=base64.b64encode(result),
