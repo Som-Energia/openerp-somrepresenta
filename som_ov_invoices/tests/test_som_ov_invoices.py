@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 from destral import testing
 from destral.transaction import Transaction
 
+from parameterized import parameterized
+
 import netsvc
 
 from .. import som_ov_invoices
@@ -36,6 +38,17 @@ class SomOvInvoicesTests(testing.OOTestCase):
         result = self.invoice.get_invoices(self.cursor, self.uid, vat)
 
         expected_result = [
+            dict(
+                contract_number='103',
+                invoice_number='RE',
+                concept='specific_retribution',
+                emission_date='2022-09-30',
+                first_period_date='2022-09-01',
+                last_period_date='2022-09-30',
+                amount=14.35,
+                liquidation="Specific Retribution Extraline 0",
+                payment_status='open',
+            ),
             dict(
                 contract_number='103',
                 invoice_number='F2',
@@ -74,7 +87,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
 
         result = self.invoice.get_invoices(self.cursor, self.uid, vat)
 
-        self.assertEqual(len(result), 2)
+        self.assertEqual(len(result), 3)
 
     def test__get_invoices__user_not_exists(self):
         vat = self.missing_vat
@@ -130,3 +143,27 @@ class SomOvInvoicesTests(testing.OOTestCase):
             trace=result.get('trace', "TRACE IS MISSING"),
         ))
 
+    @parameterized.expand([
+        ("01", None),
+        ("02", "Specific Retribution Extraline 0"),
+        ("03", None)
+    ])
+    def test__get_liquidation__base(self, input, expected):
+        invoice_id = self.reference('som_ov_invoices', 'giscere_facturacio_factura_specific_retribution_0')
+
+        result = self.invoice.get_liquidation(self.cursor, self.uid, input, invoice_id)
+
+        self.assertEqual(result, expected)
+
+    def test__get_liquidation__extraline_doest_not_exists(self):
+        specific_retribution_type_value = '02'
+        invoice_id = self.reference('som_ov_invoices', 'giscere_facturacio_factura_1')
+
+        result = self.invoice.get_liquidation(self.cursor, self.uid, specific_retribution_type_value, invoice_id)
+
+        self.assertEqual(result, '')
+
+    def reference(self, module, id):
+        return self.imd.get_object_reference(
+            self.cursor, self.uid, module, id,
+        )[1]

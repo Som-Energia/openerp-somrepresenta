@@ -23,6 +23,23 @@ class SomOvInvoices(osv.osv_memory):
         '03': 'services',
     }
 
+    def get_liquidation(self, cursor, uid, tipo_factura, invoice_id):
+        specific_retribution_type_value = '02'
+        if tipo_factura != specific_retribution_type_value:
+            return None
+
+        description = ''
+        extra_obj = self.pool.get('giscere.facturacio.extra')
+        params = [
+            ('factura_ids', '=', invoice_id)
+        ]
+        extra_line_ids = extra_obj.search(cursor, uid, params)
+        if extra_line_ids:
+            extra_line = extra_obj.browse(cursor, uid, extra_line_ids[0])
+            description = extra_line.name
+
+        return description
+
     @www_entry_point(
         expected_exceptions=(
             NoSuchUser,
@@ -54,7 +71,7 @@ class SomOvInvoices(osv.osv_memory):
                 last_period_date=invoice.data_final,
                 amount=invoice.amount_total,
                 payment_status=invoice.state,
-                liquidation=None,
+                liquidation=self.get_liquidation(cursor, uid, invoice.tipo_factura, invoice.id),
             )
             for invoice in invoices
         ]
