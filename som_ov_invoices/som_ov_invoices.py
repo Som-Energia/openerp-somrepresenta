@@ -25,25 +25,6 @@ class SomOvInvoices(osv.osv_memory):
         '03': 'services',
     }
 
-    def get_liquidation(self, cursor, uid, tipo_factura, invoice_id):
-        specific_retribution_type_value = '02'
-        if tipo_factura != specific_retribution_type_value:
-            return None
-
-        extra_obj = self.pool.get('giscere.facturacio.extra')
-        params = [
-            ('factura_ids', '=', invoice_id)
-        ]
-        extra_line_ids = extra_obj.search(cursor, uid, params)
-        description_month = None
-        description_empty = ''
-        if extra_line_ids:
-            extra_line = extra_obj.browse(cursor, uid, extra_line_ids[0])
-            extract_month_pattern = r'(\d{4})/(\d{2})'
-            description_month = re.search(extract_month_pattern, extra_line.name)
-
-        return description_month.group(2) if description_month else description_empty
-
     @www_entry_point(
         expected_exceptions=(
             NoSuchUser,
@@ -173,5 +154,28 @@ class SomOvInvoices(osv.osv_memory):
             filename='{}_invoices_from_{}.zip'.format(vat, invoice_numbers[0]),
             content_type='application/{}'.format(result_format),
         )
+
+    def get_liquidation(self, cursor, uid, tipo_factura, invoice_id):
+        specific_retribution_type_value = '02'
+        if tipo_factura != specific_retribution_type_value:
+            return None
+
+        extra_obj = self.pool.get('giscere.facturacio.extra')
+        params = [
+            ('factura_ids', '=', invoice_id)
+        ]
+        extra_line_ids = extra_obj.search(cursor, uid, params)
+        description_month = ''
+
+        if extra_line_ids:
+            extra_line = extra_obj.browse(cursor, uid, extra_line_ids[0])
+            extract_month_pattern = r'(\d{4})/(\d{2})'
+            match = re.search(extract_month_pattern, extra_line.name)
+
+            if match:
+                description_month = match.group(2)
+
+        return description_month
+
 
 SomOvInvoices()
