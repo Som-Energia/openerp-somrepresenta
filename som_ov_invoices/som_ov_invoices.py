@@ -3,6 +3,8 @@ from osv import osv
 import netsvc
 import base64
 import zipfile
+import re
+
 try:
     import cStringIO as StringIO
 except ImportError:
@@ -28,17 +30,19 @@ class SomOvInvoices(osv.osv_memory):
         if tipo_factura != specific_retribution_type_value:
             return None
 
-        description = ''
         extra_obj = self.pool.get('giscere.facturacio.extra')
         params = [
             ('factura_ids', '=', invoice_id)
         ]
         extra_line_ids = extra_obj.search(cursor, uid, params)
+        description_month = None
+        description_empty = ''
         if extra_line_ids:
             extra_line = extra_obj.browse(cursor, uid, extra_line_ids[0])
-            description = extra_line.name
+            extract_month_pattern = r'(\d{4})/(\d{2})'
+            description_month = re.search(extract_month_pattern, extra_line.name)
 
-        return description
+        return description_month.group(2) if description_month else description_empty
 
     @www_entry_point(
         expected_exceptions=(

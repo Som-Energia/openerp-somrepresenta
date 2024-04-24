@@ -46,7 +46,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
                 first_period_date='2022-09-01',
                 last_period_date='2022-09-30',
                 amount=14.35,
-                liquidation="Specific Retribution Extraline 0",
+                liquidation="03",
                 payment_status='open',
             ),
             dict(
@@ -145,7 +145,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
 
     @parameterized.expand([
         ("01", None),
-        ("02", "Specific Retribution Extraline 0"),
+        ("02", "03"),
         ("03", None)
     ])
     def test__get_liquidation__base(self, input, expected):

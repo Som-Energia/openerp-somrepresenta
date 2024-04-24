@@ -106,7 +106,7 @@
             <field name="llista_preu" eval="1"/>
         </record>
         <record id="giscere_facturacio_extra_specific_retribution_0" model="giscere.facturacio.extra">
-            <field name="name">Specific Retribution Extraline 0</field>
+            <field name="name">Specific Retribution Extraline 2024/03</field>
             <field name="factura_ids" eval="[(6, 0, [ref('giscere_facturacio_factura_specific_retribution_0')])]"/>
             <field name="type_extra">retribution</field>
             <field name="year">2024</field>
@@ -117,8 +117,8 @@
             <field name="uos_id">1</field>
 			<field name="account_id" ref="account.a_sale"/>
             <field name="polissa_id" ref="som_ov_installations.giscere_polissa_3"/>
-            <field name="date_from">2022-09-01</field>
-            <field name="date_to">2022-09-30</field>
+            <field name="date_from">2024-01-01</field>
+            <field name="date_to">2024-12-31</field>
             <field name="term">1</field>
             <field name="tipus">retrib_espec</field>
         </record>
