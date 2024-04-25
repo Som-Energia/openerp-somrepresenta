@@ -87,11 +87,10 @@ class SomOvInvoices(osv.osv_memory):
             return [value]
         return value
 
-    def do_invoice_pdf(self, cursor, uid, report_factura_obj, invoice_id):
+    def do_invoice_pdf(self, cursor, uid, report_factura_obj, invoice_obj, invoice_id):
         invoice_ids = self.ensure_list(invoice_id)
         result, result_format = report_factura_obj.create(cursor, uid, invoice_ids, {})
 
-        invoice_obj = self.pool.get('giscere.facturacio.factura')
         invoice = invoice_obj.browse(cursor, uid, invoice_ids)[0]
 
         filename = (
@@ -116,9 +115,10 @@ class SomOvInvoices(osv.osv_memory):
         invoice_ids = self.validate_invoices(cursor, uid, vat, [invoice_number])
         if not invoice_ids: raise NoSuchInvoice(invoice_number)
 
+        invoice_obj = self.pool.get('giscere.facturacio.factura')
         report_factura_obj = netsvc.LocalService('report.giscere.factura')
 
-        result, result_format, filename = self.do_invoice_pdf(cursor, uid, report_factura_obj, invoice_ids)
+        result, result_format, filename = self.do_invoice_pdf(cursor, uid, report_factura_obj, invoice_obj, invoice_ids)
 
         return dict(
             content=base64.b64encode(result),
@@ -137,6 +137,7 @@ class SomOvInvoices(osv.osv_memory):
 
         invoice_ids = self.validate_invoices(cursor, uid, vat, invoice_numbers)
 
+        invoice_obj = self.pool.get('giscere.facturacio.factura')
         report_factura_obj = netsvc.LocalService('report.giscere.factura')
 
         zipfile_io = StringIO.StringIO()
@@ -145,7 +146,7 @@ class SomOvInvoices(osv.osv_memory):
         )
 
         for invoice_id in invoice_ids:
-            result, result_format, filename = self.do_invoice_pdf(cursor, uid, report_factura_obj, [invoice_id])
+            result, result_format, filename = self.do_invoice_pdf(cursor, uid, report_factura_obj, invoice_obj, [invoice_id])
             zipfile_.writestr(filename, result)
 
         zipfile_.close()
