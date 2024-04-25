@@ -61,11 +61,11 @@ class SomOvInvoices(osv.osv_memory):
             for invoice in invoices
         ]
 
-    def validate_invoices(self, cursor, uid, vat, invoice_numbers):
+    def validate_invoices(self, cursor, uid, invoice_obj, vat, invoice_numbers):
         invoice_numbers = self.ensure_list(invoice_numbers)
         users_obj = self.pool.get('som.ov.users')
         partner = users_obj.get_customer(cursor, uid, vat)
-        invoice_obj = self.pool.get('giscere.facturacio.factura')
+
         search_params = [
             ('number', 'in', invoice_numbers),
         ]
@@ -114,7 +114,7 @@ class SomOvInvoices(osv.osv_memory):
         context = context if context is not None else {}
         invoice_obj = self.pool.get('giscere.facturacio.factura')
 
-        invoice_ids = self.validate_invoices(cursor, uid, vat, invoice_number)
+        invoice_ids = self.validate_invoices(cursor, uid, invoice_obj, vat, invoice_number)
         if not invoice_ids: raise NoSuchInvoice(invoice_number)
 
         report_factura_obj = netsvc.LocalService('report.giscere.factura')
@@ -137,7 +137,7 @@ class SomOvInvoices(osv.osv_memory):
         context = context if context is not None else {}
         invoice_obj = self.pool.get('giscere.facturacio.factura')
 
-        invoice_ids = self.validate_invoices(cursor, uid, vat, invoice_numbers)
+        invoice_ids = self.validate_invoices(cursor, uid, invoice_obj, vat, invoice_numbers)
 
         report_factura_obj = netsvc.LocalService('report.giscere.factura')
 
