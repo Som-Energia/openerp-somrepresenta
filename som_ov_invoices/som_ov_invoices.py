@@ -82,11 +82,17 @@ class SomOvInvoices(osv.osv_memory):
                 )
         return invoice_ids
 
+    def ensure_list(self, value):
+        if not isinstance(value, (tuple, list)):
+            return [value]
+        return value
+
     def do_invoice_pdf(self, cursor, uid, report_factura_obj, invoice_id):
-        result, result_format = report_factura_obj.create(cursor, uid, invoice_id, {})
+        invoice_ids = self.ensure_list(invoice_id)
+        result, result_format = report_factura_obj.create(cursor, uid, invoice_ids, {})
 
         invoice_obj = self.pool.get('giscere.facturacio.factura')
-        invoice = invoice_obj.browse(cursor, uid, invoice_id)[0]
+        invoice = invoice_obj.browse(cursor, uid, invoice_ids)[0]
 
         filename = (
             '{invoice_code}_{cil}.pdf'
