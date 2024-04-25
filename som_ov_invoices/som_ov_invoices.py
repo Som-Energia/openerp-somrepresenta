@@ -111,13 +111,10 @@ class SomOvInvoices(osv.osv_memory):
         )
     )
     def download_invoice_pdf(self, cursor, uid, vat, invoice_number, context=None):
-        if context is None:
-            context = {}
+        context = context if context is not None else {}
 
         invoice_ids = self.validate_invoices(cursor, uid, vat, [invoice_number])
-
-        if not invoice_ids:
-            raise NoSuchInvoice(invoice_number)
+        if not invoice_ids: raise NoSuchInvoice(invoice_number)
 
         report_factura_obj = netsvc.LocalService('report.giscere.factura')
 
@@ -136,8 +133,7 @@ class SomOvInvoices(osv.osv_memory):
         )
     )
     def download_invoices_zip(self, cursor, uid, vat, invoice_numbers, context=None):
-        if context is None:
-            context = {}
+        context = context if context is not None else {}
 
         invoice_ids = self.validate_invoices(cursor, uid, vat, invoice_numbers)
 
