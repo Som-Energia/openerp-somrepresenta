@@ -62,6 +62,7 @@ class SomOvInvoices(osv.osv_memory):
         ]
 
     def validate_invoices(self, cursor, uid, vat, invoice_numbers):
+        invoice_numbers = self.ensure_list(invoice_numbers)
         users_obj = self.pool.get('som.ov.users')
         partner = users_obj.get_customer(cursor, uid, vat)
         invoice_obj = self.pool.get('giscere.facturacio.factura')
@@ -111,11 +112,11 @@ class SomOvInvoices(osv.osv_memory):
     )
     def download_invoice_pdf(self, cursor, uid, vat, invoice_number, context=None):
         context = context if context is not None else {}
+        invoice_obj = self.pool.get('giscere.facturacio.factura')
 
-        invoice_ids = self.validate_invoices(cursor, uid, vat, [invoice_number])
+        invoice_ids = self.validate_invoices(cursor, uid, vat, invoice_number)
         if not invoice_ids: raise NoSuchInvoice(invoice_number)
 
-        invoice_obj = self.pool.get('giscere.facturacio.factura')
         report_factura_obj = netsvc.LocalService('report.giscere.factura')
 
         result, result_format, filename = self.do_invoice_pdf(cursor, uid, report_factura_obj, invoice_obj, invoice_ids)
@@ -134,10 +135,10 @@ class SomOvInvoices(osv.osv_memory):
     )
     def download_invoices_zip(self, cursor, uid, vat, invoice_numbers, context=None):
         context = context if context is not None else {}
+        invoice_obj = self.pool.get('giscere.facturacio.factura')
 
         invoice_ids = self.validate_invoices(cursor, uid, vat, invoice_numbers)
 
-        invoice_obj = self.pool.get('giscere.facturacio.factura')
         report_factura_obj = netsvc.LocalService('report.giscere.factura')
 
         zipfile_io = StringIO.StringIO()
