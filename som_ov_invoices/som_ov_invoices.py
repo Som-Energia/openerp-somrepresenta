@@ -175,17 +175,21 @@ class SomOvInvoices(osv.osv_memory):
             ('factura_ids', '=', invoice_id)
         ]
         extra_line_ids = extra_obj.search(cursor, uid, params)
-        description_month = ''
+        description = ''
 
         if extra_line_ids:
             extra_line = extra_obj.browse(cursor, uid, extra_line_ids[0])
+
+            if extra_line.type_extra == 'complementary':
+                return 'Complementaria'
+
             extract_month_pattern = r'(\d{4})/(\d{2})'
             match = re.search(extract_month_pattern, extra_line.name)
 
             if match:
-                description_month = match.group(2)
+                description = match.group(2)
 
-        return description_month
+        return description
 
 
 SomOvInvoices()
