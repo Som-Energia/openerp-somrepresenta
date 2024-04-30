@@ -6,10 +6,6 @@ from destral.transaction import Transaction
 
 from parameterized import parameterized
 
-import netsvc
-
-from .. import som_ov_invoices
-
 
 class SomOvInvoicesTests(testing.OOTestCase):
 
