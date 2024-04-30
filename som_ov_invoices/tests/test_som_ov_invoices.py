@@ -158,31 +158,31 @@ class SomOvInvoicesTests(testing.OOTestCase):
         ("02", "03"),
         ("03", None)
     ])
-    def test__get_liquidation__base(self, input, expected):
+    def test__get_liquidation_description__base(self, input, expected):
         invoice_id = self.reference(
             'som_ov_invoices', 'giscere_facturacio_factura_specific_retribution_0')
 
-        result = self.invoice.get_liquidation(
+        result = self.invoice.get_liquidation_description(
             self.cursor, self.uid, input, invoice_id)
 
         self.assertEqual(result, expected)
 
-    def test__get_liquidation__extraline_doest_not_exists(self):
+    def test__get_liquidation_description__extraline_doest_not_exists(self):
         specific_retribution_type_value = '02'
         invoice_id = self.reference(
             'som_ov_invoices', 'giscere_facturacio_factura_1')
 
-        result = self.invoice.get_liquidation(
+        result = self.invoice.get_liquidation_description(
             self.cursor, self.uid, specific_retribution_type_value, invoice_id)
 
-        self.assertEqual(result, '')
+        self.assertEqual(result, None)
 
-    def test__get_liquidation__complementary(self):
+    def test__get_liquidation_description__complementary(self):
         specific_retribution_type_value = '02'
         invoice_id = self.reference(
             'som_ov_invoices', 'giscere_facturacio_factura_specific_retribution_complementary_0')
 
-        result = self.invoice.get_liquidation(
+        result = self.invoice.get_liquidation_description(
             self.cursor, self.uid, specific_retribution_type_value, invoice_id)
 
         self.assertEqual(result, 'Complementaria')

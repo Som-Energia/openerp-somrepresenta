@@ -56,7 +56,7 @@ class SomOvInvoices(osv.osv_memory):
                 last_period_date=invoice.data_final,
                 amount=invoice.amount_total,
                 payment_status=invoice.state,
-                liquidation=self.get_liquidation(
+                liquidation=self.get_liquidation_description(
                     cursor, uid, invoice.tipo_factura, invoice.id),
             )
             for invoice in invoices
@@ -165,7 +165,7 @@ class SomOvInvoices(osv.osv_memory):
             content_type='application/{}'.format(result_format),
         )
 
-    def get_liquidation(self, cursor, uid, tipo_factura, invoice_id):
+    def get_extra_line(self, cursor, uid, tipo_factura, invoice_id):
         specific_retribution_type_value = '02'
         if tipo_factura != specific_retribution_type_value:
             return None
@@ -175,21 +175,24 @@ class SomOvInvoices(osv.osv_memory):
             ('factura_ids', '=', invoice_id)
         ]
         extra_line_ids = extra_obj.search(cursor, uid, params)
-        description = ''
 
         if extra_line_ids:
-            extra_line = extra_obj.browse(cursor, uid, extra_line_ids[0])
+            return extra_obj.browse(cursor, uid, extra_line_ids[0])
+        return None
 
+    def extract_retribution_liquidation_description(self, extra_line):
+        extract_month_pattern = r'(\d{4})/(\d{2})'
+        match = re.search(extract_month_pattern, extra_line.name)
+        if match:
+            return match.group(2)
+
+    def get_liquidation_description(self, cursor, uid, tipo_factura, invoice_id):
+        extra_line = self.get_extra_line(cursor, uid, tipo_factura, invoice_id)
+        if extra_line:
             if extra_line.type_extra == 'complementary':
                 return 'Complementaria'
-
-            extract_month_pattern = r'(\d{4})/(\d{2})'
-            match = re.search(extract_month_pattern, extra_line.name)
-
-            if match:
-                description = match.group(2)
-
-        return description
-
+            if extra_line.type_extra == 'retribution':
+                return self.extract_retribution_liquidation_description(extra_line)
+        return None
 
 SomOvInvoices()
