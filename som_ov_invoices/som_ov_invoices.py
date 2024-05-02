@@ -25,6 +25,9 @@ class SomOvInvoices(osv.osv_memory):
         '03': 'services',
     }
 
+    COMPLEMENTARY_LIQUIDATION = 'COMPLEMENTARY'
+
+
     @www_entry_point(
         expected_exceptions=(
             NoSuchUser,
@@ -190,7 +193,7 @@ class SomOvInvoices(osv.osv_memory):
         extra_line = self.get_extra_line(cursor, uid, tipo_factura, invoice_id)
         if extra_line:
             if extra_line.type_extra == 'complementary':
-                return 'Complementaria'
+                return self.COMPLEMENTARY_LIQUIDATION
             if extra_line.type_extra == 'retribution':
                 return self.extract_retribution_liquidation_description(extra_line)
         return None

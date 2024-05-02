@@ -28,6 +28,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
     legal_invoice = 'F1'
     missing_vat = 'ES1111111HH'
     specific_retribution_type_value = '02'
+    complementary_liquidation = 'COMPLEMENTARY'
 
     def test__get_invoices__base(self):
         vat = self.base_vat
@@ -43,7 +44,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
                 first_period_date='2022-09-01',
                 last_period_date='2022-09-30',
                 amount=-4.35,
-                liquidation="Complementaria",
+                liquidation=self.complementary_liquidation,
                 payment_status='open',
             ),
             dict(
@@ -184,7 +185,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
         result = self.invoice.get_liquidation_description(
             self.cursor, self.uid, self.specific_retribution_type_value, invoice_id)
 
-        self.assertEqual(result, 'Complementaria')
+        self.assertEqual(result, self.complementary_liquidation)
 
     def reference(self, module, id):
         return self.imd.get_object_reference(
