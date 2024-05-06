@@ -8,7 +8,10 @@ from som_ov_users.decorators import www_entry_point
 from som_ov_users.exceptions import (
     NoSuchUser,
 )
-from som_ov_installations.exceptions import UnauthorizedAccess
+from som_ov_installations.exceptions import (
+    UnauthorizedAccess,
+    ContractNotExists,
+)
 
 
 class SomOvProductionData(osv.osv_memory):
@@ -42,6 +45,7 @@ class SomOvProductionData(osv.osv_memory):
     @www_entry_point((
         NoSuchUser,
         UnauthorizedAccess,
+        ContractNotExists,
     ))
     def measures_single_installation(
         self, cursor, uid,
@@ -55,15 +59,7 @@ class SomOvProductionData(osv.osv_memory):
         if context is None:
             context = {}
 
-        polissa_obj = self.pool.get('giscere.polissa')
-        contract = polissa_obj.browse(cursor, uid, contract_number)
-
-        if contract.titular.vat != username:
-            raise UnauthorizedAccess(
-                username=username,
-                resource_type='Contract',
-                resource_name=contract_number,
-            )
+        contract = self._get_user_contract(cursor, uid, username, contract_number)
 
         measures = {'data': []}
         contract_data = self._get_production_measures(cursor, contract, first_timestamp_utc, last_timestamp_utc)[0][0]
@@ -71,6 +67,21 @@ class SomOvProductionData(osv.osv_memory):
         measures['data'].append(contract_data)
 
         return measures
+
+    def _get_user_contract(self, cursor, uid, username, contract_number):
+        polissa_obj = self.pool.get('giscere.polissa')
+        contract_id = polissa_obj.search(cursor, uid, [('name', '=', contract_number)])
+        if not contract_id:
+            raise ContractNotExists()
+        contract = polissa_obj.browse(cursor, uid, contract_id[0])
+
+        if contract.titular_nif != username:
+            raise UnauthorizedAccess(
+                username=username,
+                resource_type='Contract',
+                resource_name=contract_number,
+            )
+        return contract
 
     def _get_user_contracts(self, cursor, uid, username, context):
         installation_obj = self.pool.get('som.ov.installations')

@@ -176,10 +176,7 @@ class SomOvProductionDataTests(testing.OOTestCase):
         self.assertEqual(len(result['data'][0]['foreseen_kwh']), expected_timestamp_range_total_hours_)
 
     def test__measures_single_installation__base(self):
-        contract_number  = self.reference(
-            'som_ov_installations',
-            'giscere_polissa_0',
-        )
+        contract_number = "100"
 
         result = self.production_data.measures_single_installation(
             self.cursor, self.uid,
@@ -204,10 +201,7 @@ class SomOvProductionDataTests(testing.OOTestCase):
         self.assertEqual(len(result['data']), 1)
 
     def test__measures_single_installation__not_owner(self):
-        contract_number = self.reference(
-            'som_ov_installations',
-            'giscere_polissa_3',
-        )
+        contract_number = '103'
 
         result = self.production_data.measures_single_installation(
             self.cursor, self.uid,
@@ -227,6 +221,24 @@ class SomOvProductionDataTests(testing.OOTestCase):
             username=self.base_username,
             resource_type="Contract",
             resource_name=contract_number,
+            trace=result.get('trace', "TRACE IS MISSING"),
+        ))
+
+    def test__measures_single_installation__contract_not_exists(self):
+        contract_number = 'a_non_existent_contract_number'
+
+        result = self.production_data.measures_single_installation(
+            self.cursor, self.uid,
+            username=self.base_username,
+            contract_number=contract_number,
+            first_timestamp_utc='2022-01-01T00:00:00Z',
+            last_timestamp_utc='2022-01-01T01:00:00Z',
+            context=None
+        )
+
+        self.assertEqual(result, dict(
+            code='ContractNotExists',
+            error="Contract does not exist",
             trace=result.get('trace', "TRACE IS MISSING"),
         ))
 

@@ -164,6 +164,7 @@
             <field name="desvios">included</field>
             <field name="bank" ref="res_partner_bank_0"/>
             <field name="efecte_cartera">100</field>
+            <field name="titular_nif">ES36464471H</field>
         </record>
         <record id="giscere_polissa_1" model="giscere.polissa">
             <field name="titular" ref="som_ov_users.res_partner_soci_legal"/>
@@ -233,6 +234,7 @@
             <field name="desvios">included</field>
             <field name="bank" ref="res_partner_bank_0"/>
             <field name="efecte_cartera">100</field>
+            <field name="titular_nif">ES48591264S</field>
         </record>
     </data>
 </openerp>
