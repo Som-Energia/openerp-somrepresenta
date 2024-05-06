@@ -8,6 +8,7 @@ from som_ov_users.decorators import www_entry_point
 from som_ov_users.exceptions import (
     NoSuchUser,
 )
+from som_ov_installations.exceptions import UnauthorizedAccess
 
 
 class SomOvProductionData(osv.osv_memory):
@@ -29,11 +30,45 @@ class SomOvProductionData(osv.osv_memory):
             context = {}
 
         contracts = self._get_user_contracts(cursor, uid, username, context)
+
         measures = {'data': []}
         for contract in contracts:
             contract_data = self._get_production_measures(cursor, contract, first_timestamp_utc, last_timestamp_utc)[0][0]
             contract_data['foreseen_kwh'] = self._get_forecast_measures(cursor, uid, contract.cil.id, first_timestamp_utc, last_timestamp_utc, context)
             measures['data'].append(contract_data)
+
+        return measures
+
+    @www_entry_point((
+        NoSuchUser,
+        UnauthorizedAccess,
+    ))
+    def measures_single_installation(
+        self, cursor, uid,
+        username,
+        contract_number,
+        first_timestamp_utc,
+        last_timestamp_utc,
+        context=None
+    ):
+
+        if context is None:
+            context = {}
+
+        polissa_obj = self.pool.get('giscere.polissa')
+        contract = polissa_obj.browse(cursor, uid, contract_number)
+
+        if contract.titular.vat != username:
+            raise UnauthorizedAccess(
+                username=username,
+                resource_type='Contract',
+                resource_name=contract_number,
+            )
+
+        measures = {'data': []}
+        contract_data = self._get_production_measures(cursor, contract, first_timestamp_utc, last_timestamp_utc)[0][0]
+        contract_data['foreseen_kwh'] = self._get_forecast_measures(cursor, uid, contract.cil.id, first_timestamp_utc, last_timestamp_utc, context)
+        measures['data'].append(contract_data)
 
         return measures
 

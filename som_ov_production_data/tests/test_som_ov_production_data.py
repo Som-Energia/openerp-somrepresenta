@@ -14,12 +14,16 @@ class SomOvProductionDataTests(testing.OOTestCase):
         self.pool = self.openerp.pool
         self.imd = self.pool.get('ir.model.data')
         self.production_data = self.pool.get('som.ov.production.data')
+        self.polissa = self.pool.get('giscere.polissa')
 
         self.txn = Transaction().start(self.database)
 
         self.cursor = self.txn.cursor
         self.uid = self.txn.user
         self.maxDiff = None
+
+        self.activate_contracts(self.base_username)
+
 
     def tearDown(self):
         self.txn.stop()
@@ -171,6 +175,61 @@ class SomOvProductionDataTests(testing.OOTestCase):
         self.assertEqual(len(result['data'][0]['measure_kwh']), expected_timestamp_range_total_hours_)
         self.assertEqual(len(result['data'][0]['foreseen_kwh']), expected_timestamp_range_total_hours_)
 
+    def test__measures_single_installation__base(self):
+        contract_number  = self.reference(
+            'som_ov_installations',
+            'giscere_polissa_0',
+        )
+
+        result = self.production_data.measures_single_installation(
+            self.cursor, self.uid,
+            username=self.base_username,
+            contract_number=contract_number,
+            first_timestamp_utc='2022-01-01T00:00:00Z',
+            last_timestamp_utc='2022-01-01T01:00:00Z',
+            context=None
+        )
+
+        expected_result = {
+            'contract_name': '100',
+            'estimated': [True, True],
+            'first_timestamp_utc': '2022-01-01T00:00:00Z',
+            'last_timestamp_utc': '2022-01-01T01:00:00Z',
+            'maturity': ['HC', 'H3'],
+            'measure_kwh': [0.0, 22.0],
+            'foreseen_kwh': [10.0, 22.0],
+        }
+        self.assertNotIn('error', result, str(result))
+        self.assertEqual(result['data'][0], expected_result)
+        self.assertEqual(len(result['data']), 1)
+
+    def test__measures_single_installation__not_owner(self):
+        contract_number = self.reference(
+            'som_ov_installations',
+            'giscere_polissa_3',
+        )
+
+        result = self.production_data.measures_single_installation(
+            self.cursor, self.uid,
+            username=self.base_username,
+            contract_number=contract_number,
+            first_timestamp_utc='2022-01-01T00:00:00Z',
+            last_timestamp_utc='2022-01-01T01:00:00Z',
+            context=None
+        )
+
+        self.assertEqual(result, dict(
+            code='UnauthorizedAccess',
+            error="User {vat} cannot access the Contract '{contract_number}'".format(
+                vat=self.base_username,
+                contract_number=contract_number
+            ),
+            username=self.base_username,
+            resource_type="Contract",
+            resource_name=contract_number,
+            trace=result.get('trace', "TRACE IS MISSING"),
+        ))
+
     def _sut(self, username, first_timestamp_utc, last_timestamp_utc):
         return self.production_data.measures(
             self.cursor, self.uid,
@@ -179,3 +238,7 @@ class SomOvProductionDataTests(testing.OOTestCase):
             last_timestamp_utc=last_timestamp_utc,
             context=None
         )
+
+    def activate_contracts(self, vat):
+        contract_ids = self.polissa.search(self.cursor, self.uid, [('titular.vat', '=', vat)])
+        self.polissa.write(self.cursor, self.uid, contract_ids, {'state':'activa'})
