@@ -1,5 +1,9 @@
 # Change log
 
+## Unreleased
+
+- Extract liquidation information from invoice line
+
 ## 0.2.0 (2024-02-13)
 
 - New som.ov.production.data.measures() entry point to obtain production measures
