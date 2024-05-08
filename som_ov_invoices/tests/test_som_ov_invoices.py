@@ -4,9 +4,7 @@ from __future__ import unicode_literals
 from destral import testing
 from destral.transaction import Transaction
 
-import netsvc
-
-from .. import som_ov_invoices
+from parameterized import parameterized
 
 
 class SomOvInvoicesTests(testing.OOTestCase):
@@ -29,6 +27,8 @@ class SomOvInvoicesTests(testing.OOTestCase):
     base_invoice = 'F0'
     legal_invoice = 'F1'
     missing_vat = 'ES1111111HH'
+    specific_retribution_type_value = '02'
+    complementary_liquidation = 'COMPLEMENTARY'
 
     def test__get_invoices__base(self):
         vat = self.base_vat
@@ -36,6 +36,28 @@ class SomOvInvoicesTests(testing.OOTestCase):
         result = self.invoice.get_invoices(self.cursor, self.uid, vat)
 
         expected_result = [
+            dict(
+                contract_number='103',
+                invoice_number='CO',
+                concept='specific_retribution',
+                emission_date='2022-09-30',
+                first_period_date='2022-09-01',
+                last_period_date='2022-09-30',
+                amount=-4.35,
+                liquidation=self.complementary_liquidation,
+                payment_status='open',
+            ),
+            dict(
+                contract_number='103',
+                invoice_number='RE',
+                concept='specific_retribution',
+                emission_date='2022-09-30',
+                first_period_date='2022-09-01',
+                last_period_date='2022-09-30',
+                amount=14.35,
+                liquidation="03",
+                payment_status='open',
+            ),
             dict(
                 contract_number='103',
                 invoice_number='F2',
@@ -74,7 +96,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
 
         result = self.invoice.get_invoices(self.cursor, self.uid, vat)
 
-        self.assertEqual(len(result), 2)
+        self.assertEqual(len(result), 4)
 
     def test__get_invoices__user_not_exists(self):
         vat = self.missing_vat
@@ -91,7 +113,8 @@ class SomOvInvoicesTests(testing.OOTestCase):
         vat = self.missing_vat
         invoice_number = self.base_invoice
 
-        result = self.invoice.download_invoice_pdf(self.cursor, self.uid, vat, invoice_number)
+        result = self.invoice.download_invoice_pdf(
+            self.cursor, self.uid, vat, invoice_number)
 
         self.assertEqual(result, dict(
             code='NoSuchUser',
@@ -103,7 +126,8 @@ class SomOvInvoicesTests(testing.OOTestCase):
         vat = self.legal_vat
         invoice_number = 'No such invoice'
 
-        result = self.invoice.download_invoice_pdf(self.cursor, self.uid, vat, invoice_number)
+        result = self.invoice.download_invoice_pdf(
+            self.cursor, self.uid, vat, invoice_number)
 
         self.assertEqual(result, dict(
             code='NoSuchInvoice',
@@ -116,7 +140,8 @@ class SomOvInvoicesTests(testing.OOTestCase):
         invoice_number = self.legal_invoice
         vat = self.base_vat
 
-        result = self.invoice.download_invoice_pdf(self.cursor, self.uid, vat, invoice_number)
+        result = self.invoice.download_invoice_pdf(
+            self.cursor, self.uid, vat, invoice_number)
 
         self.assertEqual(result, dict(
             code='UnauthorizedAccess',
@@ -130,3 +155,39 @@ class SomOvInvoicesTests(testing.OOTestCase):
             trace=result.get('trace', "TRACE IS MISSING"),
         ))
 
+    @parameterized.expand([
+        ("01", None),
+        (specific_retribution_type_value, "03"),
+        ("03", None)
+    ])
+    def test__get_liquidation_description__base(self, input, expected):
+        invoice_id = self.reference(
+            'som_ov_invoices', 'giscere_facturacio_factura_specific_retribution_0')
+
+        result = self.invoice.get_liquidation_description(
+            self.cursor, self.uid, input, invoice_id)
+
+        self.assertEqual(result, expected)
+
+    def test__get_liquidation_description__extraline_doest_not_exists(self):
+        invoice_id = self.reference(
+            'som_ov_invoices', 'giscere_facturacio_factura_1')
+
+        result = self.invoice.get_liquidation_description(
+            self.cursor, self.uid, self.specific_retribution_type_value, invoice_id)
+
+        self.assertEqual(result, None)
+
+    def test__get_liquidation_description__complementary(self):
+        invoice_id = self.reference(
+            'som_ov_invoices', 'giscere_facturacio_factura_specific_retribution_complementary_0')
+
+        result = self.invoice.get_liquidation_description(
+            self.cursor, self.uid, self.specific_retribution_type_value, invoice_id)
+
+        self.assertEqual(result, self.complementary_liquidation)
+
+    def reference(self, module, id):
+        return self.imd.get_object_reference(
+            self.cursor, self.uid, module, id,
+        )[1]
