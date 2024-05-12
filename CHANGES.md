@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Extract liquidation information from invoice line
+- Retrieve production data for a single contract
 
 ## 0.2.0 (2024-02-13)
 
