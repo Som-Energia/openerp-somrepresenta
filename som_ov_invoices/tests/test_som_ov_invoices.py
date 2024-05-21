@@ -33,7 +33,8 @@ class SomOvInvoicesTests(testing.OOTestCase):
     def test__get_invoices__base(self):
         vat = self.base_vat
 
-        result = self.invoice.get_invoices(self.cursor, self.uid, vat)
+        result = self.invoice.get_invoices(
+            self.cursor, self.uid, vat, oldest_date=None)
 
         expected_result = [
             dict(
@@ -87,21 +88,24 @@ class SomOvInvoicesTests(testing.OOTestCase):
     def test__get_invoices__no_draft(self):
         vat = self.legal_vat
 
-        result = self.invoice.get_invoices(self.cursor, self.uid, vat)
+        result = self.invoice.get_invoices(
+            self.cursor, self.uid, vat, oldest_date=None)
 
         self.assertEqual(result, [])
 
     def test__get_invoices__open_and_paid(self):
         vat = self.base_vat
 
-        result = self.invoice.get_invoices(self.cursor, self.uid, vat)
+        result = self.invoice.get_invoices(
+            self.cursor, self.uid, vat, oldest_date=None)
 
         self.assertEqual(len(result), 4)
 
     def test__get_invoices__user_not_exists(self):
         vat = self.missing_vat
 
-        result = self.invoice.get_invoices(self.cursor, self.uid, vat)
+        result = self.invoice.get_invoices(
+            self.cursor, self.uid, vat, oldest_date=None)
 
         self.assertEqual(result, dict(
             code='NoSuchUser',
@@ -186,6 +190,28 @@ class SomOvInvoicesTests(testing.OOTestCase):
             self.cursor, self.uid, self.specific_retribution_type_value, invoice_id)
 
         self.assertEqual(result, self.complementary_liquidation)
+
+    def test__get_invoices__with_oldest_date(self):
+        vat = self.base_vat
+        oldest_date = '2022-10-31'
+
+        result = self.invoice.get_invoices(
+            self.cursor, self.uid, vat, oldest_date=oldest_date)
+
+        self.assertEqual(result, [
+            # Invoices emitted 2022-09-30 are filtered out
+            dict(
+                contract_number='103',
+                invoice_number='F0',
+                concept='market',
+                emission_date='2022-10-31',
+                first_period_date='2022-10-01',
+                last_period_date='2022-10-31',
+                amount=28.77,
+                liquidation=None,
+                payment_status='open',
+            ),
+        ])
 
     def reference(self, module, id):
         return self.imd.get_object_reference(
