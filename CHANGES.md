@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Hide invoices emitted beyond a given date
 - Extract liquidation information from invoice line
 - Retrieve production data for a single contract
 
