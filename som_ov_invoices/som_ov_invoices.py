@@ -26,14 +26,21 @@ class SomOvInvoices(osv.osv_memory):
     }
 
     COMPLEMENTARY_LIQUIDATION = 'COMPLEMENTARY'
-
+    OLDEST_INVOICE_EMISSION_DATE = '2024-05-16'
 
     @www_entry_point(
         expected_exceptions=(
             NoSuchUser,
         )
     )
-    def get_invoices(self, cursor, uid, vat, context=None):
+    def get_invoices(
+            self,
+            cursor,
+            uid,
+            vat,
+            oldest_date=OLDEST_INVOICE_EMISSION_DATE,
+            context=None,
+    ):
         if context is None:
             context = {}
 
@@ -45,6 +52,10 @@ class SomOvInvoices(osv.osv_memory):
             ('partner_id', '=', partner.id),
             ('state', 'in', ['open', 'paid']),
         ]
+        if oldest_date:
+            search_params.append(
+                ('date_invoice', '>=', oldest_date),
+            )
 
         invoice_ids = invoice_obj.search(cursor, uid, search_params)
 
@@ -197,5 +208,6 @@ class SomOvInvoices(osv.osv_memory):
             if extra_line.type_extra == 'retribution':
                 return self.extract_retribution_liquidation_description(extra_line)
         return None
+
 
 SomOvInvoices()
