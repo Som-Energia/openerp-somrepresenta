@@ -103,10 +103,18 @@ class SomOvInvoices(osv.osv_memory):
             return [value]
         return value
 
-    def do_invoice_pdf(self, cursor, uid, report_factura_obj, invoice_obj, invoice_id):
+    def do_invoice_pdf(
+            self,
+            cursor,
+            uid,
+            report_factura_obj,
+            invoice_obj,
+            invoice_id,
+            context=None
+    ):
         invoice_ids = self.ensure_list(invoice_id)
         result, result_format = report_factura_obj.create(
-            cursor, uid, invoice_ids, {})
+            cursor, uid, invoice_ids, {}, context=context)
 
         invoice = invoice_obj.browse(cursor, uid, invoice_ids)[0]
 
@@ -138,7 +146,7 @@ class SomOvInvoices(osv.osv_memory):
         report_factura_obj = netsvc.LocalService('report.giscere.factura')
 
         result, result_format, filename = self.do_invoice_pdf(
-            cursor, uid, report_factura_obj, invoice_obj, invoice_ids)
+            cursor, uid, report_factura_obj, invoice_obj, invoice_ids, context)
 
         return dict(
             content=base64.b64encode(result),
@@ -168,7 +176,7 @@ class SomOvInvoices(osv.osv_memory):
 
         for invoice_id in invoice_ids:
             result, result_format, filename = self.do_invoice_pdf(
-                cursor, uid, report_factura_obj, invoice_obj, [invoice_id])
+                cursor, uid, report_factura_obj, invoice_obj, [invoice_id], context)
             zipfile_.writestr(filename, result)
 
         zipfile_.close()
