@@ -6,7 +6,7 @@
             <field name="model">wizard.create.staff.users</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Crear usuari staff per la OV">
+                <form string="Crear usuaria gestora de la OV de Representa">
                     <field name="state" invisible="1"/>
                     <group colspan="4" attrs="{'invisible': [('state', '!=', 'init')]}">
                         <field name="user_to_staff" colspan="4" width="400"/>
@@ -25,7 +25,7 @@
             </field>
         </record>
         <record model="ir.actions.act_window" id="action_wizard_create_staff_users">
-            <field name="name">Crear usuari staff per la OV</field>
+            <field name="name">Crear usuaria gestora de la OV de Representa</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">wizard.create.staff.users</field>
             <field name="view_type">form</field>
@@ -34,7 +34,7 @@
         </record>
         <record id="value_wizard_create_staff_users" model="ir.values">
             <field name="object" eval="1"/>
-            <field name="name">Crear usuari staff per la OV</field>
+            <field name="name">Crear usuari gestora de la OV de Representa</field>
             <field name="key2">client_action_multi</field>
             <field name="key">action</field>
             <field name="model">res.users</field>

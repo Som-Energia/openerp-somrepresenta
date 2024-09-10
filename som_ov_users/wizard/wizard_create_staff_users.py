@@ -54,20 +54,26 @@ class WizardCreateStaffUsers(osv.osv_memory):
         if user_id:
             user = user_obj.browse(cursor, uid, user_id)
             if not user.read():
-                self._update_wizard_status(cursor, uid, ids, 'done', 'No s\'ha trobat cap usuaria')
+                self._update_wizard_status(cursor, uid, ids, 'done', "No s'ha trobat cap usuaria")
                 return True
 
             if not user['address_id']:
                 address_id = self._create_partner_and_address(cursor, uid, wizard_data)
                 user_obj.write(cursor, uid, user_id, {'address_id': address_id})
-                self._update_wizard_status(cursor, uid, ids, 'done', 'Usuaria staff creada')
+                self._update_wizard_status(
+                    cursor, uid, ids, 'done',
+                    "S'ha creat la usuaria gestora per l'Oficina Virtual de Representació"
+                )
                 return True
 
             if user['address_id']:
-                self._update_wizard_status(cursor, uid, ids, 'done', 'Aquesta usuaria ja és staff')
+                self._update_wizard_status(
+                    cursor, uid, ids, 'done',
+                    "Aquesta usuaria ja és gestora de l'Oficina Virtual de Representació"
+                )
                 return True
 
-        self._update_wizard_status(cursor, uid, ids, 'done', 'No s\'ha trobat cap usuaria')
+        self._update_wizard_status(cursor, uid, ids, 'done', "No s'ha trobat cap usuaria")
         return True
 
     _columns = {
