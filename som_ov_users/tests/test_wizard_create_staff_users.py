@@ -42,7 +42,7 @@ class WizardCreateStaffUsersTests(testing.OOTestCase):
 
         wiz = self.wiz_o.read(self.cursor, self.uid, [wiz_id])[0]
         self.assertEqual(wiz['state'], 'done')
-        self.assertEqual(wiz['info'], 'Usuaria staff creada')
+        self.assertEqual(wiz['info'], "S'ha creat la usuaria gestora per l'Oficina Virtual de Representació")
 
     def test__action_create_staff_users__res_user_is_already_staff(self):
         user_id = self.res_users.search(
@@ -62,7 +62,7 @@ class WizardCreateStaffUsersTests(testing.OOTestCase):
 
         wiz = self.wiz_o.read(self.cursor, self.uid, [wiz_id])[0]
         self.assertEqual(wiz['state'], 'done')
-        self.assertEqual(wiz['info'], 'Aquesta usuaria ja és staff')
+        self.assertEqual(wiz['info'], "Aquesta usuaria ja és gestora de l'Oficina Virtual de Representació")
 
 
     def test__action_create_staff_users__res_user_does_not_exists(self):

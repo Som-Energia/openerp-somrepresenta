@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from osv import osv, fields
-
+from tools.translate import _
 
 class ResUsers(osv.osv):
     _inherit = 'res.users'
@@ -46,7 +46,7 @@ class ResUsers(osv.osv):
             fnct_search=_fnt_is_staff_search,
             type='boolean',
             method=True,
-            string='És usuària OV staff',
+            string=_('Gestora OV Representa'),
             store=False,
             bold=True,
         )
