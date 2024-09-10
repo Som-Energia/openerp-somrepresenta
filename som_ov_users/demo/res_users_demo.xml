@@ -26,6 +26,7 @@
         <record id="res_partner_res_users_already_staff" model="res.partner">
             <field name="name">Hari, Mata</field>
             <field name="vat">G78525763</field>
+            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_ovrepresenta_staff')])]" />
         </record>
         <record id="res_partner_address_res_users_already_staff" model="res.partner.address">
             <field name="name">Hari, Mata</field>
