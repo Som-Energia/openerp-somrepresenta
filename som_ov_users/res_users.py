@@ -21,14 +21,13 @@ class ResUsers(osv.osv):
         res_user = res_user_obj.browse(cursor, uid, res_user_id)
         address_id = res_user.address_id
         if not address_id: return False
-        partner_id = address_id.partner_id
-        if not partner_id: return False
+        partner = address_id.partner_id
+        if not partner: return False
 
-        cat_staff_id = imd_obj.get_object_reference(
+        staff_category_id = imd_obj.get_object_reference(
             cursor, uid, "som_ov_users", "res_partner_category_ovrepresenta_staff"
         )[1]
-        return cat_staff_id in [x.id for x in partner_id.category_id]
-
+        return any(cat.id == staff_category_id for cat in partner.category_id)
 
     def _fnt_is_staff_search(self, cursor, uid, obj, name, args, context=None):
         if not context:
