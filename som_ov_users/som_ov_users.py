@@ -35,18 +35,12 @@ class SomOvUsers(osv.osv_memory):
         raise NoSuchUser()
 
     def partner_is_staff(self, cursor, uid, partner):
-        address_obj = self.pool.get('res.partner.address')
-        search_params = [
-            ('partner_id','=', partner.id),
-        ]
-        partner_adddress_ids = address_obj.search(cursor, uid, search_params)
-        if not partner_adddress_ids: return False
+        if not partner.address: return False
 
         user_obj = self.pool.get('res.users')
-        search_params = [
-            ('address_id','=', partner_adddress_ids[0]),
-        ]
-        user = user_obj.search(cursor, uid, search_params)
+        user = user_obj.search(cursor, uid, [
+            ('address_id','=', partner.address[0].id),
+        ])
         imd_obj = self.pool.get("ir.model.data")
         staff_category_id = imd_obj.get_object_reference(
             cursor, uid, "som_ov_users", "res_partner_category_ovrepresenta_staff"
@@ -76,7 +70,7 @@ class SomOvUsers(osv.osv_memory):
         partner = self.get_customer(cursor, uid, username)
         return dict(
             username=partner.vat,
-            roles=['staff'] if self.partner_is_staff(cursor, uid, partner.id) else ['customer'],
+            roles=['staff'] if self.partner_is_staff(cursor, uid, partner) else ['customer'],
             vat=partner.vat,
             name=partner.name,
             email=partner.address[0].email,
