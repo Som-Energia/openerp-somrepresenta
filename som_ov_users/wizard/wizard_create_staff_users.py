@@ -15,11 +15,17 @@ class WizardCreateStaffUsers(osv.osv_memory):
     def _create_partner_and_address(self, cursor, uid, wizard_data):
         partner_obj = self.pool.get("res.partner")
         address_obj = self.pool.get("res.partner.address")
+        imd_obj = self.pool.get("ir.model.data")
+
+        cat_staff_id = imd_obj.get_object_reference(
+            cursor, uid, "som_ov_users", "res_partner_category_ovrepresenta_staff"
+        )[1]
 
         partner_data = {
             'name': wizard_data.user_to_staff.name,
             'vat': self._validate_vat(cursor, uid, wizard_data.vat),
             'lang': 'ca_ES',
+            "category_id": [(6, 0, [cat_staff_id])],
         }
         partner_id = partner_obj.create(cursor, uid, partner_data)
 
