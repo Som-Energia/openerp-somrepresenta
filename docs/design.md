@@ -40,11 +40,15 @@ Excepcions:
 2.b.1. Wizard shows a warning explaining the case and aborts
 
 1.a. Wizard detects that the user is already relatated to an address
+1.a.0. Wizard detects that the partner has not have the category
 1.a.1. Wizard detects that the related vat matches
 1.a.2. Wizard detects that the related address is 0 for the partner
 1.a.3. Wizard chooses the first address
 1.a.4. Wizard detects that the related email matches
 1.a.5. Go to step 5
+
+1.a.0.a. Wizard detects that the partner has the category
+1.a.0.a.1. Shows messages and abort
 
 1.a.1.a. Wizard detects that the related vat missmatches
 1.a.1.a.1. Shows messages and abort
