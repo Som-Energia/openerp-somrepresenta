@@ -5,6 +5,16 @@ class WizardCreateStaffUsers(osv.osv_memory):
 
     _name = "wizard.create.staff.users"
 
+    def default_get(self, cursor, uid, fields, context=None):
+        res = super(WizardCreateStaffUsers, self).default_get(cursor, uid, fields, context)
+
+        active_ids = context.get('active_ids')
+
+        res.update({
+            'user_to_staff': active_ids[0] if active_ids else None,
+        })
+        return res
+
     def _update_wizard_status(self, cursor, uid, ids, state, info=''):
         values = {
             'state': state,
