@@ -11,6 +11,51 @@ We identified 3 roles
 - Customer: Plain users
     - Customer valid res_partner with the `customer` category.
 
+## Provisining use cases
+
+Definicions:
+- provided data: the ones provided by the user on the wizard fields
+    - VAT
+    - Mail
+
+Base case:
+
+0. User provides data
+1. Wizard verifies that user has not a partner address
+2. Wizard creates the partner with provided data
+3. Wizard creates the partner_address with provide data
+4. Wizard links user to the partner_address
+5. Wizard adds the category
+
+Excepcions:
+
+2.a. Wizard detects that there is one existing partner with the same vat
+2.a.1. Wizard chooses the first address
+2.a.2. Wizard warns operator about an existing partner and shows previous email
+2.a.3. User choses which email to keep
+2.a.4. Wizard updates the selected email
+2.a.5. Go to step 4
+
+2.b. Wizard detects that there is **more than one** existing partner with the same vat
+2.b.1. Wizard shows a warning explaining the case and aborts
+
+1.a. Wizard detects that the user is already relatated to an address
+1.a.1. Wizard detects that the related vat matches
+1.a.2. Wizard detects that the related address is 0 for the partner
+1.a.3. Wizard chooses the first address
+1.a.4. Wizard detects that the related email matches
+1.a.5. Go to step 5
+
+1.a.1.a. Wizard detects that the related vat missmatches
+1.a.1.a.1. Shows messages and abort
+
+1.a.2.a. Wizard detects that the related address is not zero
+1.a.2.a.1. Shows messages and abort
+
+1.a.4.a. Wizard detects that the related email missmatches
+1.a.4.a.1. Goto 2.a.2.
+
+
 
 ## Authentication
 
