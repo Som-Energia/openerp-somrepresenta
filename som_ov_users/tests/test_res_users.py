@@ -57,4 +57,28 @@ class ResUsersTests(testing.OOTestCase):
 
         data = self.res_users.ovrepre_provisioning_data(self.cursor, self.uid, user_id)
 
-        self.assertEqual(data, {})
+        self.assertEqual(data, dict(
+            vat = None,
+            email = None,
+        ))
+
+    def test__ovrepre_provisioning_data__non_staff_address_linked(self):
+        partner_id = self.reference(
+            "som_ov_users",
+            "res_partner_res_users_already_staff",
+        )
+        partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
+        user_id = self.reference(
+            "som_ov_users",
+            "res_users_already_staff",
+        )
+        # Remove the category
+        self.res_partner.write(self.cursor, self.uid, partner_id, {'category_id': [(6, 0, [])]})
+
+        data = self.res_users.ovrepre_provisioning_data(self.cursor, self.uid, user_id)
+
+        self.assertEqual(data, dict(
+            vat = partner.vat,
+            email = partner.address[0].email,
+        ))
+
