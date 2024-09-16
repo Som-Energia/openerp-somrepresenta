@@ -6,6 +6,8 @@ from osv.osv import except_osv
 from destral import testing
 from destral.transaction import Transaction
 
+import unittest
+
 class ResUsersTests(testing.OOTestCase):
 
     def setUp(self):
@@ -99,5 +101,39 @@ class ResUsersTests(testing.OOTestCase):
             vat = partner.vat,
             email = partner.address[0].email,
             error = "La usuaria ja estàva com a gestora de l'Oficina Virtual de Representa",
+        ))
+
+    @unittest.skip('Wait for Fran to confime whether the fisrt or the last address is used')
+    def test__ovrepre_provisioning_data__non_staff_with_linked_secondary_address(self):
+        partner_id = self.reference(
+            "som_ov_users",
+            "res_partner_res_users_already_staff",
+        )
+        user_id = self.reference(
+            "som_ov_users",
+            "res_users_already_staff",
+        )
+        new_partner_address_id = self.reference(
+            "som_ov_users",
+            "res_partner_address_unlinked",
+        )
+        # Remove the category and add the new address
+        LINK = 4
+        SET = 6
+        self.res_partner.write(self.cursor, self.uid, partner_id, {
+            'category_id': [(SET, 0, [])],
+            # This sets the new primary address of the partner
+            # now different from the one linked in user which
+            # is set as secondary now
+            'address': [(LINK, new_partner_address_id)],
+        })
+        partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
+
+        data = self.res_users.ovrepre_provisioning_data(self.cursor, self.uid, user_id)
+
+        self.assertEqual(data, dict(
+            vat = partner.vat,
+            email = "unlinked@somenergia.coop", # partner.address[0].email,
+            warning = "",
         ))
 
