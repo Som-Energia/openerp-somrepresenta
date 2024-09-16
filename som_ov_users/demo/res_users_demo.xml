@@ -37,6 +37,14 @@
             <field name="zip">17002</field>
             <field name="state_id">20</field>
         </record>
+        <record id="res_partner_address_unlinked" model="res.partner.address">
+            <field name="name">Hari Unlinked, Mata</field>
+            <field name="email">unlinked@somenergia.coop</field>
+            <field name="street">Unlinked Street, 1</field>
+            <field name="city">Girona</field>
+            <field name="zip">17002</field>
+            <field name="state_id">20</field>
+        </record>
         <record id="res_users_already_staff" model="res.users">
             <field name="name">Hari, Mata</field>
             <field name="login">matahari</field>
