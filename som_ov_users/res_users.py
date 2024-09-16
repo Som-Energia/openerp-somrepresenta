@@ -17,11 +17,17 @@ class ResUsers(osv.osv):
         return res
 
     def ovrepre_provisioning_data(self, cursor, uid, res_user_id):
+        error = None
         user = self.browse(cursor, uid, res_user_id)
-        return {
-            'vat': user.address_id.partner_id.vat if user.address_id else None,
-            'email': user.address_id.email if user.address_id else None,
-        }
+
+        if user.is_staff:
+            error = "La usuaria ja estàva com a gestora de l'Oficina Virtual de Representa"
+
+        return dict(
+            dict(error=error) if error else {},
+            vat = user.address_id.partner_id.vat if user.address_id else None,
+            email = user.address_id.email if user.address_id else None,
+        )
 
     def _is_user_staff(self, cursor, uid, res_user_obj, res_user_id):
         imd_obj = self.pool.get("ir.model.data")
