@@ -16,6 +16,9 @@ class ResUsers(osv.osv):
 
         return res
 
+    def ovrepre_provisioning_data(self, cursor, uid, res_user_id):
+        return {}
+
     def _is_user_staff(self, cursor, uid, res_user_obj, res_user_id):
         imd_obj = self.pool.get("ir.model.data")
         res_user = res_user_obj.browse(cursor, uid, res_user_id)
