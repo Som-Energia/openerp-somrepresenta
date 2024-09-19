@@ -9,10 +9,9 @@ class ResUsers(osv.osv):
         if context is None:
             context = {}
         res = dict.fromkeys(ids, False)
-        res_user_obj = self.pool.get('res.users')
 
         for res_user_id in ids:
-            res[res_user_id] = self._is_user_staff(cursor, uid, res_user_obj, res_user_id)
+            res[res_user_id] = self._is_user_staff(cursor, uid, res_user_id)
 
         return res
 
@@ -77,9 +76,9 @@ class ResUsers(osv.osv):
             email = email,
         )
 
-    def _is_user_staff(self, cursor, uid, res_user_obj, res_user_id):
+    def _is_user_staff(self, cursor, uid, res_user_id):
         imd_obj = self.pool.get("ir.model.data")
-        res_user = res_user_obj.browse(cursor, uid, res_user_id)
+        res_user = self.browse(cursor, uid, res_user_id)
         address_id = res_user.address_id
         if not address_id: return False
         partner = address_id.partner_id
@@ -97,10 +96,9 @@ class ResUsers(osv.osv):
         ids = self.search(cursor, uid, [])
 
         selection_value = args[0][2]
-        res_user_obj = self.pool.get('res.users')
 
         for res_user_id in ids:
-            is_staff = self._is_user_staff(cursor, uid, res_user_obj, res_user_id)
+            is_staff = self._is_user_staff(cursor, uid, res_user_id)
             if is_staff == selection_value:
                 res.append(res_user_id)
 

@@ -8,6 +8,7 @@ from destral.transaction import Transaction
 
 import unittest
 
+
 class OrmLink:
     create = 0
     update = 1
@@ -57,14 +58,14 @@ class ResUsersTests(testing.OOTestCase):
     def test__is_user_staff__user_is_staff(self):
         user_id = self.staff_user_id
 
-        is_staff = self.res_users._is_user_staff(self.cursor, self.uid, self.res_users, user_id)
+        is_staff = self.res_users._is_user_staff(self.cursor, self.uid, user_id)
 
         self.assertTrue(is_staff)
 
     def test__is_user_staff__user_is_not_staff(self):
         user_id = self.non_staff_user_id
 
-        is_staff = self.res_users._is_user_staff(self.cursor, self.uid, self.res_users, user_id)
+        is_staff = self.res_users._is_user_staff(self.cursor, self.uid, user_id)
 
         self.assertFalse(is_staff)
 
