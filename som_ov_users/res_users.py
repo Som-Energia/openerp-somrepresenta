@@ -16,7 +16,7 @@ class ResUsers(osv.osv):
 
         return res
 
-    def ovrepre_provisioning_data(self, cursor, uid, res_user_id):
+    def init_wizard_to_turn_into_representation_staff(self, cursor, uid, res_user_id):
         error = None
         user = self.browse(cursor, uid, res_user_id)
 

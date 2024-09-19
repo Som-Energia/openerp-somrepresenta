@@ -31,7 +31,7 @@ class ResUsersTests(testing.OOTestCase):
             self.cursor, self.uid, module, id,
         )[1]
 
-    def test___is_user_staff__user_is_staff(self):
+    def test__is_user_staff__user_is_staff(self):
         user_id = self.res_users.search(
             self.cursor,
             self.uid,
@@ -42,7 +42,7 @@ class ResUsersTests(testing.OOTestCase):
 
         self.assertTrue(is_staff)
 
-    def test___is_user_staff__user_is_not_staff(self):
+    def test__is_user_staff__user_is_not_staff(self):
         user_id = self.res_users.search(
             self.cursor,
             self.uid,
@@ -53,18 +53,18 @@ class ResUsersTests(testing.OOTestCase):
 
         self.assertFalse(is_staff)
 
-    def test__ovrepre_provisioning_data__base_case(self):
+    def test__init_wizard_to_turn_into_representation_staff__base_case(self):
         # User has no address and no partner with such VAT exists
         user_id = self.reference('som_ov_users', 'res_users_staff') # TOD:rename to no_staff
 
-        data = self.res_users.ovrepre_provisioning_data(self.cursor, self.uid, user_id)
+        data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
         self.assertEqual(data, dict(
             vat = None,
             email = None,
         ))
 
-    def test__ovrepre_provisioning_data__non_staff_address_linked(self):
+    def test__init_wizard_to_turn_into_representation_staff__linked_to_non_staff_address(self):
         partner_id = self.reference(
             "som_ov_users",
             "res_partner_res_users_already_staff",
@@ -77,14 +77,15 @@ class ResUsersTests(testing.OOTestCase):
         # Remove the category
         self.res_partner.write(self.cursor, self.uid, partner_id, {'category_id': [(6, 0, [])]})
 
-        data = self.res_users.ovrepre_provisioning_data(self.cursor, self.uid, user_id)
+        data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
+        # Then the wizard uses data from the linked parnter
         self.assertEqual(data, dict(
             vat = partner.vat,
             email = partner.address[0].email,
         ))
 
-    def test__ovrepre_provisioning_data__already_staff__gives_error(self):
+    def test__init_wizard_to_turn_into_representation_staff__linked_partner_already_staff__gives_error(self):
         partner_id = self.reference(
             "som_ov_users",
             "res_partner_res_users_already_staff",
@@ -95,7 +96,7 @@ class ResUsersTests(testing.OOTestCase):
             "res_users_already_staff",
         )
 
-        data = self.res_users.ovrepre_provisioning_data(self.cursor, self.uid, user_id)
+        data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
         self.assertEqual(data, dict(
             vat = partner.vat,
@@ -103,8 +104,7 @@ class ResUsersTests(testing.OOTestCase):
             error = "La usuaria ja estàva com a gestora de l'Oficina Virtual de Representa",
         ))
 
-    @unittest.skip('Wait for Fran to confime whether the fisrt or the last address is used')
-    def test__ovrepre_provisioning_data__non_staff_with_linked_secondary_address(self):
+    def test__init_wizard_to_turn_into_representation_staff__non_staff_with_linked_secondary_address(self):
         partner_id = self.reference(
             "som_ov_users",
             "res_partner_res_users_already_staff",
@@ -129,7 +129,7 @@ class ResUsersTests(testing.OOTestCase):
         })
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
 
-        data = self.res_users.ovrepre_provisioning_data(self.cursor, self.uid, user_id)
+        data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
         self.assertEqual(data, dict(
             vat = partner.vat,
