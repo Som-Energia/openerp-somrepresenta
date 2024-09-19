@@ -47,6 +47,16 @@ class ResUsers(osv.osv):
                 error = "L'adreça primària de la persona vinculada a la usuària no té email",
             )
 
+        res_partner_obj = self.pool.get('res.partner')
+        number_of_partners_with_vat = res_partner_obj.search_count(cursor, uid, [
+            ('vat', '=', vat),
+        ])
+
+        if number_of_partners_with_vat > 1:
+            return dict(
+                error = "El VAT de la persona vinculada a la usuària, {vat}, està assignat a més persones".format(vat=vat),
+            )
+
         return dict(
             dict(error=error) if error else {},
             vat = vat,
