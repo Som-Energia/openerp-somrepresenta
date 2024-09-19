@@ -206,3 +206,33 @@ class ResUsersTests(testing.OOTestCase):
             error = "L'adreça primària de la persona vinculada a la usuària no té email",
         ))
 
+    def test__init_wizard_to_turn_into_representation_staff__dupped_vat(self):
+        partner_id = self.reference(
+            "som_ov_users",
+            "res_partner_res_users_already_staff",
+        )
+        other_partner_id = self.reference(
+            "som_ov_users",
+            "res_partner_soci",
+        )
+
+        partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
+        other_partner = self.res_partner.browse(self.cursor, self.uid, other_partner_id)
+        user_id = self.reference(
+            "som_ov_users",
+            "res_users_already_staff",
+        )
+
+        # Remove the category
+        self.res_partner.write(self.cursor, self.uid, partner_id, {
+            'category_id': [(6, 0, [])],
+            'vat': other_partner.vat,
+        })
+
+        data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
+
+        # Then the wizard uses data from the linked parnter
+        self.assertEqual(data, dict(
+            error = "El VAT de la persona vinculada a la usuària, {vat}, està assignat a més persones".format(vat=other_partner.vat),
+        ))
+
