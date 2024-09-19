@@ -8,6 +8,15 @@ from destral.transaction import Transaction
 
 import unittest
 
+class OrmLink:
+    create = 0
+    update = 1
+    delete = 2
+    unlink = 3
+    link = 4
+    clear = 5
+    set = 6
+
 def get_models(self):
     self.pool = self.openerp.pool
     self.imd = self.pool.get('ir.model.data')
@@ -75,7 +84,7 @@ class ResUsersTests(testing.OOTestCase):
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
         user_id = self.staff_user_id
         # Remove the category
-        self.res_partner.write(self.cursor, self.uid, partner_id, {'category_id': [(6, 0, [])]})
+        self.res_partner.write(self.cursor, self.uid, partner_id, {'category_id': [(OrmLink.set, 0, [])]})
 
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
@@ -103,12 +112,10 @@ class ResUsersTests(testing.OOTestCase):
         user_id = self.staff_user_id
         new_partner_address_id = self.unlinked_address_id
         # Remove the category and add the new address
-        LINK = 4
-        SET = 6
         self.res_partner.write(self.cursor, self.uid, partner_id, {
-            'category_id': [(SET, 0, [])],
+            'category_id': [(OrmLink.set, 0, [])],
             # Add the new address to the existing one
-            'address': [(LINK, new_partner_address_id)],
+            'address': [(OrmLink.link, new_partner_address_id)],
         })
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
         user = self.res_users.browse(self.cursor, self.uid, user_id)
@@ -152,7 +159,7 @@ class ResUsersTests(testing.OOTestCase):
         user_id = self.staff_user_id
         # Remove the category and the partner VAT
         self.res_partner.write(self.cursor, self.uid, partner_id, {
-            'category_id': [(6, 0, [])],
+            'category_id': [(OrmLink.set, 0, [])],
             'vat': False,
         })
 
@@ -168,7 +175,7 @@ class ResUsersTests(testing.OOTestCase):
         user_id = self.staff_user_id
         # Remove the category
         self.res_partner.write(self.cursor, self.uid, partner_id, {
-            'category_id': [(6, 0, [])],
+            'category_id': [(OrmLink.set, 0, [])],
         })
         self.res_partner_address.write(self.cursor, self.uid, partner.address[0].id, dict(
             email = False,
@@ -191,7 +198,7 @@ class ResUsersTests(testing.OOTestCase):
 
         # Remove the category and set the vat of another existing partner
         self.res_partner.write(self.cursor, self.uid, partner_id, {
-            'category_id': [(6, 0, [])],
+            'category_id': [(OrmLink.set, 0, [])],
             'vat': other_partner.vat,
         })
 
