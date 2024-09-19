@@ -122,18 +122,20 @@ class ResUsersTests(testing.OOTestCase):
         SET = 6
         self.res_partner.write(self.cursor, self.uid, partner_id, {
             'category_id': [(SET, 0, [])],
-            # This sets the new primary address of the partner
-            # now different from the one linked in user which
-            # is set as secondary now
+            # Add the new address to the existing one
             'address': [(LINK, new_partner_address_id)],
         })
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
+        # The linked address is not the first one of the partner
+        self.res_users.write(self.cursor, self.uid, user_id, dict(
+            address_id=new_partner_address_id,
+        ))
 
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
         self.assertEqual(data, dict(
             vat = partner.vat,
-            email = "unlinked@somenergia.coop", # partner.address[0].email,
-            warning = "",
+            email = partner.address[0].email, # not "unlinked@somenergia.coop"
+            #warning = "lo pensamos ahora",
         ))
 
