@@ -26,6 +26,11 @@ class ResUsers(osv.osv):
                 email = None,
             )
 
+        if not user.address_id.partner_id:
+            return dict(
+                error = "La usuària té una adreça que no està vinculada a cap persona",
+            )
+
         if user.is_staff:
             error = "La usuaria ja estàva com a gestora de l'Oficina Virtual de Representa"
 
