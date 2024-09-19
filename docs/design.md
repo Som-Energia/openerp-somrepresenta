@@ -17,12 +17,13 @@ Definicions:
 - provided data: the ones provided by the user on the wizard fields
     - VAT
     - Mail
+- A consitent partner, has a vat and the first adress has a valid email
 
 Base case:
 
 1. Operator selects a User in the ERP
 2. Operator actions "Turnt into SomRepre Staff"
-3. Wizard verifies that user has not a partner address
+3. [x] Wizard verifies that user has not a partner address
 4. Wizard prompts for a VAT and a email
 5. Wizard verifies that there is not a partner with that VAT
 6. Wizard creates the partner with provided data
@@ -45,25 +46,29 @@ TODO
 5.b.1. Wizard adds an error: "There is more than one person matching this VAT. Fix it, before proceeding"
 5.a.3. Go to step 10
 
-3.a. Wizard detects that the user is already relatated to an address
-3.a.1. Wizard verifies that the address's partner has VAT
+3.a. [x] Wizard detects that the user is already relatated to an address
+3.a.1. Wizard verifies that the linked address partner is not broken
 3.a.2. Wizard verifies that the linked address is the first one
-3.a.2. Wizard verifies that there is no more partners with that VAT
-3.a.2. Wizard verifies that the partner is missing the category
-3.a.2. Wizard takes the VAT from the partner to fill the form
-3.a.2. Wizard takes the email from the first partner address (not the linked one) to fill the form
-3.a.2. Wizard prompts "This will will turn this user into somrepre staff, proceed?"
-3.a.2. User acepts
-3.a.2. Go to step 9
+3.a.3. Wizard verifies that there is no more partners with that VAT
+3.a.4. Wizard verifies that the partner is missing the category
+3.a.5. Wizard takes the VAT from the partner to fill the form
+3.a.6. Wizard takes the email from the first partner address (not the linked one) to fill the form
+3.a.7. Wizard prompts "This will will turn this user into somrepre staff, proceed?"
+3.a.8. User acepts
+3.a.9. Go to step 9
 
-3.a.0.a. Wizard detects that the partner has the category
-3.a.0.a.1. Shows message "Already staff" and abort
-TODO: Warn about inconsistencies
+3.a.1.a. Wizard detect that the linked partner is inconsistent
+3.a.1.a.1. Shows message "Partner related is broken: <reason>" and abort
 
-3.a.4.a. Wizard is mising VAT/email or dupped VAT
-3.a.0.a.1. Shows message "Already staff" and abort
+3.a.2.a. The address linked to the user is not the first one of the partner
+3.a.2.a.1. Set the form warning to "Using the primary address of the partner instead the one set on the user"
+3.a.2.a.2. Goto 3.a.3
 
+3.a.3.a. Wizard detect that the linked partner VAT is dupped in other partners
+3.a.3.a.1. Shows message "Other parnters have the same VAT, fix it" and abort
 
+3.a.4.a. [x] Wizard detects that the linked parnter already has category
+3.a.4.a.1. Shows message "Already staff" and abort
 
 ## Authentication
 
