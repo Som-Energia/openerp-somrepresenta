@@ -104,7 +104,7 @@ class ResUsersTests(testing.OOTestCase):
             error = "La usuaria ja estàva com a gestora de l'Oficina Virtual de Representa",
         ))
 
-    def test__init_wizard_to_turn_into_representation_staff__non_staff_with_linked_secondary_address(self):
+    def test__init_wizard_to_turn_into_representation_staff__when_linked_to_a_secondary_address__warn_not_the_address_to_be_used(self):
         partner_id = self.reference(
             "som_ov_users",
             "res_partner_res_users_already_staff",
@@ -126,6 +126,7 @@ class ResUsersTests(testing.OOTestCase):
             'address': [(LINK, new_partner_address_id)],
         })
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
+        user = self.res_users.browse(self.cursor, self.uid, user_id)
         # The linked address is not the first one of the partner
         self.res_users.write(self.cursor, self.uid, user_id, dict(
             address_id=new_partner_address_id,
@@ -136,8 +137,14 @@ class ResUsersTests(testing.OOTestCase):
         self.assertEqual(data, dict(
             vat = partner.vat,
             email = partner.address[0].email, # not "unlinked@somenergia.coop"
-            # TODO
-            #warning = "lo pensamos ahora",
+            warning = (
+                "L'adreça vinculada a la usuària, {linked}, "
+                "no serà la que es fará servir a la OV sinó "
+                "la de l'adreça principal de la persona {primary}"
+            ).format(
+                linked = user.address_id.email,
+                primary = partner.address[0].email,
+            ),
         ))
 
     def test__init_wizard_to_turn_into_representation_staff__user_linked_to_a_partnerless_address(self):

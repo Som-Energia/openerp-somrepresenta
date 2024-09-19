@@ -60,11 +60,11 @@ TODO
 3.a.1.a. [x] Wizard detect that the linked address is inconsistent
 3.a.1.a.1. Shows message "Partner related is broken: <reason>" and abort
 
-3.a.2.a. [] The address linked to the user is not the first one of the partner
+3.a.2.a. [x] The address linked to the user is not the first one of the partner
 3.a.2.a.1. Set the form warning to "Using the primary address of the partner instead the one set on the user"
 3.a.2.a.2. Goto 3.a.3
 
-3.a.3.a. [] Wizard detect that the linked partner VAT is dupped in other partners
+3.a.3.a. [x] Wizard detect that the linked partner VAT is dupped in other partners
 3.a.3.a.1. Shows message "Other parnters have the same VAT, fix it" and abort
 
 3.a.4.a. [x] Wizard detects that the linked parnter already has category
