@@ -136,6 +136,27 @@ class ResUsersTests(testing.OOTestCase):
         self.assertEqual(data, dict(
             vat = partner.vat,
             email = partner.address[0].email, # not "unlinked@somenergia.coop"
+            # TODO
             #warning = "lo pensamos ahora",
+        ))
+
+    def test__init_wizard_to_turn_into_representation_staff__user_linked_to_a_partnerless_address(self):
+        user_id = self.reference(
+            "som_ov_users",
+            "res_users_already_staff",
+        )
+        new_partner_address_id = self.reference(
+            "som_ov_users",
+            "res_partner_address_unlinked",
+        )
+        # The user address is an unlinked one
+        self.res_users.write(self.cursor, self.uid, user_id, dict(
+            address_id=new_partner_address_id,
+        ))
+
+        data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
+
+        self.assertEqual(data, dict(
+            error = "La usuària té una adreça que no està vinculada a cap persona",
         ))
 
