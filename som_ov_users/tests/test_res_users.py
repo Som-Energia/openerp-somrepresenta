@@ -160,3 +160,49 @@ class ResUsersTests(testing.OOTestCase):
             error = "La usuària té una adreça que no està vinculada a cap persona",
         ))
 
+    def test__init_wizard_to_turn_into_representation_staff__linked_partner_without_vat(self):
+        partner_id = self.reference(
+            "som_ov_users",
+            "res_partner_res_users_already_staff",
+        )
+        partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
+        user_id = self.reference(
+            "som_ov_users",
+            "res_users_already_staff",
+        )
+        # Remove the category and the partner VAT
+        self.res_partner.write(self.cursor, self.uid, partner_id, {
+            'category_id': [(6, 0, [])],
+            'vat': False,
+        })
+
+        data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
+
+        self.assertEqual(data, dict(
+            error = "La persona vinculada per l'adreça de la usuària no té VAT",
+        ))
+
+    def test__init_wizard_to_turn_into_representation_staff__linked_partner_without_email(self):
+        partner_id = self.reference(
+            "som_ov_users",
+            "res_partner_res_users_already_staff",
+        )
+        partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
+        user_id = self.reference(
+            "som_ov_users",
+            "res_users_already_staff",
+        )
+        # Remove the category
+        self.res_partner.write(self.cursor, self.uid, partner_id, {
+            'category_id': [(6, 0, [])],
+        })
+        self.res_partner_address.write(self.cursor, self.uid, partner.address[0].id, dict(
+            email = False,
+        ))
+
+        data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
+
+        self.assertEqual(data, dict(
+            error = "L'adreça primària de la persona vinculada a la usuària no té email",
+        ))
+
