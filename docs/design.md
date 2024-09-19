@@ -17,7 +17,7 @@ Definicions:
 - provided data: the ones provided by the user on the wizard fields
     - VAT
     - Mail
-- A consitent partner, has a vat and the first adress has a valid email
+- A consistent linked address has a partner, with a vat and a first address has a valid email
 
 Base case:
 
@@ -47,7 +47,7 @@ TODO
 5.a.3. Go to step 10
 
 3.a. [x] Wizard detects that the user is already relatated to an address
-3.a.1. Wizard verifies that the linked address partner is not broken
+3.a.1. Wizard verifies that the linked address is not broken
 3.a.2. Wizard verifies that the linked address is the first one
 3.a.3. Wizard verifies that there is no more partners with that VAT
 3.a.4. Wizard verifies that the partner is missing the category
@@ -57,14 +57,14 @@ TODO
 3.a.8. User acepts
 3.a.9. Go to step 9
 
-3.a.1.a. Wizard detect that the linked partner is inconsistent
+3.a.1.a. [x] Wizard detect that the linked address is inconsistent
 3.a.1.a.1. Shows message "Partner related is broken: <reason>" and abort
 
-3.a.2.a. The address linked to the user is not the first one of the partner
+3.a.2.a. [] The address linked to the user is not the first one of the partner
 3.a.2.a.1. Set the form warning to "Using the primary address of the partner instead the one set on the user"
 3.a.2.a.2. Goto 3.a.3
 
-3.a.3.a. Wizard detect that the linked partner VAT is dupped in other partners
+3.a.3.a. [] Wizard detect that the linked partner VAT is dupped in other partners
 3.a.3.a.1. Shows message "Other parnters have the same VAT, fix it" and abort
 
 3.a.4.a. [x] Wizard detects that the linked parnter already has category

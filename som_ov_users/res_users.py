@@ -37,6 +37,16 @@ class ResUsers(osv.osv):
         vat = user.address_id.partner_id.vat
         email = user.address_id.partner_id.address[0].email
 
+        if not vat:
+            return dict(
+                error = "La persona vinculada per l'adreça de la usuària no té VAT",
+            )
+
+        if not email:
+            return dict(
+                error = "L'adreça primària de la persona vinculada a la usuària no té email",
+            )
+
         return dict(
             dict(error=error) if error else {},
             vat = vat,
