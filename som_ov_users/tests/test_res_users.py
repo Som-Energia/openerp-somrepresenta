@@ -39,9 +39,10 @@ class ResUsersTests(testing.OOTestCase):
     def setUp(self):
         self.get_models()
         self.setup_transaction()
+        self.staff_user_id = self.reference('som_ov_users', 'res_users_already_staff')
 
     def test__is_user_staff__user_is_staff(self):
-        user_id = self.reference('som_ov_users', 'res_users_already_staff')
+        user_id = self.staff_user_id
 
         is_staff = self.res_users._is_user_staff(self.cursor, self.uid, self.res_users, user_id)
 
@@ -71,10 +72,7 @@ class ResUsersTests(testing.OOTestCase):
             "res_partner_res_users_already_staff",
         )
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
-        user_id = self.reference(
-            "som_ov_users",
-            "res_users_already_staff",
-        )
+        user_id = self.staff_user_id
         # Remove the category
         self.res_partner.write(self.cursor, self.uid, partner_id, {'category_id': [(6, 0, [])]})
 
@@ -92,10 +90,7 @@ class ResUsersTests(testing.OOTestCase):
             "res_partner_res_users_already_staff",
         )
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
-        user_id = self.reference(
-            "som_ov_users",
-            "res_users_already_staff",
-        )
+        user_id = self.staff_user_id
 
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
@@ -110,10 +105,7 @@ class ResUsersTests(testing.OOTestCase):
             "som_ov_users",
             "res_partner_res_users_already_staff",
         )
-        user_id = self.reference(
-            "som_ov_users",
-            "res_users_already_staff",
-        )
+        user_id = self.staff_user_id
         new_partner_address_id = self.reference(
             "som_ov_users",
             "res_partner_address_unlinked",
@@ -149,10 +141,7 @@ class ResUsersTests(testing.OOTestCase):
         ))
 
     def test__init_wizard_to_turn_into_representation_staff__user_linked_to_a_partnerless_address(self):
-        user_id = self.reference(
-            "som_ov_users",
-            "res_users_already_staff",
-        )
+        user_id = self.staff_user_id
         new_partner_address_id = self.reference(
             "som_ov_users",
             "res_partner_address_unlinked",
@@ -174,10 +163,7 @@ class ResUsersTests(testing.OOTestCase):
             "res_partner_res_users_already_staff",
         )
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
-        user_id = self.reference(
-            "som_ov_users",
-            "res_users_already_staff",
-        )
+        user_id = self.staff_user_id
         # Remove the category and the partner VAT
         self.res_partner.write(self.cursor, self.uid, partner_id, {
             'category_id': [(6, 0, [])],
@@ -196,10 +182,7 @@ class ResUsersTests(testing.OOTestCase):
             "res_partner_res_users_already_staff",
         )
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
-        user_id = self.reference(
-            "som_ov_users",
-            "res_users_already_staff",
-        )
+        user_id = self.staff_user_id
         # Remove the category
         self.res_partner.write(self.cursor, self.uid, partner_id, {
             'category_id': [(6, 0, [])],
@@ -226,10 +209,7 @@ class ResUsersTests(testing.OOTestCase):
 
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
         other_partner = self.res_partner.browse(self.cursor, self.uid, other_partner_id)
-        user_id = self.reference(
-            "som_ov_users",
-            "res_users_already_staff",
-        )
+        user_id = self.staff_user_id
 
         # Remove the category
         self.res_partner.write(self.cursor, self.uid, partner_id, {
