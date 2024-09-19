@@ -26,7 +26,7 @@ class ResUsers(osv.osv):
         return dict(
             dict(error=error) if error else {},
             vat = user.address_id.partner_id.vat if user.address_id else None,
-            email = user.address_id.email if user.address_id else None,
+            email = user.address_id.partner_id.address[0].email if user.address_id else None,
         )
 
     def _is_user_staff(self, cursor, uid, res_user_obj, res_user_id):
