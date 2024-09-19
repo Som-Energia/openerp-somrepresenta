@@ -42,7 +42,8 @@ class ResUsersTests(testing.OOTestCase):
         self.staff_user_id = self.reference('som_ov_users', 'res_users_already_staff')
         self.staff_partner_id = self.reference('som_ov_users', 'res_partner_res_users_already_staff')
         self.non_staff_user_id = self.reference('som_ov_users', 'res_users_non_staff')
-
+        self.unlinked_address_id = self.reference('som_ov_users', 'res_partner_address_unlinked')
+        self.other_partner_id = self.reference('som_ov_users', 'res_partner_soci')
 
     def test__is_user_staff__user_is_staff(self):
         user_id = self.staff_user_id
@@ -100,10 +101,7 @@ class ResUsersTests(testing.OOTestCase):
     def test__init_wizard_to_turn_into_representation_staff__when_linked_to_a_secondary_address__warn_not_the_address_to_be_used(self):
         partner_id = self.staff_partner_id
         user_id = self.staff_user_id
-        new_partner_address_id = self.reference(
-            "som_ov_users",
-            "res_partner_address_unlinked",
-        )
+        new_partner_address_id = self.unlinked_address_id
         # Remove the category and add the new address
         LINK = 4
         SET = 6
@@ -136,10 +134,7 @@ class ResUsersTests(testing.OOTestCase):
 
     def test__init_wizard_to_turn_into_representation_staff__user_linked_to_a_partnerless_address(self):
         user_id = self.staff_user_id
-        new_partner_address_id = self.reference(
-            "som_ov_users",
-            "res_partner_address_unlinked",
-        )
+        new_partner_address_id = self.unlinked_address_id
         # The user address is an unlinked one
         self.res_users.write(self.cursor, self.uid, user_id, dict(
             address_id=new_partner_address_id,
@@ -187,22 +182,22 @@ class ResUsersTests(testing.OOTestCase):
 
     def test__init_wizard_to_turn_into_representation_staff__dupped_vat(self):
         partner_id = self.staff_partner_id
-        other_partner_id = self.reference(
-            "som_ov_users",
-            "res_partner_soci",
-        )
-
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
+
+        other_partner_id = self.other_partner_id
         other_partner = self.res_partner.browse(self.cursor, self.uid, other_partner_id)
+
         user_id = self.staff_user_id
 
-        # Remove the category
+        # Remove the category and set the vat of another existing partner
         self.res_partner.write(self.cursor, self.uid, partner_id, {
             'category_id': [(6, 0, [])],
             'vat': other_partner.vat,
         })
 
+
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
+
 
         # Then the wizard uses data from the linked parnter
         self.assertEqual(data, dict(
