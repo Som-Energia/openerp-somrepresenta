@@ -40,6 +40,8 @@ class ResUsersTests(testing.OOTestCase):
         self.get_models()
         self.setup_transaction()
         self.staff_user_id = self.reference('som_ov_users', 'res_users_already_staff')
+        self.non_staff_user_id = self.reference('som_ov_users', 'res_users_non_staff')
+
 
     def test__is_user_staff__user_is_staff(self):
         user_id = self.staff_user_id
@@ -49,7 +51,7 @@ class ResUsersTests(testing.OOTestCase):
         self.assertTrue(is_staff)
 
     def test__is_user_staff__user_is_not_staff(self):
-        user_id = self.reference('som_ov_users', 'res_users_non_staff')
+        user_id = self.non_staff_user_id
 
         is_staff = self.res_users._is_user_staff(self.cursor, self.uid, self.res_users, user_id)
 
@@ -57,7 +59,7 @@ class ResUsersTests(testing.OOTestCase):
 
     def test__init_wizard_to_turn_into_representation_staff__base_case(self):
         # User has no address and no partner with such VAT exists
-        user_id = self.reference('som_ov_users', 'res_users_non_staff')
+        user_id = self.non_staff_user_id
 
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
