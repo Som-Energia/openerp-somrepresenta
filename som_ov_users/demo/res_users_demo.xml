@@ -14,7 +14,7 @@
         </record>
 
         <!-- User exists, is active -->
-        <record id="res_users_staff" model="res.users">
+        <record id="res_users_non_staff" model="res.users">
             <field name="name">Cameron, Katie</field>
             <field name="login">lamaali</field>
             <field name="password">$9$NB3wTRKd$PL7sNc2PQsY.foLPazpkr.</field>
