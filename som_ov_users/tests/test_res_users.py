@@ -8,28 +8,37 @@ from destral.transaction import Transaction
 
 import unittest
 
+def get_models(self):
+    self.pool = self.openerp.pool
+    self.imd = self.pool.get('ir.model.data')
+    self.res_users = self.pool.get('res.users')
+    self.res_partner = self.pool.get('res.partner')
+    self.res_partner_address = self.pool.get('res.partner.address')
+    self.wiz_o = self.pool.get('wizard.create.staff.users')
+
+def setup_transaction(self):
+    self.txn = Transaction().start(self.database)
+
+    self.cursor = self.txn.cursor
+    self.uid = self.txn.user
+    def cleanup():
+        self.txn.stop()
+    self.addCleanup(cleanup)
+
+def reference(self, module, id):
+    return self.imd.get_object_reference(
+        self.cursor, self.uid, module, id,
+    )[1]
+
+
 class ResUsersTests(testing.OOTestCase):
+    get_models = get_models
+    setup_transaction = setup_transaction
+    reference = reference
 
     def setUp(self):
-        self.pool = self.openerp.pool
-        self.imd = self.pool.get('ir.model.data')
-        self.res_users = self.pool.get('res.users')
-        self.res_partner = self.pool.get('res.partner')
-        self.res_partner_address = self.pool.get('res.partner.address')
-        self.wiz_o = self.pool.get('wizard.create.staff.users')
-
-        self.txn = Transaction().start(self.database)
-
-        self.cursor = self.txn.cursor
-        self.uid = self.txn.user
-
-    def tearDown(self):
-        self.txn.stop()
-
-    def reference(self, module, id):
-        return self.imd.get_object_reference(
-            self.cursor, self.uid, module, id,
-        )[1]
+        self.get_models()
+        self.setup_transaction()
 
     def test__is_user_staff__user_is_staff(self):
         user_id = self.reference('som_ov_users', 'res_users_already_staff')
