@@ -40,6 +40,7 @@ class ResUsersTests(testing.OOTestCase):
         self.get_models()
         self.setup_transaction()
         self.staff_user_id = self.reference('som_ov_users', 'res_users_already_staff')
+        self.staff_partner_id = self.reference('som_ov_users', 'res_partner_res_users_already_staff')
         self.non_staff_user_id = self.reference('som_ov_users', 'res_users_non_staff')
 
 
@@ -69,10 +70,7 @@ class ResUsersTests(testing.OOTestCase):
         ))
 
     def test__init_wizard_to_turn_into_representation_staff__linked_to_non_staff_address(self):
-        partner_id = self.reference(
-            "som_ov_users",
-            "res_partner_res_users_already_staff",
-        )
+        partner_id = self.staff_partner_id
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
         user_id = self.staff_user_id
         # Remove the category
@@ -87,10 +85,7 @@ class ResUsersTests(testing.OOTestCase):
         ))
 
     def test__init_wizard_to_turn_into_representation_staff__linked_partner_already_staff__gives_error(self):
-        partner_id = self.reference(
-            "som_ov_users",
-            "res_partner_res_users_already_staff",
-        )
+        partner_id = self.staff_partner_id
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
         user_id = self.staff_user_id
 
@@ -103,10 +98,7 @@ class ResUsersTests(testing.OOTestCase):
         ))
 
     def test__init_wizard_to_turn_into_representation_staff__when_linked_to_a_secondary_address__warn_not_the_address_to_be_used(self):
-        partner_id = self.reference(
-            "som_ov_users",
-            "res_partner_res_users_already_staff",
-        )
+        partner_id = self.staff_partner_id
         user_id = self.staff_user_id
         new_partner_address_id = self.reference(
             "som_ov_users",
@@ -160,10 +152,7 @@ class ResUsersTests(testing.OOTestCase):
         ))
 
     def test__init_wizard_to_turn_into_representation_staff__linked_partner_without_vat(self):
-        partner_id = self.reference(
-            "som_ov_users",
-            "res_partner_res_users_already_staff",
-        )
+        partner_id = self.staff_partner_id
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
         user_id = self.staff_user_id
         # Remove the category and the partner VAT
@@ -179,10 +168,7 @@ class ResUsersTests(testing.OOTestCase):
         ))
 
     def test__init_wizard_to_turn_into_representation_staff__linked_partner_without_email(self):
-        partner_id = self.reference(
-            "som_ov_users",
-            "res_partner_res_users_already_staff",
-        )
+        partner_id = self.staff_partner_id
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
         user_id = self.staff_user_id
         # Remove the category
@@ -200,10 +186,7 @@ class ResUsersTests(testing.OOTestCase):
         ))
 
     def test__init_wizard_to_turn_into_representation_staff__dupped_vat(self):
-        partner_id = self.reference(
-            "som_ov_users",
-            "res_partner_res_users_already_staff",
-        )
+        partner_id = self.staff_partner_id
         other_partner_id = self.reference(
             "som_ov_users",
             "res_partner_soci",
