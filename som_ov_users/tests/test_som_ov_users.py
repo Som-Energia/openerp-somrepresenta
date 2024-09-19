@@ -12,7 +12,7 @@ from .. import som_ov_users
 class SomUsersTests(testing.OOTestCase):
 
     base_costumer_vat = 'ES48591264S'
-    base_staff_vat = 'G78525763'
+    base_staff_vat = 'ESV41325689'
 
     def setUp(self):
         self.pool = self.openerp.pool

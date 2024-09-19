@@ -25,7 +25,7 @@
         <!-- User exists, is active and is staff -->
         <record id="res_partner_res_users_already_staff" model="res.partner">
             <field name="name">Hari, Mata</field>
-            <field name="vat">G78525763</field>
+            <field name="vat">ESV41325689</field>
             <field name="category_id" eval="[(6, 0, [ref('res_partner_category_ovrepresenta_staff')])]" />
         </record>
         <record id="res_partner_address_res_users_already_staff" model="res.partner.address">
