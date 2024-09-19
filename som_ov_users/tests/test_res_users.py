@@ -55,7 +55,7 @@ class ResUsersTests(testing.OOTestCase):
 
     def test__init_wizard_to_turn_into_representation_staff__base_case(self):
         # User has no address and no partner with such VAT exists
-        user_id = self.reference('som_ov_users', 'res_users_staff') # TOD:rename to no_staff
+        user_id = self.reference('som_ov_users', 'res_users_non_staff')
 
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
