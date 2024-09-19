@@ -57,6 +57,20 @@ class ResUsers(osv.osv):
                 error = "El VAT de la persona vinculada a la usuària, {vat}, està assignat a més persones".format(vat=vat),
             )
 
+        if user.address_id.id != user.address_id.partner_id.address[0].id:
+            return dict(
+                vat = vat,
+                email = email,
+                warning = (
+                    "L'adreça vinculada a la usuària, {linked}, "
+                    "no serà la que es fará servir a la OV sinó "
+                    "la de l'adreça principal de la persona {primary}"
+                ).format(
+                    linked = user.address_id.email,
+                    primary = email,
+                )
+            )
+
         return dict(
             dict(error=error) if error else {},
             vat = vat,
