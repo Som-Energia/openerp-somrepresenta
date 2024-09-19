@@ -20,13 +20,22 @@ class ResUsers(osv.osv):
         error = None
         user = self.browse(cursor, uid, res_user_id)
 
+        if not user.address_id:
+            return dict(
+                vat = None,
+                email = None,
+            )
+
         if user.is_staff:
             error = "La usuaria ja estàva com a gestora de l'Oficina Virtual de Representa"
 
+        vat = user.address_id.partner_id.vat
+        email = user.address_id.partner_id.address[0].email
+
         return dict(
             dict(error=error) if error else {},
-            vat = user.address_id.partner_id.vat if user.address_id else None,
-            email = user.address_id.partner_id.address[0].email if user.address_id else None,
+            vat = vat,
+            email = email,
         )
 
     def _is_user_staff(self, cursor, uid, res_user_obj, res_user_id):
