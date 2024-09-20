@@ -13,7 +13,7 @@
             <field name="grouping">[]</field>
         </record>
 
-        <!-- User exists, is active -->
+        <!-- User unlinked to any address -->
         <record id="res_users_non_staff" model="res.users">
             <field name="name">Cameron, Katie</field>
             <field name="login">lamaali</field>
@@ -22,7 +22,7 @@
             <field name="lang">ca_ES</field>
         </record>
 
-        <!-- User exists, is active and is staff -->
+        <!-- User linked to a partner with staff category -->
         <record id="res_partner_res_users_already_staff" model="res.partner">
             <field name="name">Hari, Mata</field>
             <field name="vat">ESV41325689</field>
@@ -37,14 +37,6 @@
             <field name="zip">17002</field>
             <field name="state_id">20</field>
         </record>
-        <record id="res_partner_address_unlinked" model="res.partner.address">
-            <field name="name">Hari Unlinked, Mata</field>
-            <field name="email">unlinked@somenergia.coop</field>
-            <field name="street">Unlinked Street, 1</field>
-            <field name="city">Girona</field>
-            <field name="zip">17002</field>
-            <field name="state_id">20</field>
-        </record>
         <record id="res_users_already_staff" model="res.users">
             <field name="name">Hari, Mata</field>
             <field name="login">matahari</field>
@@ -52,6 +44,15 @@
             <field name="address_id" ref="res_partner_address_res_users_already_staff"/>
             <field name="active" eval="True"/>
             <field name="lang">ca_ES</field>
+        </record>
+        <!-- Address unlinked to any partner (to be linked in tests) -->
+        <record id="res_partner_address_unlinked" model="res.partner.address">
+            <field name="name">Hari Unlinked, Mata</field>
+            <field name="email">unlinked@somenergia.coop</field>
+            <field name="street">Unlinked Street, 1</field>
+            <field name="city">Girona</field>
+            <field name="zip">17002</field>
+            <field name="state_id">20</field>
         </record>
     </data>
 </openerp>
