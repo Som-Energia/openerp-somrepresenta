@@ -10,9 +10,23 @@ class WizardCreateStaffUsers(osv.osv_memory):
 
         active_ids = context.get('active_ids')
 
+        res_user_id = active_ids[0] if active_ids else None
+        # TODO: Handle None
+
+        user_obj = self.pool.get("res.users")
+        init_data = user_obj.init_wizard_to_turn_into_representation_staff(cursor, uid, res_user_id)
+        if init_data.get('error'):
+            init_data['init_error'] = True
+            init_data['init_message'] = init_data.pop('error')
+
+        if init_data.get('warning'):
+            init_data['init_error'] = False
+            init_data['init_message'] = init_data.pop('warning')
+
         res.update({
-            'user_to_staff': active_ids[0] if active_ids else None,
-        })
+            'user_to_staff': res_user_id,
+        }, **init_data)
+
         return res
 
     def _update_wizard_status(self, cursor, uid, ids, state, info=''):
@@ -95,9 +109,11 @@ class WizardCreateStaffUsers(osv.osv_memory):
     _columns = {
         'state': fields.char('State', size=16),
         'info': fields.text('Info', size=4000),
-        'email': fields.char('Email', size=100),
         'user_to_staff': fields.many2one('res.users', 'Usuaria', required=True),
         'vat': fields.char('VAT', size=20),
+        'email': fields.char('Email', size=100),
+        'init_error': fields.boolean('Init Error'),
+        'init_message': fields.text('Init Message', size=4000),
     }
 
     _defaults = {

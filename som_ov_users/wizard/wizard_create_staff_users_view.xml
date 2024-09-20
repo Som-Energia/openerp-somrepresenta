@@ -10,11 +10,12 @@
                     <field name="state" invisible="1"/>
                     <group colspan="4" attrs="{'invisible': [('state', '!=', 'init')]}">
                         <field name="user_to_staff" colspan="4" width="400"/>
-                        <field name="email" colspan="4" width="400"/>
-                        <field name="vat" colspan="4" width="400"/>
+                        <field name="vat" colspan="4" width="400" attrs="{'readonly': [('vat', '!=', False)]}"/>
+                        <field name="email" colspan="4" width="400" attrs="{'readonly': [('email', '!=', False)]}"/>
+                        <field name="init_message" colspan="4" readonly="1" nolabel="1" attrs="{'invisible': [('init_message', '=', False)]}"/>
                         <group colspan="4">
-                            <button icon="gtk-ok" name="action_create_staff_users" string="Crear" type="object"/>
                             <button special="cancel" string="Cancel·lar" icon="gtk-cancel"/>
+                            <button icon="gtk-ok" name="action_create_staff_users" string="Crear" type="object" attrs="{'readonly': [('init_error', '=', True)]}"/>
                         </group>
                     </group>
                     <group colspan="4" attrs="{'invisible': [('state', '!=', 'done')]}">
