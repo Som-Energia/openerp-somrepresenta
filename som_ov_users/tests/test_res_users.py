@@ -162,15 +162,18 @@ class ResUsersTests(testing.OOTestCase):
             error = "La usuària té una adreça que no està vinculada a cap persona",
         ))
 
+    def set_partner_vat(self, partner_id, vat):
+        self.res_partner.write(self.cursor, self.uid, partner_id, {
+            'vat': vat,
+        })
+
     def test__init_wizard_to_turn_into_representation_staff__linked_partner_without_vat(self):
         partner_id = self.staff_partner_id
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
         user_id = self.staff_user_id
         # Remove the category and the partner VAT
         self.clear_partner_categories(partner_id)
-        self.res_partner.write(self.cursor, self.uid, partner_id, {
-            'vat': False,
-        })
+        self.set_partner_vat(partner_id, False)
 
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
@@ -204,9 +207,7 @@ class ResUsersTests(testing.OOTestCase):
 
         # Remove the category and set the vat of another existing partner
         self.clear_partner_categories(partner_id)
-        self.res_partner.write(self.cursor, self.uid, partner_id, {
-            'vat': other_partner.vat,
-        })
+        self.set_partner_vat(partner_id, other_partner.vat)
 
 
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
