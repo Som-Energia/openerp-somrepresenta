@@ -140,13 +140,15 @@ class ResUsersTests(testing.OOTestCase):
             ),
         ))
 
+    def set_user_address(self, user_id, address_id):
+        self.res_users.write(self.cursor, self.uid, user_id, dict(
+            address_id=address_id,
+        ))
+
     def test__init_wizard_to_turn_into_representation_staff__user_linked_to_a_partnerless_address(self):
         user_id = self.staff_user_id
-        new_partner_address_id = self.unlinked_address_id
         # The user address is an unlinked one
-        self.res_users.write(self.cursor, self.uid, user_id, dict(
-            address_id=new_partner_address_id,
-        ))
+        self.set_user_address(user_id, self.unlinked_address_id)
 
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
