@@ -181,17 +181,18 @@ class ResUsersTests(testing.OOTestCase):
             error = "La persona vinculada per l'adreça de la usuària no té VAT",
         ))
 
-    def set_address_email(self, address_id, email):
-        self.res_partner_address.write(self.cursor, self.uid, address_id, dict(
+    def set_partner_primary_email(self, partner_id, email):
+        partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
+        primary_address_id = partner.address[0].id
+        self.res_partner_address.write(self.cursor, self.uid, primary_address_id, dict(
             email = email,
         ))
 
     def test__init_wizard_to_turn_into_representation_staff__linked_partner_without_email(self):
         partner_id = self.staff_partner_id
-        partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
         user_id = self.staff_user_id
         self.clear_partner_categories(partner_id)
-        self.set_address_email(partner.address[0].id, False)
+        self.set_partner_primary_email(partner_id, False)
 
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
