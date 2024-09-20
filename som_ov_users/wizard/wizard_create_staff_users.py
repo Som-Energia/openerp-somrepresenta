@@ -15,13 +15,6 @@ class WizardCreateStaffUsers(osv.osv_memory):
 
         user_obj = self.pool.get("res.users")
         init_data = user_obj.init_wizard_to_turn_into_representation_staff(cursor, uid, res_user_id)
-        if init_data.get('error'):
-            init_data['init_error'] = True
-            init_data['init_message'] = init_data.pop('error')
-
-        if init_data.get('warning'):
-            init_data['init_error'] = False
-            init_data['init_message'] = init_data.pop('warning')
 
         res.update({
             'user_to_staff': res_user_id,
