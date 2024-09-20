@@ -55,6 +55,21 @@ class ResUsersTests(testing.OOTestCase):
         self.unlinked_address_id = self.reference('som_ov_users', 'res_partner_address_unlinked')
         self.other_partner_id = self.reference('som_ov_users', 'res_partner_soci')
 
+    def add_partner_address(self, partner_id, address_id):
+        self.res_partner.write(self.cursor, self.uid, partner_id, {
+            'address': [(OrmLink.link, address_id)],
+        })
+
+    def set_user_address(self, user_id, address_id):
+        self.res_users.write(self.cursor, self.uid, user_id, dict(
+            address_id=address_id,
+        ))
+
+    def clear_partner_categories(self, partner_id):
+        self.res_partner.write(self.cursor, self.uid, partner_id, {
+            'category_id': [(OrmLink.set, 0, [])],
+        })
+
     def test__is_user_staff__user_is_staff(self):
         user_id = self.staff_user_id
 
@@ -108,11 +123,6 @@ class ResUsersTests(testing.OOTestCase):
             error = "La usuaria ja estàva com a gestora de l'Oficina Virtual de Representa",
         ))
 
-    def add_partner_address(self, partner_id, address_id):
-        self.res_partner.write(self.cursor, self.uid, partner_id, {
-            'address': [(OrmLink.link, address_id)],
-        })
-
     def test__init_wizard_to_turn_into_representation_staff__when_linked_to_a_secondary_address__warn_not_the_address_to_be_used(self):
         partner_id = self.staff_partner_id
         user_id = self.staff_user_id
@@ -141,11 +151,6 @@ class ResUsersTests(testing.OOTestCase):
             ),
         ))
 
-    def set_user_address(self, user_id, address_id):
-        self.res_users.write(self.cursor, self.uid, user_id, dict(
-            address_id=address_id,
-        ))
-
     def test__init_wizard_to_turn_into_representation_staff__user_linked_to_a_partnerless_address(self):
         user_id = self.staff_user_id
         # The user address is an unlinked one
@@ -172,11 +177,6 @@ class ResUsersTests(testing.OOTestCase):
         self.assertEqual(data, dict(
             error = "La persona vinculada per l'adreça de la usuària no té VAT",
         ))
-
-    def clear_partner_categories(self, partner_id):
-        self.res_partner.write(self.cursor, self.uid, partner_id, {
-            'category_id': [(OrmLink.set, 0, [])],
-        })
 
     def test__init_wizard_to_turn_into_representation_staff__linked_partner_without_email(self):
         partner_id = self.staff_partner_id
