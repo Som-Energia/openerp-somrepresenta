@@ -16,8 +16,13 @@ class ResUsers(osv.osv):
         return res
 
     def init_wizard_to_turn_into_representation_staff(self, cursor, uid, res_user_id):
-        error = None
         user = self.browse(cursor, uid, res_user_id)
+
+        def error(message, **kwargs):
+            return dict(error=message, **kwargs)
+
+        def warning(message, **kwargs):
+            return dict(warning=message, **kwargs)
 
         if not user.address_id:
             return dict(
@@ -26,24 +31,28 @@ class ResUsers(osv.osv):
             )
 
         if not user.address_id.partner_id:
-            return dict(
-                error = "La usuària té una adreça que no està vinculada a cap persona",
+            return error(
+                "La usuària té una adreça que no està vinculada a cap persona"
             )
-
-        if user.is_staff:
-            error = "La usuaria ja estàva com a gestora de l'Oficina Virtual de Representa"
 
         vat = user.address_id.partner_id.vat
         email = user.address_id.partner_id.address[0].email
 
+        if user.is_staff:
+            return error(
+                "La usuaria ja estàva com a gestora de l'Oficina Virtual de Representa",
+                vat=vat,
+                email=email,
+            )
+
         if not vat:
-            return dict(
-                error = "La persona vinculada per l'adreça de la usuària no té VAT",
+            return error(
+                "La persona vinculada per l'adreça de la usuària no té VAT",
             )
 
         if not email:
-            return dict(
-                error = "L'adreça primària de la persona vinculada a la usuària no té email",
+            return error(
+                "L'adreça primària de la persona vinculada a la usuària no té email",
             )
 
         res_partner_obj = self.pool.get('res.partner')
@@ -52,26 +61,25 @@ class ResUsers(osv.osv):
         ])
 
         if number_of_partners_with_vat > 1:
-            return dict(
-                error = "El VAT de la persona vinculada a la usuària, {vat}, està assignat a més persones".format(vat=vat),
+            return error(
+                "El VAT de la persona vinculada a la usuària, {vat}, està assignat a més persones".format(vat=vat),
             )
 
         if user.address_id.id != user.address_id.partner_id.address[0].id:
-            return dict(
-                vat = vat,
-                email = email,
-                warning = (
+            return warning(
+                (
                     "L'adreça vinculada a la usuària, {linked}, "
                     "no serà la que es fará servir a la OV sinó "
                     "la de l'adreça principal de la persona {primary}"
                 ).format(
                     linked = user.address_id.email,
                     primary = email,
-                )
+                ),
+                vat=vat,
+                email=email,
             )
 
         return dict(
-            dict(error=error) if error else {},
             vat = vat,
             email = email,
         )
