@@ -97,7 +97,7 @@ class ResUsersTests(testing.OOTestCase):
         self.assertFalse(is_staff)
 
     def test__init_wizard_to_turn_into_representation_staff__base_case(self):
-        # User has no address and no partner with such VAT exists
+        """User has no address and no partner with such VAT exists"""
         user_id = self.non_staff_user_id
 
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
@@ -107,10 +107,10 @@ class ResUsersTests(testing.OOTestCase):
             email = None,
         ))
 
-    def test__init_wizard_to_turn_into_representation_staff__linked_to_non_staff_address(self):
+    def test__init_wizard_to_turn_into_representation_staff__linked_to_non_staff_address__takes_data_from_address(self):
+        user_id = self.staff_user_id
         partner_id = self.staff_partner_id
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
-        user_id = self.staff_user_id
         # Remove the category
         self.clear_partner_categories(partner_id)
 
@@ -122,10 +122,10 @@ class ResUsersTests(testing.OOTestCase):
             email = partner.address[0].email,
         ))
 
-    def test__init_wizard_to_turn_into_representation_staff__linked_partner_already_staff__gives_error(self):
+    def test__init_wizard_to_turn_into_representation_staff__linked_partner_already_staff__returns_error(self):
+        user_id = self.staff_user_id
         partner_id = self.staff_partner_id
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
-        user_id = self.staff_user_id
 
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
@@ -136,20 +136,20 @@ class ResUsersTests(testing.OOTestCase):
         ))
 
     def test__init_wizard_to_turn_into_representation_staff__when_linked_to_a_secondary_address__warn_not_the_address_to_be_used(self):
-        partner_id = self.staff_partner_id
         user_id = self.staff_user_id
+        partner_id = self.staff_partner_id
         new_partner_address_id = self.unlinked_address_id
-        # Remove the category and add the new address
+        # Remove the category
         self.clear_partner_categories(partner_id)
         # Add the new address to the existing one
         self.add_partner_address(partner_id, new_partner_address_id)
-        partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
-        user = self.res_users.browse(self.cursor, self.uid, user_id)
         # The linked address is not the first one of the partner
         self.set_user_address(user_id, new_partner_address_id)
 
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
+        partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
+        user = self.res_users.browse(self.cursor, self.uid, user_id)
         self.assertEqual(data, dict(
             vat = partner.vat,
             email = partner.address[0].email, # not "unlinked@somenergia.coop"
@@ -163,7 +163,7 @@ class ResUsersTests(testing.OOTestCase):
             ),
         ))
 
-    def test__init_wizard_to_turn_into_representation_staff__user_linked_to_a_partnerless_address(self):
+    def test__init_wizard_to_turn_into_representation_staff__user_linked_to_a_partnerless_address__returns_error(self):
         user_id = self.staff_user_id
         # The user address is an unlinked one
         self.set_user_address(user_id, self.unlinked_address_id)
@@ -174,10 +174,9 @@ class ResUsersTests(testing.OOTestCase):
             error = "La usuària té una adreça que no està vinculada a cap persona",
         ))
 
-    def test__init_wizard_to_turn_into_representation_staff__linked_partner_without_vat(self):
-        partner_id = self.staff_partner_id
-        partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
+    def test__init_wizard_to_turn_into_representation_staff__linked_partner_without_vat__returns_error(self):
         user_id = self.staff_user_id
+        partner_id = self.staff_partner_id
         # Remove the category and the partner VAT
         self.clear_partner_categories(partner_id)
         self.set_partner_vat(partner_id, False)
@@ -188,9 +187,9 @@ class ResUsersTests(testing.OOTestCase):
             error = "La persona vinculada per l'adreça de la usuària no té VAT",
         ))
 
-    def test__init_wizard_to_turn_into_representation_staff__linked_partner_without_email(self):
-        partner_id = self.staff_partner_id
+    def test__init_wizard_to_turn_into_representation_staff__linked_partner_without_email__returns_error(self):
         user_id = self.staff_user_id
+        partner_id = self.staff_partner_id
         self.clear_partner_categories(partner_id)
         self.set_partner_primary_email(partner_id, False)
 
@@ -200,22 +199,16 @@ class ResUsersTests(testing.OOTestCase):
             error = "L'adreça primària de la persona vinculada a la usuària no té email",
         ))
 
-    def test__init_wizard_to_turn_into_representation_staff__dupped_vat(self):
+    def test__init_wizard_to_turn_into_representation_staff__dupped_vat__returns_error(self):
+        user_id = self.staff_user_id
         partner_id = self.staff_partner_id
-        partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
-
         other_partner_id = self.other_partner_id
         other_partner = self.res_partner.browse(self.cursor, self.uid, other_partner_id)
-
-        user_id = self.staff_user_id
-
         # Remove the category and set the vat of another existing partner
         self.clear_partner_categories(partner_id)
         self.set_partner_vat(partner_id, other_partner.vat)
 
-
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
-
 
         # Then the wizard uses data from the linked parnter
         self.assertEqual(data, dict(
