@@ -124,9 +124,7 @@ class ResUsersTests(testing.OOTestCase):
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
         user = self.res_users.browse(self.cursor, self.uid, user_id)
         # The linked address is not the first one of the partner
-        self.res_users.write(self.cursor, self.uid, user_id, dict(
-            address_id=new_partner_address_id,
-        ))
+        self.set_user_address(user_id, new_partner_address_id)
 
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
