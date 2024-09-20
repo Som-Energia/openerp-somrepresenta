@@ -108,6 +108,11 @@ class ResUsersTests(testing.OOTestCase):
             error = "La usuaria ja estàva com a gestora de l'Oficina Virtual de Representa",
         ))
 
+    def add_partner_address(self, partner_id, address_id):
+        self.res_partner.write(self.cursor, self.uid, partner_id, {
+            'address': [(OrmLink.link, address_id)],
+        })
+
     def test__init_wizard_to_turn_into_representation_staff__when_linked_to_a_secondary_address__warn_not_the_address_to_be_used(self):
         partner_id = self.staff_partner_id
         user_id = self.staff_user_id
@@ -115,9 +120,7 @@ class ResUsersTests(testing.OOTestCase):
         # Remove the category and add the new address
         self.clear_partner_categories(partner_id)
         # Add the new address to the existing one
-        self.res_partner.write(self.cursor, self.uid, partner_id, {
-            'address': [(OrmLink.link, new_partner_address_id)],
-        })
+        self.add_partner_address(partner_id, new_partner_address_id)
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
         user = self.res_users.browse(self.cursor, self.uid, user_id)
         # The linked address is not the first one of the partner
