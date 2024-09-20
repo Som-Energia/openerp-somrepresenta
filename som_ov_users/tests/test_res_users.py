@@ -85,7 +85,7 @@ class ResUsersTests(testing.OOTestCase):
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
         user_id = self.staff_user_id
         # Remove the category
-        self.res_partner.write(self.cursor, self.uid, partner_id, {'category_id': [(OrmLink.set, 0, [])]})
+        self.clear_partner_categories(partner_id)
 
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
@@ -113,9 +113,9 @@ class ResUsersTests(testing.OOTestCase):
         user_id = self.staff_user_id
         new_partner_address_id = self.unlinked_address_id
         # Remove the category and add the new address
+        self.clear_partner_categories(partner_id)
+        # Add the new address to the existing one
         self.res_partner.write(self.cursor, self.uid, partner_id, {
-            'category_id': [(OrmLink.set, 0, [])],
-            # Add the new address to the existing one
             'address': [(OrmLink.link, new_partner_address_id)],
         })
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
@@ -161,8 +161,8 @@ class ResUsersTests(testing.OOTestCase):
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
         user_id = self.staff_user_id
         # Remove the category and the partner VAT
+        self.clear_partner_categories(partner_id)
         self.res_partner.write(self.cursor, self.uid, partner_id, {
-            'category_id': [(OrmLink.set, 0, [])],
             'vat': False,
         })
 
@@ -172,14 +172,16 @@ class ResUsersTests(testing.OOTestCase):
             error = "La persona vinculada per l'adreça de la usuària no té VAT",
         ))
 
+    def clear_partner_categories(self, partner_id):
+        self.res_partner.write(self.cursor, self.uid, partner_id, {
+            'category_id': [(OrmLink.set, 0, [])],
+        })
+
     def test__init_wizard_to_turn_into_representation_staff__linked_partner_without_email(self):
         partner_id = self.staff_partner_id
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
         user_id = self.staff_user_id
-        # Remove the category
-        self.res_partner.write(self.cursor, self.uid, partner_id, {
-            'category_id': [(OrmLink.set, 0, [])],
-        })
+        self.clear_partner_categories(partner_id)
         self.res_partner_address.write(self.cursor, self.uid, partner.address[0].id, dict(
             email = False,
         ))
@@ -200,8 +202,8 @@ class ResUsersTests(testing.OOTestCase):
         user_id = self.staff_user_id
 
         # Remove the category and set the vat of another existing partner
+        self.clear_partner_categories(partner_id)
         self.res_partner.write(self.cursor, self.uid, partner_id, {
-            'category_id': [(OrmLink.set, 0, [])],
             'vat': other_partner.vat,
         })
 
