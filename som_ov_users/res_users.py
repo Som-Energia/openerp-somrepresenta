@@ -45,15 +45,10 @@ class ResUsers(osv.osv):
             cursor, uid, "som_ov_users", "res_partner_category_ovrepresenta_staff"
         )[1]
 
-        if partner_ids:
-            partner = partner_obj.browse(cursor, uid, partner_ids[0])
-            if any(cat.id == cat_staff_id for cat in partner.category_id):
-                return dict(
-                    info = (
-                        "La persona ja és gestora de l'Oficina Virtual de Representa. "
-                        "Potser el VAT {vat} ja està vinculat amb una altra usuària".format(vat=vat)
-                    )
-                )
+        def add_staff_category_to_partner(partner_id):
+            return partner_obj.write(cursor, uid, partner_id, {
+                "category_id": [(4, cat_staff_id)],
+            })
 
         def create_partner(name, vat):
             return partner_obj.create(cursor, uid, {
@@ -77,6 +72,21 @@ class ResUsers(osv.osv):
 
         def link_user_address(user_id, address_id):
             self.write(cursor, uid, user_id, {'address_id': address_id})
+
+        if partner_ids:
+            partner = partner_obj.browse(cursor, uid, partner_ids[0])
+            if any(cat.id == cat_staff_id for cat in partner.category_id):
+                return dict(
+                    info = (
+                        "La persona ja és gestora de l'Oficina Virtual de Representa. "
+                        "Potser el VAT {vat} ja està vinculat amb una altra usuària".format(vat=vat)
+                    )
+                )
+            add_staff_category_to_partner(partner.id)
+            link_user_address(user_id, partner.address[0].id)
+            return dict(
+                info="La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa",
+            )
 
         partner_id = create_partner(name, vat)
         address_id = create_address(name, email, partner_id)
