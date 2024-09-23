@@ -45,6 +45,9 @@ class ResUsers(osv.osv):
             cursor, uid, "som_ov_users", "res_partner_category_ovrepresenta_staff"
         )[1]
 
+        def has_staff_category(partner):
+            return any(cat.id == cat_staff_id for cat in partner.category_id)
+
         def add_staff_category_to_partner(partner_id):
             return partner_obj.write(cursor, uid, partner_id, {
                 "category_id": [(4, cat_staff_id)],
@@ -75,7 +78,7 @@ class ResUsers(osv.osv):
 
         if partner_ids:
             partner = partner_obj.browse(cursor, uid, partner_ids[0])
-            if any(cat.id == cat_staff_id for cat in partner.category_id):
+            if has_staff_category(partner):
                 return dict(
                     info = (
                         "La persona ja és gestora de l'Oficina Virtual de Representa. "
