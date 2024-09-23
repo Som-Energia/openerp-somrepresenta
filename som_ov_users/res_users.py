@@ -32,6 +32,15 @@ class ResUsers(osv.osv):
         address_obj = self.pool.get("res.partner.address")
         imd_obj = self.pool.get("ir.model.data")
 
+        n_partners_with_vat = partner_obj.search_count(cursor, uid, [('vat', '=', vat)])
+        if n_partners_with_vat > 1:
+            return dict(
+                info = "El VAT de la persona vinculada a la usuària, "
+                "{vat}, està assignat a més persones".format(
+                    vat=vat,
+                ),
+            )
+
         cat_staff_id = imd_obj.get_object_reference(
             cursor, uid, "som_ov_users", "res_partner_category_ovrepresenta_staff"
         )[1]
