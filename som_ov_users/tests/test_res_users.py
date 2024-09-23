@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from osv.osv import except_osv
-
 from destral import testing
 from destral.transaction import Transaction
 
-import unittest
 from ..utils import Many2Many
 
 
@@ -18,14 +15,18 @@ def get_models(self):
     self.res_partner_address = self.pool.get('res.partner.address')
     self.wiz_o = self.pool.get('wizard.create.staff.users')
 
+
 def setup_transaction(self):
     self.txn = Transaction().start(self.database)
 
     self.cursor = self.txn.cursor
     self.uid = self.txn.user
+
     def cleanup():
         self.txn.stop()
+
     self.addCleanup(cleanup)
+
 
 def reference(self, module, id):
     return self.imd.get_object_reference(
@@ -103,8 +104,8 @@ class ResUsersTests(testing.OOTestCase):
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
         self.assertEqual(data, dict(
-            vat = None,
-            email = None,
+            vat=None,
+            email=None,
         ))
 
     def test__init_wizard_to_turn_into_representation_staff__linked_to_non_staff_address__takes_data_from_address(self):
@@ -118,8 +119,8 @@ class ResUsersTests(testing.OOTestCase):
 
         # Then the wizard uses data from the linked parnter
         self.assertEqual(data, dict(
-            vat = partner.vat,
-            email = partner.address[0].email,
+            vat=partner.vat,
+            email=partner.address[0].email,
         ))
 
     def test__init_wizard_to_turn_into_representation_staff__linked_partner_already_staff__returns_error(self):
@@ -130,13 +131,14 @@ class ResUsersTests(testing.OOTestCase):
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
         self.assertEqual(data, dict(
-            vat = partner.vat,
-            email = partner.address[0].email,
+            vat=partner.vat,
+            email=partner.address[0].email,
             init_error=True,
-            init_message = "La usuaria ja estàva com a gestora de l'Oficina Virtual de Representa",
+            init_message="La usuària ja és gestora de l'Oficina Virtual de Representa",
         ))
 
-    def test__init_wizard_to_turn_into_representation_staff__when_linked_to_a_secondary_address__warn_not_the_address_to_be_used(self):
+    def test__init_wizard_to_turn_into_representation_staff__when_linked_to_a_secondary_address__warn_not_the_address_to_be_used(
+            self):
         user_id = self.staff_user_id
         partner_id = self.staff_partner_id
         new_partner_address_id = self.unlinked_address_id
@@ -152,16 +154,16 @@ class ResUsersTests(testing.OOTestCase):
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
         user = self.res_users.browse(self.cursor, self.uid, user_id)
         self.assertEqual(data, dict(
-            vat = partner.vat,
-            email = partner.address[0].email, # not "unlinked@somenergia.coop"
+            vat=partner.vat,
+            email=partner.address[0].email,  # not "unlinked@somenergia.coop"
             init_error=False,
-            init_message = (
+            init_message=(
                 "L'adreça vinculada a la usuària, {linked}, "
                 "no serà la que es fará servir a la OV sinó "
                 "la de l'adreça principal de la persona {primary}"
             ).format(
-                linked = user.address_id.email,
-                primary = partner.address[0].email,
+                linked=user.address_id.email,
+                primary=partner.address[0].email,
             ),
         ))
 
@@ -174,7 +176,7 @@ class ResUsersTests(testing.OOTestCase):
 
         self.assertEqual(data, dict(
             init_error=True,
-            init_message = "La usuària té una adreça que no està vinculada a cap persona",
+            init_message="La usuària té una adreça que no està vinculada a cap persona",
         ))
 
     def test__init_wizard_to_turn_into_representation_staff__linked_partner_without_vat__returns_error(self):
@@ -188,7 +190,7 @@ class ResUsersTests(testing.OOTestCase):
 
         self.assertEqual(data, dict(
             init_error=True,
-            init_message = "La persona vinculada per l'adreça de la usuària no té VAT",
+            init_message="La persona vinculada per l'adreça de la usuària no té VAT",
         ))
 
     def test__init_wizard_to_turn_into_representation_staff__linked_partner_without_email__returns_error(self):
@@ -201,7 +203,7 @@ class ResUsersTests(testing.OOTestCase):
 
         self.assertEqual(data, dict(
             init_error=True,
-            init_message = "L'adreça primària de la persona vinculada a la usuària no té email",
+            init_message="L'adreça primària de la persona vinculada a la usuària no té email",
         ))
 
     def test__init_wizard_to_turn_into_representation_staff__dupped_vat__returns_error(self):
@@ -218,14 +220,15 @@ class ResUsersTests(testing.OOTestCase):
         # Then the wizard uses data from the linked parnter
         self.assertEqual(data, dict(
             init_error=True,
-            init_message = "El VAT de la persona vinculada a la usuària, {vat}, està assignat a més persones".format(vat=other_partner.vat),
+            init_message="El VAT de la persona vinculada a la usuària, {vat}, està assignat a més persones".format(
+                vat=other_partner.vat),
         ))
 
     def test__process_wizard_to_turn_into_representation_staff__base_case(self):
         """User has no address and provided VAT does not exist"""
         user_id = self.non_staff_user_id
         vat_not_in_db = 'ESP4594924E'
-        email="user@server.com"
+        email = "user@server.com"
         user = self.res_users.browse(self.cursor, self.uid, user_id)
 
         data = self.res_users.process_wizard_to_turn_into_representation_staff(
@@ -265,7 +268,8 @@ class ResUsersTests(testing.OOTestCase):
 
         self.assertEqual(
             data['info'],
-            "El VAT de la persona vinculada a la usuària, {vat}, està assignat a més persones".format(vat=other_partner.vat),
+            "El VAT de la persona vinculada a la usuària, {vat}, està assignat a més persones".format(
+                vat=other_partner.vat),
         )
 
     def test__process_wizard_to_turn_into_representation_staff__unlinked_with_category__returns_error(self):
@@ -280,7 +284,7 @@ class ResUsersTests(testing.OOTestCase):
             self.cursor, self.uid,
             user=user,
             vat=vat,
-            email=partner.address[0].email, # Same as existing address
+            email=partner.address[0].email,  # Same as existing address
         )
 
         self.assertEqual(
@@ -300,7 +304,7 @@ class ResUsersTests(testing.OOTestCase):
             self.cursor, self.uid,
             user=user,
             vat=vat,
-            email=partner.address[0].email, # Same as existing address
+            email=partner.address[0].email,  # Same as existing address
         )
 
         # Then operation is successfull
@@ -314,5 +318,3 @@ class ResUsersTests(testing.OOTestCase):
         self.assertEqual(user.address_id.id, self.non_staff_partner_address_id)
         # And category is added to the partner
         self.assertEqual([x.id for x in user.address_id.partner_id.category_id], [self.cat_staff_id])
-
-
