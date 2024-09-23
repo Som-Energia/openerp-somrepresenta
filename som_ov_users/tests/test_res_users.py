@@ -54,6 +54,7 @@ class ResUsersTests(testing.OOTestCase):
         self.non_staff_user_id = self.reference('som_ov_users', 'res_users_non_staff')
         self.unlinked_address_id = self.reference('som_ov_users', 'res_partner_address_unlinked')
         self.non_staff_partner_id = self.reference('som_ov_users', 'res_partner_not_customer')
+        self.non_staff_partner_address_id = self.reference('som_ov_users', 'res_partner_address_not_customer')
         self.other_partner_id = self.reference('som_ov_users', 'res_partner_soci')
         self.cat_staff_id = self.reference("som_ov_users", "res_partner_category_ovrepresenta_staff")
 
@@ -295,4 +296,28 @@ class ResUsersTests(testing.OOTestCase):
             "La persona ja és gestora de l'Oficina Virtual de Representa. "
             "Potser el VAT {vat} ja està vinculat amb una altra usuària".format(vat=vat),
         )
+
+    def test__process_wizard_to_turn_into_representation_staff__unlinked_exists_without_category(self):
+        user_id = self.non_staff_user_id
+        partner_id = self.non_staff_partner_id
+        partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
+        vat = partner.vat
+        user = self.res_users.browse(self.cursor, self.uid, user_id)
+
+        data = self.res_users.process_wizard_to_turn_into_representation_staff(
+            self.cursor, self.uid,
+            user=user,
+            vat=vat,
+            email=partner.address[0].email, # Same as existing address
+        )
+
+        self.assertEqual(
+            data['info'],
+            "La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa"
+        )
+        partner_address_id = self.reference('som_ov_users', 'res_partner_address_not_customer')
+        user = self.res_users.browse(self.cursor, self.uid, user_id)
+        self.assertEqual(user.address_id.id, self.non_staff_partner_address_id)
+        self.assertEqual([x.id for x in user.address_id.partner_id.category_id], [self.cat_staff_id])
+
 
