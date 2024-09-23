@@ -53,6 +53,7 @@ class ResUsersTests(testing.OOTestCase):
         self.staff_partner_id = self.reference('som_ov_users', 'res_partner_res_users_already_staff')
         self.non_staff_user_id = self.reference('som_ov_users', 'res_users_non_staff')
         self.unlinked_address_id = self.reference('som_ov_users', 'res_partner_address_unlinked')
+        self.non_staff_partner_id = self.reference('som_ov_users', 'res_partner_not_customer')
         self.other_partner_id = self.reference('som_ov_users', 'res_partner_soci')
         self.cat_staff_id = self.reference("som_ov_users", "res_partner_category_ovrepresenta_staff")
 
@@ -246,4 +247,26 @@ class ResUsersTests(testing.OOTestCase):
         self.assertEqual(user.address_id.name, user.name)
         self.assertEqual(user.address_id.partner_id.name, user.name)
         self.assertEqual([x.id for x in user.address_id.partner_id.category_id], [self.cat_staff_id])
+
+    def test__process_wizard_to_turn_into_representation_staff__unlinked_dupped_vat__returns_error(self):
+        user_id = self.non_staff_user_id
+        partner_id = self.non_staff_partner_id
+        other_partner_id = self.other_partner_id
+        other_partner = self.res_partner.browse(self.cursor, self.uid, other_partner_id)
+        dupped_vat = other_partner.vat
+        # Set the vat of another existing partner
+        self.set_partner_vat(partner_id, dupped_vat)
+        user = self.res_users.browse(self.cursor, self.uid, user_id)
+
+        data = self.res_users.process_wizard_to_turn_into_representation_staff(
+            self.cursor, self.uid,
+            user=user,
+            vat=dupped_vat,
+            email="user@server.com",
+        )
+
+        self.assertEqual(
+            data['info'],
+            "El VAT de la persona vinculada a la usuària, {vat}, està assignat a més persones".format(vat=other_partner.vat),
+        )
 
