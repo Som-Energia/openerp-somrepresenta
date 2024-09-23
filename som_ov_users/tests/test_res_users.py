@@ -7,16 +7,8 @@ from destral import testing
 from destral.transaction import Transaction
 
 import unittest
+from ..utils import OrmLink
 
-
-class OrmLink:
-    create = 0
-    update = 1
-    delete = 2
-    unlink = 3
-    link = 4
-    clear = 5
-    set = 6
 
 def get_models(self):
     self.pool = self.openerp.pool
