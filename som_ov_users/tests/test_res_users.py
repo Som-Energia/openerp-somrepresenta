@@ -221,3 +221,21 @@ class ResUsersTests(testing.OOTestCase):
             init_message = "El VAT de la persona vinculada a la usuària, {vat}, està assignat a més persones".format(vat=other_partner.vat),
         ))
 
+    def test__process_wizard_to_turn_into_representation_staff__base_case(self):
+        """User has no address and provided VAT does not exist"""
+        user_id = self.non_staff_user_id
+        vat_not_in_db = 'ESP4594924E'
+        user = self.res_users.browse(self.cursor, self.uid, user_id)
+
+        data = self.res_users.process_wizard_to_turn_into_representation_staff(
+            self.cursor, self.uid,
+            user=user,
+            vat=vat_not_in_db,
+            email="user@server.com",
+        )
+
+        # Then the wizard creates a new partner and new partner address with the provided data
+        self.assertEqual(
+            data['info'], "La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa")
+        self.assertIsInstance(data['partner_id'], long)
+        self.assertIsInstance(data['address_id'], long)

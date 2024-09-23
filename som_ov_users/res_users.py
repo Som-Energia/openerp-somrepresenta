@@ -2,6 +2,7 @@
 from osv import osv, fields
 from tools.translate import _
 
+
 class ResUsers(osv.osv):
     _inherit = 'res.users'
 
@@ -14,6 +15,54 @@ class ResUsers(osv.osv):
             res[res_user_id] = self._is_user_staff(cursor, uid, res_user_id)
 
         return res
+
+    def _validate_vat(self, cursor, uid, vat):
+        partner_obj = self.pool.get("res.partner")
+        if not partner_obj.is_vat(vat) or vat[:2] != 'ES':
+            raise osv.except_osv('Error validant el VAT!',
+                                 'El VAT no és vàlid')
+        return vat.upper()
+
+    def create_partner_and_address(self, cursor, uid, name, vat, email):
+        partner_obj = self.pool.get("res.partner")
+        address_obj = self.pool.get("res.partner.address")
+        imd_obj = self.pool.get("ir.model.data")
+
+        cat_staff_id = imd_obj.get_object_reference(
+            cursor, uid, "som_ov_users", "res_partner_category_ovrepresenta_staff"
+        )[1]
+
+        partner_data = {
+            'name': name,
+            'vat': self._validate_vat(cursor, uid, vat),
+            'lang': 'ca_ES',
+            "category_id": [(6, 0, [cat_staff_id])],
+        }
+        partner_id = partner_obj.create(cursor, uid, partner_data)
+
+        address_data = {
+            'name': name,
+            'email': email,
+            'partner_id': partner_id,
+            'street': 'Carrer Pic de Peguera, 9',
+            'zip': '17002',
+            'city': 'Girona',
+            'state_id': 20,
+        }
+        address_id = address_obj.create(cursor, uid, address_data)
+
+        return partner_id, address_id
+
+    def process_wizard_to_turn_into_representation_staff(self, cursor, uid, user, vat, email):
+        name = user.name
+        address_id, partner_id = self.create_partner_and_address(
+            cursor, uid, name, vat, email)
+
+        return dict(
+            partner_id=partner_id,
+            address_id=address_id,
+            info="La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa",
+        )
 
     def init_wizard_to_turn_into_representation_staff(self, cursor, uid, res_user_id):
         user = self.browse(cursor, uid, res_user_id)
@@ -123,5 +172,6 @@ class ResUsers(osv.osv):
             bold=True,
         )
     }
+
 
 ResUsers()
