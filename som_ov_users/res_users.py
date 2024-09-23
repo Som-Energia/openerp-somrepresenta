@@ -126,7 +126,7 @@ class ResUsers(osv.osv):
 
         if user.is_staff:
             return error(
-                "La usuaria ja estàva com a gestora de l'Oficina Virtual de Representa",
+                "La usuària ja és gestora de l'Oficina Virtual de Representa",
                 vat=vat,
                 email=email,
             )
