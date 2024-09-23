@@ -72,6 +72,11 @@ class ResUsersTests(testing.OOTestCase):
             'category_id': [(OrmLink.set, 0, [])],
         })
 
+    def add_partner_category(self, partner_id, category_id):
+        self.res_partner.write(self.cursor, self.uid, partner_id, {
+            'category_id': [(OrmLink.link, category_id)],
+        })
+
     def set_partner_vat(self, partner_id, vat):
         self.res_partner.write(self.cursor, self.uid, partner_id, {
             'vat': vat,
@@ -268,5 +273,26 @@ class ResUsersTests(testing.OOTestCase):
         self.assertEqual(
             data['info'],
             "El VAT de la persona vinculada a la usuària, {vat}, està assignat a més persones".format(vat=other_partner.vat),
+        )
+
+    def test__process_wizard_to_turn_into_representation_staff__unlinked_with_category__returns_error(self):
+        user_id = self.non_staff_user_id
+        partner_id = self.non_staff_partner_id
+        partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
+        vat = partner.vat
+        self.add_partner_category(partner_id, self.cat_staff_id)
+        user = self.res_users.browse(self.cursor, self.uid, user_id)
+
+        data = self.res_users.process_wizard_to_turn_into_representation_staff(
+            self.cursor, self.uid,
+            user=user,
+            vat=vat,
+            email=partner.address[0].email, # Same as existing address
+        )
+
+        self.assertEqual(
+            data['info'],
+            "La persona ja és gestora de l'Oficina Virtual de Representa. "
+            "Potser el VAT {vat} ja està vinculat amb una altra usuària".format(vat=vat),
         )
 
