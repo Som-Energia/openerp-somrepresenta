@@ -303,13 +303,16 @@ class ResUsersTests(testing.OOTestCase):
             email=partner.address[0].email, # Same as existing address
         )
 
+        # Then operation is successfull
         self.assertEqual(
             data['info'],
             "La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa"
         )
         partner_address_id = self.reference('som_ov_users', 'res_partner_address_not_customer')
         user = self.res_users.browse(self.cursor, self.uid, user_id)
+        # Main partner address is linked to the user
         self.assertEqual(user.address_id.id, self.non_staff_partner_address_id)
+        # And category is added to the partner
         self.assertEqual([x.id for x in user.address_id.partner_id.category_id], [self.cat_staff_id])
 
 
