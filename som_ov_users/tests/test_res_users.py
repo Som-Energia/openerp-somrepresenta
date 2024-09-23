@@ -7,7 +7,7 @@ from destral import testing
 from destral.transaction import Transaction
 
 import unittest
-from ..utils import OrmLink
+from ..utils import Many2Many
 
 
 def get_models(self):
@@ -57,17 +57,17 @@ class ResUsersTests(testing.OOTestCase):
 
     def add_partner_address(self, partner_id, address_id):
         self.res_partner.write(self.cursor, self.uid, partner_id, {
-            'address': [(OrmLink.link, address_id)],
+            'address': [Many2Many.link(address_id)],
         })
 
     def clear_partner_categories(self, partner_id):
         self.res_partner.write(self.cursor, self.uid, partner_id, {
-            'category_id': [(OrmLink.set, 0, [])],
+            'category_id': [Many2Many.clear()],
         })
 
     def add_partner_category(self, partner_id, category_id):
         self.res_partner.write(self.cursor, self.uid, partner_id, {
-            'category_id': [(OrmLink.link, category_id)],
+            'category_id': [Many2Many.link(category_id)],
         })
 
     def set_partner_vat(self, partner_id, vat):
