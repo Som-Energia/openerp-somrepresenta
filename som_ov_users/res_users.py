@@ -23,7 +23,7 @@ class ResUsers(osv.osv):
                                  'El VAT no és vàlid')
         return vat.upper()
 
-    def create_partner_and_address(self, cursor, uid, name, vat, email):
+    def create_partner_and_address(self, cursor, uid, user_id, name, vat, email):
         partner_obj = self.pool.get("res.partner")
         address_obj = self.pool.get("res.partner.address")
         imd_obj = self.pool.get("ir.model.data")
@@ -50,13 +50,14 @@ class ResUsers(osv.osv):
             'state_id': 20,
         }
         address_id = address_obj.create(cursor, uid, address_data)
+        self.write(cursor, uid, user_id, {'address_id': address_id})
 
         return partner_id, address_id
 
     def process_wizard_to_turn_into_representation_staff(self, cursor, uid, user, vat, email):
         name = user.name
-        address_id, partner_id = self.create_partner_and_address(
-            cursor, uid, name, vat, email)
+        partner_id, address_id = self.create_partner_and_address(
+            cursor, uid, user.id, name, vat, email)
 
         return dict(
             partner_id=partner_id,

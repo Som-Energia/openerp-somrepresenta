@@ -54,6 +54,7 @@ class ResUsersTests(testing.OOTestCase):
         self.non_staff_user_id = self.reference('som_ov_users', 'res_users_non_staff')
         self.unlinked_address_id = self.reference('som_ov_users', 'res_partner_address_unlinked')
         self.other_partner_id = self.reference('som_ov_users', 'res_partner_soci')
+        self.cat_staff_id = self.reference("som_ov_users", "res_partner_category_ovrepresenta_staff")
 
     def set_user_address(self, user_id, address_id):
         self.res_users.write(self.cursor, self.uid, user_id, {
@@ -225,17 +226,24 @@ class ResUsersTests(testing.OOTestCase):
         """User has no address and provided VAT does not exist"""
         user_id = self.non_staff_user_id
         vat_not_in_db = 'ESP4594924E'
+        email="user@server.com"
         user = self.res_users.browse(self.cursor, self.uid, user_id)
 
         data = self.res_users.process_wizard_to_turn_into_representation_staff(
             self.cursor, self.uid,
             user=user,
             vat=vat_not_in_db,
-            email="user@server.com",
+            email=email,
         )
 
-        # Then the wizard creates a new partner and new partner address with the provided data
         self.assertEqual(
             data['info'], "La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa")
-        self.assertIsInstance(data['partner_id'], long)
-        self.assertIsInstance(data['address_id'], long)
+        user = self.res_users.browse(self.cursor, self.uid, user_id)
+        self.assertTrue(user.address_id, "Should be linked to an address")
+        self.assertEqual(user.address_id.id, user.address_id.partner_id.address[0].id)
+        self.assertEqual(user.address_id.partner_id.vat, vat_not_in_db)
+        self.assertEqual(user.address_id.email, email)
+        self.assertEqual(user.address_id.name, user.name)
+        self.assertEqual(user.address_id.partner_id.name, user.name)
+        self.assertEqual([x.id for x in user.address_id.partner_id.category_id], [self.cat_staff_id])
+
