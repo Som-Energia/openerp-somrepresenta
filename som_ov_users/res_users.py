@@ -23,7 +23,6 @@ class ResUsers(osv.osv):
                                  'El VAT no és vàlid')
         return vat.upper()
 
-
     def process_wizard_to_turn_into_representation_staff(self, cursor, uid, user, vat, email):
         name = user.name
         user_id = user.id
@@ -35,8 +34,8 @@ class ResUsers(osv.osv):
         partner_ids = partner_obj.search(cursor, uid, [('vat', '=', vat)])
         if len(partner_ids) > 1:
             return dict(
-                info = "El VAT de la persona vinculada a la usuària, "
-                "{vat}, està assignat a més persones".format(
+                info="El VAT de la persona vinculada a la usuària, "
+                     "{vat}, està assignat a més persones".format(
                     vat=vat,
                 ),
             )
@@ -80,7 +79,7 @@ class ResUsers(osv.osv):
             partner = partner_obj.browse(cursor, uid, partner_ids[0])
             if has_staff_category(partner):
                 return dict(
-                    info = (
+                    info=(
                         "La persona ja és gestora de l'Oficina Virtual de Representa. "
                         "Potser el VAT {vat} ja està vinculat amb una altra usuària".format(vat=vat)
                     )
@@ -112,8 +111,8 @@ class ResUsers(osv.osv):
 
         if not user.address_id:
             return dict(
-                vat = None,
-                email = None,
+                vat=None,
+                email=None,
             )
 
         if not user.address_id.partner_id:
@@ -158,16 +157,16 @@ class ResUsers(osv.osv):
                     "no serà la que es fará servir a la OV sinó "
                     "la de l'adreça principal de la persona {primary}"
                 ).format(
-                    linked = user.address_id.email,
-                    primary = email,
+                    linked=user.address_id.email,
+                    primary=email,
                 ),
                 vat=vat,
                 email=email,
             )
 
         return dict(
-            vat = vat,
-            email = email,
+            vat=vat,
+            email=email,
         )
 
     def _is_user_staff(self, cursor, uid, res_user_id):
