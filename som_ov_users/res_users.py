@@ -55,25 +55,32 @@ class ResUsers(osv.osv):
                     )
                 )
 
-        partner_data = {
-            'name': name,
-            'vat': self._validate_vat(cursor, uid, vat),
-            'lang': 'ca_ES',
-            "category_id": [(6, 0, [cat_staff_id])],
-        }
-        partner_id = partner_obj.create(cursor, uid, partner_data)
+        def create_partner(name, vat):
+            return partner_obj.create(cursor, uid, {
+                'name': name,
+                'vat': self._validate_vat(cursor, uid, vat),
+                'lang': 'ca_ES',
+                "category_id": [(6, 0, [cat_staff_id])],
+            })
 
-        address_data = {
-            'name': name,
-            'email': email,
-            'partner_id': partner_id,
-            'street': 'Carrer Pic de Peguera, 9',
-            'zip': '17002',
-            'city': 'Girona',
-            'state_id': 20,
-        }
-        address_id = address_obj.create(cursor, uid, address_data)
-        self.write(cursor, uid, user_id, {'address_id': address_id})
+        def create_address(name, email, partner_id):
+            address_data = {
+                'name': name,
+                'email': email,
+                'partner_id': partner_id,
+                'street': 'Carrer Pic de Peguera, 9',
+                'zip': '17002',
+                'city': 'Girona',
+                'state_id': 20,
+            }
+            return address_obj.create(cursor, uid, address_data)
+
+        def link_user_address(user_id, address_id):
+            self.write(cursor, uid, user_id, {'address_id': address_id})
+
+        partner_id = create_partner(name, vat)
+        address_id = create_address(name, email, partner_id)
+        link_user_address(user_id, address_id)
 
         return dict(
             partner_id=partner_id,
