@@ -32,8 +32,8 @@ class ResUsers(osv.osv):
         address_obj = self.pool.get("res.partner.address")
         imd_obj = self.pool.get("ir.model.data")
 
-        n_partners_with_vat = partner_obj.search_count(cursor, uid, [('vat', '=', vat)])
-        if n_partners_with_vat > 1:
+        partner_ids = partner_obj.search(cursor, uid, [('vat', '=', vat)])
+        if len(partner_ids) > 1:
             return dict(
                 info = "El VAT de la persona vinculada a la usuària, "
                 "{vat}, està assignat a més persones".format(
@@ -44,6 +44,16 @@ class ResUsers(osv.osv):
         cat_staff_id = imd_obj.get_object_reference(
             cursor, uid, "som_ov_users", "res_partner_category_ovrepresenta_staff"
         )[1]
+
+        if partner_ids:
+            partner = partner_obj.browse(cursor, uid, partner_ids[0])
+            if any(cat.id == cat_staff_id for cat in partner.category_id):
+                return dict(
+                    info = (
+                        "La persona ja és gestora de l'Oficina Virtual de Representa. "
+                        "Potser el VAT {vat} ja està vinculat amb una altra usuària".format(vat=vat)
+                    )
+                )
 
         partner_data = {
             'name': name,
