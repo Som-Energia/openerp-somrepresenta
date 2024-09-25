@@ -224,8 +224,8 @@ class ResUsersTests(testing.OOTestCase):
                 vat=other_partner.vat),
         ))
 
-    def test__process_wizard_to_turn_into_representation_staff__base_case(self):
-        """User has no address and provided VAT does not exist"""
+    def test__process_wizard_to_turn_into_representation_staff__unlinked_vat_not_found__creates_everything(self):
+        """User has no linked address and no partener found with the provided VAT"""
         user_id = self.non_staff_user_id
         vat_not_in_db = 'ESP4594924E'
         email = "user@server.com"
@@ -293,7 +293,7 @@ class ResUsersTests(testing.OOTestCase):
             "Potser el VAT {vat} ja està vinculat amb una altra usuària".format(vat=vat),
         )
 
-    def test__process_wizard_to_turn_into_representation_staff__unlinked_exists_without_category(self):
+    def test__process_wizard_to_turn_into_representation_staff__unlinked_exists_without_category__adds_category(self):
         user_id = self.non_staff_user_id
         partner_id = self.non_staff_partner_id
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
