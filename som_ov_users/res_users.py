@@ -116,10 +116,10 @@ class ResUsers(osv.osv):
         user = self.browse(cursor, uid, res_user_id)
 
         def error(message, **kwargs):
-            return dict(init_message=message, init_error=True, **kwargs)
+            return dict(init_message=message, state="init_error", **kwargs)
 
         def warning(message, **kwargs):
-            return dict(init_message=message, init_error=False, **kwargs)
+            return dict(init_message=message, **kwargs)
 
         if not user.address_id:
             return dict(

@@ -111,6 +111,7 @@ class WizardCreateStaffUsers(osv.osv_memory):
 
     _defaults = {
         'state': lambda *a: 'init',
+        'init_message': lambda *a: '',
     }
 
 WizardCreateStaffUsers()

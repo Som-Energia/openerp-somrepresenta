@@ -40,6 +40,7 @@ class ResUsersTests(testing.OOTestCase):
     reference = reference
 
     def setUp(self):
+        self.maxDiff = None
         self.get_models()
         self.setup_transaction()
         self.staff_user_id = self.reference('som_ov_users', 'res_users_already_staff')
@@ -133,7 +134,7 @@ class ResUsersTests(testing.OOTestCase):
         self.assertEqual(data, dict(
             vat=partner.vat,
             email=partner.address[0].email,
-            init_error=True,
+            state='init_error',
             init_message="La usuària ja és gestora de l'Oficina Virtual de Representa",
         ))
 
@@ -156,7 +157,6 @@ class ResUsersTests(testing.OOTestCase):
         self.assertEqual(data, dict(
             vat=partner.vat,
             email=partner.address[0].email,  # not "unlinked@somenergia.coop"
-            init_error=False,
             init_message=(
                 "L'adreça vinculada a la usuària, {linked}, "
                 "no serà la que es fará servir a la OV sinó "
@@ -175,7 +175,7 @@ class ResUsersTests(testing.OOTestCase):
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
         self.assertEqual(data, dict(
-            init_error=True,
+            state='init_error',
             init_message="La usuària té una adreça que no està vinculada a cap persona",
         ))
 
@@ -189,7 +189,7 @@ class ResUsersTests(testing.OOTestCase):
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
         self.assertEqual(data, dict(
-            init_error=True,
+            state='init_error',
             init_message="La persona vinculada per l'adreça de la usuària no té VAT",
         ))
 
@@ -202,7 +202,7 @@ class ResUsersTests(testing.OOTestCase):
         data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
 
         self.assertEqual(data, dict(
-            init_error=True,
+            state='init_error',
             init_message="L'adreça primària de la persona vinculada a la usuària no té email",
         ))
 
@@ -219,7 +219,7 @@ class ResUsersTests(testing.OOTestCase):
 
         # Then the wizard uses data from the linked parnter
         self.assertEqual(data, dict(
-            init_error=True,
+            state='init_error',
             init_message="El VAT de la persona vinculada a la usuària, {vat}, està assignat a més persones".format(
                 vat=other_partner.vat),
         ))
