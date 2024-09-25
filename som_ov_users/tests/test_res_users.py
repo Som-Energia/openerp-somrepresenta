@@ -312,7 +312,6 @@ class ResUsersTests(testing.OOTestCase):
             data['info'],
             "La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa"
         )
-        partner_address_id = self.reference('som_ov_users', 'res_partner_address_not_customer')
         user = self.res_users.browse(self.cursor, self.uid, user_id)
         # Main partner address is linked to the user
         self.assertEqual(user.address_id.id, self.non_staff_partner_address_id)
