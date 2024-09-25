@@ -43,7 +43,7 @@ class Many2Many:
     @staticmethod
     def clear():
         """Clear any existing links keeping existing objects"""
-        return OrmLink.set, 0, []
+        return (OrmLink.clear,)
 
 
     @staticmethod

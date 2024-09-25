@@ -63,7 +63,7 @@ class ResUsersTests(testing.OOTestCase):
 
     def clear_partner_categories(self, partner_id):
         self.res_partner.write(self.cursor, self.uid, partner_id, {
-            'category_id': [Many2Many.clear()],
+            'category_id': [Many2Many.set([])],
         })
 
     def add_partner_category(self, partner_id, category_id):
