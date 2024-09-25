@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from osv import osv, fields
 from tools.translate import _
+from .utils import Many2Many
 
 
 class ResUsers(osv.osv):
@@ -49,7 +50,7 @@ class ResUsers(osv.osv):
 
         def add_staff_category_to_partner(partner_id):
             return partner_obj.write(cursor, uid, partner_id, {
-                "category_id": [(4, cat_staff_id)],
+                "category_id": [Many2Many.link(cat_staff_id)],
             })
 
         def create_partner(name, vat):
@@ -57,7 +58,7 @@ class ResUsers(osv.osv):
                 'name': name,
                 'vat': self._validate_vat(cursor, uid, vat),
                 'lang': 'ca_ES',
-                "category_id": [(6, 0, [cat_staff_id])],
+                "category_id": [Many2Many.set([cat_staff_id])],
             })
 
         def create_address(name, email, partner_id):
