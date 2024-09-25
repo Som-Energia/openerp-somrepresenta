@@ -97,9 +97,18 @@ class ResUsers(osv.osv):
                 address_id = partner.address[0].id
                 if not partner.address[0].email:
                     set_partner_email(partner, email)
+
             link_user_address(user_id, address_id)
             return dict(
-                info="La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa",
+                info='.\n'.join(
+                    ["La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa"]
+                    + ([
+                        "Es farà servir el correu ({email}) en comptes de el provist ({new_email})".format(
+                            email=partner.address[0].email,
+                            new_email=email,
+                        ),
+                      ] if partner.address and partner.address[0].email and partner.address[0].email != email else [])
+                ),
             )
 
         partner_id = create_partner(name, vat)
