@@ -86,7 +86,11 @@ class ResUsers(osv.osv):
                     )
                 )
             add_staff_category_to_partner(partner.id)
-            link_user_address(user_id, partner.address[0].id)
+            if not partner.address:
+                address_id = create_address(name, email, partner.id)
+            else:
+                address_id = partner.address[0].id
+            link_user_address(user_id, address_id)
             return dict(
                 info="La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa",
             )
