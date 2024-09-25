@@ -76,6 +76,11 @@ class ResUsers(osv.osv):
         def link_user_address(user_id, address_id):
             self.write(cursor, uid, user_id, {'address_id': address_id})
 
+        def set_partner_email(partner, email):
+            address_obj.write(cursor, uid, partner.address[0].id, {
+                'email': email,
+            })
+
         if partner_ids:
             partner = partner_obj.browse(cursor, uid, partner_ids[0])
             if has_staff_category(partner):
@@ -90,6 +95,8 @@ class ResUsers(osv.osv):
                 address_id = create_address(name, email, partner.id)
             else:
                 address_id = partner.address[0].id
+                if not partner.address[0].email:
+                    set_partner_email(partner, email)
             link_user_address(user_id, address_id)
             return dict(
                 info="La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa",

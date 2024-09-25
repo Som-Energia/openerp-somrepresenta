@@ -348,3 +348,35 @@ class ResUsersTests(testing.OOTestCase):
         self.assertEqual(user.address_id.id, partner.address[0].id)
         # And category is added to the partner
         self.assertEqual([x.id for x in user.address_id.partner_id.category_id], [self.cat_staff_id])
+
+    def test__process_wizard_to_turn_into_representation_staff__unlinked_exists_without_email(self):
+        user_id = self.non_staff_user_id
+        partner_id = self.non_staff_partner_id
+        partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
+        vat = partner.vat
+        user = self.res_users.browse(self.cursor, self.uid, user_id)
+        # Remove the partner email
+        self.res_partner_address.write(self.cursor, self.uid, partner.address[0].id, dict(
+            email=False,
+        ))
+
+        data = self.res_users.process_wizard_to_turn_into_representation_staff(
+            self.cursor, self.uid,
+            user=user,
+            vat=vat,
+            email="new@email.com",
+        )
+
+        # Then operation is successfull
+        self.assertEqual(
+            data['info'],
+            "La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa"
+        )
+        user = self.res_users.browse(self.cursor, self.uid, user_id)
+        partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
+        # Main partner address is linked to the user
+        self.assertEqual(user.address_id.id, partner.address[0].id)
+        # Main partner address email is the provided one
+        self.assertEqual(partner.address[0].email, "new@email.com")
+        # And category is added to the partner
+        self.assertEqual([x.id for x in user.address_id.partner_id.category_id], [self.cat_staff_id])
