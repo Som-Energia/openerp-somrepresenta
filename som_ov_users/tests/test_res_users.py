@@ -118,7 +118,7 @@ class ResUsersTests(testing.OOTestCase):
 
         result = self.res_users.init_wizard_create_staff(self.cursor, self.uid, user_id)
 
-        # Then the wizard uses data from the linked parnter
+        # Then the wizard uses data from the linked partner
         self.assertEqual(result, dict(
             vat=partner.vat,
             email=partner.address[0].email,
@@ -217,7 +217,7 @@ class ResUsersTests(testing.OOTestCase):
 
         result = self.res_users.init_wizard_create_staff(self.cursor, self.uid, user_id)
 
-        # Then the wizard uses data from the linked parnter
+        # Then the wizard uses data from the linked partner
         self.assertEqual(result, dict(
             state='init_error',
             init_message="El VAT de la persona vinculada a la usuària, {vat}, està assignat a més persones".format(
@@ -225,7 +225,7 @@ class ResUsersTests(testing.OOTestCase):
         ))
 
     def test__process_create_staff__unlinked_vat_not_found__creates_everything(self):
-        """User has no linked address and no partener found with the provided VAT"""
+        """User has no linked address and no partner found with the provided VAT"""
         user_id = self.non_staff_user_id
         vat_not_in_db = 'ESP4594924E'
         email = "user@server.com"
@@ -307,7 +307,7 @@ class ResUsersTests(testing.OOTestCase):
             email=partner.address[0].email,  # Same as existing address
         )
 
-        # Then operation is successfull
+        # Then operation is successful
         self.assertEqual(
             result['info'],
             "La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa"
@@ -336,7 +336,7 @@ class ResUsersTests(testing.OOTestCase):
             email="new@email.com",
         )
 
-        # Then operation is successfull
+        # Then operation is successful
         self.assertEqual(
             result['info'],
             "La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa"
@@ -366,7 +366,7 @@ class ResUsersTests(testing.OOTestCase):
             email="new@email.com",
         )
 
-        # Then operation is successfull
+        # Then operation is successful
         self.assertEqual(
             result['info'],
             "La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa"
@@ -396,7 +396,7 @@ class ResUsersTests(testing.OOTestCase):
             email=new_email,
         )
 
-        # Then operation is successfull
+        # Then operation is successful
         self.assertEqual(
             result['info'],
             "La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa.\n"
