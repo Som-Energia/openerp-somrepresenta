@@ -14,7 +14,7 @@ class WizardCreateStaffUsers(osv.osv_memory):
         # TODO: Handle None
 
         user_obj = self.pool.get("res.users")
-        init_data = user_obj.init_wizard_to_turn_into_representation_staff(cursor, uid, res_user_id)
+        init_data = user_obj.init_wizard_create_staff(cursor, uid, res_user_id)
 
         res.update({
             'user_to_staff': res_user_id,
