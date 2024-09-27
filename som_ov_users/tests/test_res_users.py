@@ -102,7 +102,7 @@ class ResUsersTests(testing.OOTestCase):
         """User has no address and no partner with such VAT exists"""
         user_id = self.non_staff_user_id
 
-        data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
+        data = self.res_users.init_wizard_create_staff(self.cursor, self.uid, user_id)
 
         self.assertEqual(data, dict(
             vat=None,
@@ -116,7 +116,7 @@ class ResUsersTests(testing.OOTestCase):
         # Remove the category
         self.clear_partner_categories(partner_id)
 
-        data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
+        data = self.res_users.init_wizard_create_staff(self.cursor, self.uid, user_id)
 
         # Then the wizard uses data from the linked parnter
         self.assertEqual(data, dict(
@@ -129,7 +129,7 @@ class ResUsersTests(testing.OOTestCase):
         partner_id = self.staff_partner_id
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
 
-        data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
+        data = self.res_users.init_wizard_create_staff(self.cursor, self.uid, user_id)
 
         self.assertEqual(data, dict(
             vat=partner.vat,
@@ -150,7 +150,7 @@ class ResUsersTests(testing.OOTestCase):
         # The linked address is not the first one of the partner
         self.set_user_address(user_id, new_partner_address_id)
 
-        data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
+        data = self.res_users.init_wizard_create_staff(self.cursor, self.uid, user_id)
 
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
         user = self.res_users.browse(self.cursor, self.uid, user_id)
@@ -172,7 +172,7 @@ class ResUsersTests(testing.OOTestCase):
         # The user address is an unlinked one
         self.set_user_address(user_id, self.unlinked_address_id)
 
-        data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
+        data = self.res_users.init_wizard_create_staff(self.cursor, self.uid, user_id)
 
         self.assertEqual(data, dict(
             state='init_error',
@@ -186,7 +186,7 @@ class ResUsersTests(testing.OOTestCase):
         self.clear_partner_categories(partner_id)
         self.set_partner_vat(partner_id, False)
 
-        data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
+        data = self.res_users.init_wizard_create_staff(self.cursor, self.uid, user_id)
 
         self.assertEqual(data, dict(
             state='init_error',
@@ -199,7 +199,7 @@ class ResUsersTests(testing.OOTestCase):
         self.clear_partner_categories(partner_id)
         self.set_partner_primary_email(partner_id, False)
 
-        data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
+        data = self.res_users.init_wizard_create_staff(self.cursor, self.uid, user_id)
 
         self.assertEqual(data, dict(
             state='init_error',
@@ -215,7 +215,7 @@ class ResUsersTests(testing.OOTestCase):
         self.clear_partner_categories(partner_id)
         self.set_partner_vat(partner_id, other_partner.vat)
 
-        data = self.res_users.init_wizard_to_turn_into_representation_staff(self.cursor, self.uid, user_id)
+        data = self.res_users.init_wizard_create_staff(self.cursor, self.uid, user_id)
 
         # Then the wizard uses data from the linked parnter
         self.assertEqual(data, dict(
@@ -231,7 +231,7 @@ class ResUsersTests(testing.OOTestCase):
         email = "user@server.com"
         user = self.res_users.browse(self.cursor, self.uid, user_id)
 
-        data = self.res_users.process_wizard_to_turn_into_representation_staff(
+        data = self.res_users.process_wizard_create_staff(
             self.cursor, self.uid,
             user=user,
             vat=vat_not_in_db,
@@ -259,7 +259,7 @@ class ResUsersTests(testing.OOTestCase):
         self.set_partner_vat(partner_id, dupped_vat)
         user = self.res_users.browse(self.cursor, self.uid, user_id)
 
-        data = self.res_users.process_wizard_to_turn_into_representation_staff(
+        data = self.res_users.process_wizard_create_staff(
             self.cursor, self.uid,
             user=user,
             vat=dupped_vat,
@@ -280,7 +280,7 @@ class ResUsersTests(testing.OOTestCase):
         self.add_partner_category(partner_id, self.cat_staff_id)
         user = self.res_users.browse(self.cursor, self.uid, user_id)
 
-        data = self.res_users.process_wizard_to_turn_into_representation_staff(
+        data = self.res_users.process_wizard_create_staff(
             self.cursor, self.uid,
             user=user,
             vat=vat,
@@ -300,7 +300,7 @@ class ResUsersTests(testing.OOTestCase):
         vat = partner.vat
         user = self.res_users.browse(self.cursor, self.uid, user_id)
 
-        data = self.res_users.process_wizard_to_turn_into_representation_staff(
+        data = self.res_users.process_wizard_create_staff(
             self.cursor, self.uid,
             user=user,
             vat=vat,
@@ -329,7 +329,7 @@ class ResUsersTests(testing.OOTestCase):
             address=[Many2Many.set([])],
         ))
 
-        data = self.res_users.process_wizard_to_turn_into_representation_staff(
+        data = self.res_users.process_wizard_create_staff(
             self.cursor, self.uid,
             user=user,
             vat=vat,
@@ -359,7 +359,7 @@ class ResUsersTests(testing.OOTestCase):
             email=False,
         ))
 
-        data = self.res_users.process_wizard_to_turn_into_representation_staff(
+        data = self.res_users.process_wizard_create_staff(
             self.cursor, self.uid,
             user=user,
             vat=vat,
@@ -389,7 +389,7 @@ class ResUsersTests(testing.OOTestCase):
         new_email = "new@email.com"
         old_email = partner.address[0].email
 
-        data = self.res_users.process_wizard_to_turn_into_representation_staff(
+        data = self.res_users.process_wizard_create_staff(
             self.cursor, self.uid,
             user=user,
             vat=vat,

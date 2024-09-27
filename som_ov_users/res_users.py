@@ -24,7 +24,7 @@ class ResUsers(osv.osv):
                                  'El VAT no és vàlid')
         return vat.upper()
 
-    def process_wizard_to_turn_into_representation_staff(self, cursor, uid, user, vat, email):
+    def process_wizard_create_staff(self, cursor, uid, user, vat, email):
         name = user.name
         user_id = user.id
 
@@ -121,7 +121,7 @@ class ResUsers(osv.osv):
             info="La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa",
         )
 
-    def init_wizard_to_turn_into_representation_staff(self, cursor, uid, res_user_id):
+    def init_wizard_create_staff(self, cursor, uid, res_user_id):
         user = self.browse(cursor, uid, res_user_id)
 
         def error(message, **kwargs):
