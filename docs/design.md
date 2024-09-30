@@ -24,10 +24,10 @@ Base case:
 1. Operator selects a User in the ERP
 2. Operator actions "Turnt into SomRepre Staff"
 3. [x] Wizard verifies that user has not a partner address
-4. Wizard prompts for a VAT and a email
-5. Wizard verifies that there is not a partner with that VAT
-6. Wizard creates the partner with provided data
-7. Wizard creates the partner_address with provide data
+4. [x] Wizard prompts for a VAT and a email
+5. [x] Wizard verifies that there is not a partner with that VAT
+6. [x] Wizard creates the partner with provided data
+7. [x] Wizard creates the partner_address with provide data
 8. Wizard links user to the partner_address
 9. Wizard adds the category to the partner
 10. Wizard presents any result, error or warning to the user
