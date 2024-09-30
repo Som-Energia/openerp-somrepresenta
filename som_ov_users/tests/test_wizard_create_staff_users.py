@@ -42,7 +42,7 @@ class WizardCreateStaffUsersTests(testing.OOTestCase):
 
         wiz = self.wiz_o.read(self.cursor, self.uid, [wiz_id])[0]
         self.assertEqual(wiz['state'], 'done')
-        self.assertEqual(wiz['info'], "S'ha creat la usuaria gestora per l'Oficina Virtual de Representació")
+        self.assertEqual(wiz['info'], "La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa")
         final_user = self.res_users.browse(self.cursor, self.uid, user_id)
         self.assertEqual(final_user.is_staff, True)
 
