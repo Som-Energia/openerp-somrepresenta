@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Specify in visible strings the word representation to distinguish from commercialization properly
+- New implementation to create and identify the user staff for Representation Virtual Office
 - Hide invoices emitted beyond a given date
 - Extract liquidation information from invoice line
 - Retrieve production data for a single contract
