@@ -4,7 +4,6 @@ from osv import osv, fields
 class WizardCreateStaffUsers(osv.osv_memory):
 
     _name = "wizard.create.staff.users"
-    _cached_default_values = None
 
     def default_get(self, cursor, uid, fields, context=None):
         res = super(WizardCreateStaffUsers, self).default_get(cursor, uid, fields, context)
@@ -14,18 +13,13 @@ class WizardCreateStaffUsers(osv.osv_memory):
         res_user_id = active_ids[0] if active_ids else None
         # TODO: Handle None
 
-        if self._cached_default_values is None:  # Ensure we only call init_wizard_create_staff once
+        if res.get('state') == 'init':  # Ensure we only call init_wizard_create_staff once
             user_obj = self.pool.get("res.users")
             init_data = user_obj.init_wizard_create_staff(cursor, uid, res_user_id)
-            self._cached_default_values = res
 
             res.update({
                 'user_to_staff': res_user_id,
             }, **init_data)
-
-        res.update({
-            'user_to_staff': res_user_id,
-        })
 
         return res
 
