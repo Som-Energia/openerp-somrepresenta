@@ -116,8 +116,6 @@ class ResUsers(osv.osv):
         link_user_address(user_id, address_id)
 
         return dict(
-            partner_id=partner_id,
-            address_id=address_id,
             info="La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa",
         )
 
