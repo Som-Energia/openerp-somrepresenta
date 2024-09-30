@@ -29,42 +29,12 @@ class WizardCreateStaffUsers(osv.osv_memory):
 
         return res
 
-    def _update_wizard_status(self, cursor, uid, ids, state, info=''):
+    def _update_wizard_status(self, cursor, uid, ids, info=''):
         values = {
-            'state': state,
+            'state': 'done',
             'info': info,
         }
         self.write(cursor, uid, ids, values)
-
-    def _create_partner_and_address(self, cursor, uid, wizard_data):
-        partner_obj = self.pool.get("res.partner")
-        address_obj = self.pool.get("res.partner.address")
-        imd_obj = self.pool.get("ir.model.data")
-
-        cat_staff_id = imd_obj.get_object_reference(
-            cursor, uid, "som_ov_users", "res_partner_category_ovrepresenta_staff"
-        )[1]
-
-        partner_data = {
-            'name': wizard_data.user_to_staff.name,
-            'vat': self._validate_vat(cursor, uid, wizard_data.vat),
-            'lang': 'ca_ES',
-            "category_id": [(6, 0, [cat_staff_id])],
-        }
-        partner_id = partner_obj.create(cursor, uid, partner_data)
-
-        address_data = {
-            'name': wizard_data.user_to_staff.name,
-            'email': wizard_data.email,
-            'partner_id': partner_id,
-            'street': 'Carrer Pic de Peguera, 9',
-            'zip': '17002',
-            'city': 'Girona',
-            'state_id': 20,
-        }
-        address_id = address_obj.create(cursor, uid, address_data)
-
-        return address_id
 
     def _validate_vat(self, cursor, uid, vat):
         partner_obj = self.pool.get("res.partner")
@@ -73,37 +43,27 @@ class WizardCreateStaffUsers(osv.osv_memory):
         return vat.upper()
 
     def action_create_staff_users(self, cursor, uid, ids, context=None):
-        if context is None:
-            context = {}
-
+        if context is None: context = {}
         user_obj = self.pool.get("res.users")
-
         wizard_data = self.browse(cursor, uid, ids[0])
         user_id = wizard_data.user_to_staff.id
 
         if user_id:
             user = user_obj.browse(cursor, uid, user_id)
             if not user.read():
-                self._update_wizard_status(cursor, uid, ids, 'done', "No s'ha trobat cap usuaria")
+                self._update_wizard_status(cursor, uid, ids, "No s'ha trobat cap usuaria")
                 return True
 
-            if not user['address_id']:
-                address_id = self._create_partner_and_address(cursor, uid, wizard_data)
-                user_obj.write(cursor, uid, user_id, {'address_id': address_id})
-                self._update_wizard_status(
-                    cursor, uid, ids, 'done',
-                    "S'ha creat la usuaria gestora per l'Oficina Virtual de Representació"
-                )
-                return True
+            process_create_staff_result = user_obj.process_wizard_create_staff(
+                cursor, uid, user, wizard_data.vat, wizard_data.email
+            )
 
-            if user['address_id']:
-                self._update_wizard_status(
-                    cursor, uid, ids, 'done',
-                    "Aquesta usuaria ja és gestora de l'Oficina Virtual de Representació"
-                )
-                return True
+            self._update_wizard_status(
+                cursor, uid, ids, process_create_staff_result.get('info', '')
+            )
+            return True
 
-        self._update_wizard_status(cursor, uid, ids, 'done', "No s'ha trobat cap usuaria")
+        self._update_wizard_status(cursor, uid, ids, "No s'ha trobat cap usuaria")
         return True
 
     _columns = {
