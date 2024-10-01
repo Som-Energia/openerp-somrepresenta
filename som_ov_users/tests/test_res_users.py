@@ -98,8 +98,8 @@ class ResUsersTests(testing.OOTestCase):
 
         self.assertFalse(is_staff)
 
-    def test__init_create_staff__base_case(self):
-        """User has no address and no partner with such VAT exists"""
+    def test__init_create_staff__unlinked(self):
+        """User has no address linked"""
         user_id = self.non_staff_user_id
 
         result = self.res_users.init_wizard_create_staff(self.cursor, self.uid, user_id)
@@ -109,7 +109,7 @@ class ResUsersTests(testing.OOTestCase):
             email=None,
         ))
 
-    def test__init_create_staff__linked_to_non_staff_address__takes_data_from_address(self):
+    def test__init_create_staff__linked_to_non_staff_partner__takes_data_from_linked(self):
         user_id = self.staff_user_id
         partner_id = self.staff_partner_id
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
@@ -138,7 +138,7 @@ class ResUsersTests(testing.OOTestCase):
             init_message="La usuària ja és gestora de l'Oficina Virtual de Representa",
         ))
 
-    def test__init_create_staff__when_linked_to_a_secondary_address__warn_not_the_address_to_be_used(
+    def test__init_create_staff__linked_to_a_secondary_address__warn_not_the_address_to_be_used(
             self):
         user_id = self.staff_user_id
         partner_id = self.staff_partner_id
@@ -167,7 +167,7 @@ class ResUsersTests(testing.OOTestCase):
             ),
         ))
 
-    def test__init_create_staff__user_linked_to_a_partnerless_address__returns_error(self):
+    def test__init_create_staff__linked_to_a_partnerless_address__returns_error(self):
         user_id = self.staff_user_id
         # The user address is an unlinked one
         self.set_user_address(user_id, self.unlinked_address_id)
@@ -206,7 +206,7 @@ class ResUsersTests(testing.OOTestCase):
             init_message="L'adreça primària de la persona vinculada a la usuària no té email",
         ))
 
-    def test__init_create_staff__dupped_vat__returns_error(self):
+    def test__init_create_staff__linked_dupped_vat__returns_error(self):
         user_id = self.staff_user_id
         partner_id = self.staff_partner_id
         other_partner_id = self.other_partner_id
