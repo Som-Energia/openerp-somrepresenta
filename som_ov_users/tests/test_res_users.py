@@ -413,3 +413,34 @@ class ResUsersTests(testing.OOTestCase):
         self.assertEqual(partner.address[0].email, old_email)
         # And category is added to the partner
         self.assertEqual([x.id for x in user.address_id.partner_id.category_id], [self.cat_staff_id])
+
+    def test__process_create_staff__linked_to_non_staff_partner__adds_staff_category(self):
+        user_id = self.staff_user_id
+        partner_id = self.staff_partner_id
+        partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
+        user = self.res_users.browse(self.cursor, self.uid, user_id)
+        old_email = user.address_id.email
+        old_address_id = user.address_id.id
+        # Remove the category
+        self.clear_partner_categories(partner_id)
+
+        result = self.res_users.process_wizard_create_staff(
+            self.cursor, self.uid,
+            user=user,
+            vat=False, # `readonly` wizard field returns false
+            email=False, # `readonly` wizard field returns false
+        )
+
+        # Then the operation  active')None-Nones successful
+        self.assertEqual(
+            result['info'],
+            "La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa"
+        )
+        # And the staff category is added
+        user = self.res_users.browse(self.cursor, self.uid, user_id)
+        self.assertEqual([x.id for x in user.address_id.partner_id.category_id], [self.cat_staff_id])
+        # And the linked address remains
+        self.assertEqual(user.address_id.id, old_address_id)
+        # And the email remains
+        self.assertEqual(user.address_id.email, old_email)
+
