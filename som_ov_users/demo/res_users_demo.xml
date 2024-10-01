@@ -54,5 +54,27 @@
             <field name="zip">17002</field>
             <field name="state_id">20</field>
         </record>
+        <!-- User linked to a partner without staff category -->
+        <record id="res_partner_res_users_linked_non_staff" model="res.partner">
+            <field name="name">Corday, Charlotte</field>
+            <field name="vat">ES92039880K</field>
+        </record>
+        <record id="res_partner_address_res_users_linked_non_staff" model="res.partner.address">
+            <field name="name">Corday, Charlotte</field>
+            <field name="email">charlotte@somenergia.coop</field>
+            <field name="partner_id" ref="res_partner_res_users_linked_non_staff"/>
+            <field name="street">Carrer Pic de Peguera, 9</field>
+            <field name="city">Girona</field>
+            <field name="zip">17002</field>
+            <field name="state_id">20</field>
+        </record>
+        <record id="res_users_linked_non_staff" model="res.users">
+            <field name="name">Corday, Charlotte</field>
+            <field name="login">charlotte</field>
+            <field name="password">$9$NB3wTRKF$PL9sNc2PQsY.foYLazpkr.</field>
+            <field name="address_id" ref="res_partner_address_res_users_linked_non_staff"/>
+            <field name="active" eval="True"/>
+            <field name="lang">ca_ES</field>
+        </record>
     </data>
 </openerp>
