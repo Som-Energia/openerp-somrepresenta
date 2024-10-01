@@ -16,6 +16,8 @@ class WizardCreateStaffUsers(osv.osv_memory):
         if res.get('state') == 'init':  # Ensure we only call init_wizard_create_staff once
             user_obj = self.pool.get("res.users")
             init_data = user_obj.init_wizard_create_staff(cursor, uid, res_user_id)
+            init_data['missing_vat'] = not init_data.get('vat')
+            init_data['missing_email'] = not init_data.get('email')
 
             res.update({
                 'user_to_staff': res_user_id,
@@ -66,13 +68,16 @@ class WizardCreateStaffUsers(osv.osv_memory):
         'user_to_staff': fields.many2one('res.users', 'Usuaria', required=True),
         'vat': fields.char('VAT', size=20),
         'email': fields.char('Email', size=100),
-        'init_error': fields.boolean('Init Error'),
         'init_message': fields.text('Init Message', size=4000),
+        'missing_vat': fields.boolean('VAT is missing'),
+        'missing_email': fields.boolean('Email is missing'),
     }
 
     _defaults = {
         'state': lambda *a: 'init',
         'init_message': lambda *a: '',
+        'missing_vat': True,
+        'missing_email': True,
     }
 
 WizardCreateStaffUsers()
