@@ -32,6 +32,9 @@ class ResUsers(osv.osv):
         address_obj = self.pool.get("res.partner.address")
         imd_obj = self.pool.get("ir.model.data")
 
+        if user.address_id:
+            vat = user.address_id.partner_id.vat
+
         partner_ids = partner_obj.search(cursor, uid, [('vat', '=', vat)])
         if len(partner_ids) > 1:
             return dict(
@@ -107,7 +110,7 @@ class ResUsers(osv.osv):
                             email=partner.address[0].email,
                             new_email=email,
                         ),
-                      ] if partner.address and partner.address[0].email and partner.address[0].email != email else [])
+                      ] if email and partner.address and partner.address[0].email and partner.address[0].email != email else [])
                 ),
             )
 
