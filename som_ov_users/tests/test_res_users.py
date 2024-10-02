@@ -195,9 +195,8 @@ class ResUsersTests(testing.OOTestCase):
         ))
 
     def test__init_create_staff__linked_partner_without_email__returns_error(self):
-        user_id = self.staff_user_id
-        partner_id = self.staff_partner_id
-        self.clear_partner_categories(partner_id)
+        user_id = self.linked_non_staff_user_id
+        partner_id = self.linked_non_staff_partner_id
         self.set_partner_primary_email(partner_id, False)
 
         result = self.res_users.init_wizard_create_staff(self.cursor, self.uid, user_id)
@@ -208,12 +207,11 @@ class ResUsersTests(testing.OOTestCase):
         ))
 
     def test__init_create_staff__linked_dupped_vat__returns_error(self):
-        user_id = self.staff_user_id
-        partner_id = self.staff_partner_id
+        user_id = self.linked_non_staff_user_id
+        partner_id = self.linked_non_staff_partner_id
         other_partner_id = self.other_partner_id
         other_partner = self.res_partner.browse(self.cursor, self.uid, other_partner_id)
-        # Remove the category and set the vat of another existing partner
-        self.clear_partner_categories(partner_id)
+        # Set the vat of another existing partner
         self.set_partner_vat(partner_id, other_partner.vat)
 
         result = self.res_users.init_wizard_create_staff(self.cursor, self.uid, user_id)
