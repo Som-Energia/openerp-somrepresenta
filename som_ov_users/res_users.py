@@ -84,55 +84,56 @@ class ResUsers(osv.osv):
                 'email': email,
             })
 
-        if partner_ids:
-            partner = partner_obj.browse(cursor, uid, partner_ids[0])
-            if has_staff_category(partner):
-                return dict(
-                    info=(
-                        "La persona ja és gestora de l'Oficina Virtual de Representa. "
-                        "Potser el VAT {vat} ja està vinculat amb una altra usuària".format(vat=vat)
-                    )
-                )
-            add_staff_category_to_partner(partner.id)
-            if not partner.address:
-                address_id = create_address(name, email, partner.id)
-            else:
-                address_id = partner.address[0].id
-                if not partner.address[0].email:
-                    set_partner_email(partner, email)
-
-            previous_link_exists = bool(user.address_id)
-            if not previous_link_exists: # Respect existing address id
-                link_user_address(user_id, address_id)
+        # No partner found with such vat, create
+        if not partner_ids:
+            partner_id = create_partner(name, vat)
+            address_id = create_address(name, email, partner_id)
+            link_user_address(user_id, address_id)
 
             return dict(
-                info='.\n'.join(
-                    ["La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa"]
-                    + ([
-                        "Es farà servir el correu ({email}) en comptes de el provist ({new_email})".format(
-                            email=partner.address[0].email,
-                            new_email=email,
-                        ),
-                      ] if email and partner.address and partner.address[0].email and partner.address[0].email != email else [])
-                    + ([
-                        (
-                            "L'adreça vinculada a la usuària, {linked}, "
-                            "no serà la que es farà servir a la OV sinó "
-                            "la de l'adreça principal de la persona {primary}"
-                        ).format(
-                            linked=user.address_id.email,
-                            primary=partner.address[0].email,
-                        )
-                    ] if previous_link_exists and user.address_id.email != partner.address[0].email else [])
-                ),
+                info="La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa",
             )
 
-        partner_id = create_partner(name, vat)
-        address_id = create_address(name, email, partner_id)
-        link_user_address(user_id, address_id)
+        partner = partner_obj.browse(cursor, uid, partner_ids[0])
+        if has_staff_category(partner):
+            return dict(
+                info=(
+                    "La persona ja és gestora de l'Oficina Virtual de Representa. "
+                    "Potser el VAT {vat} ja està vinculat amb una altra usuària".format(vat=vat)
+                )
+            )
+        add_staff_category_to_partner(partner.id)
+        if not partner.address:
+            address_id = create_address(name, email, partner.id)
+        else:
+            address_id = partner.address[0].id
+            if not partner.address[0].email:
+                set_partner_email(partner, email)
+
+        previous_link_exists = bool(user.address_id)
+        if not previous_link_exists: # Respect existing address id
+            link_user_address(user_id, address_id)
 
         return dict(
-            info="La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa",
+            info='.\n'.join(
+                ["La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa"]
+                + ([
+                    "Es farà servir el correu ({email}) en comptes de el provist ({new_email})".format(
+                        email=partner.address[0].email,
+                        new_email=email,
+                    ),
+                  ] if email and partner.address and partner.address[0].email and partner.address[0].email != email else [])
+                + ([
+                    (
+                        "L'adreça vinculada a la usuària, {linked}, "
+                        "no serà la que es farà servir a la OV sinó "
+                        "la de l'adreça principal de la persona {primary}"
+                    ).format(
+                        linked=user.address_id.email,
+                        primary=partner.address[0].email,
+                    )
+                ] if previous_link_exists and user.address_id.email != partner.address[0].email else [])
+            ),
         )
 
     def init_wizard_create_staff(self, cursor, uid, res_user_id):
