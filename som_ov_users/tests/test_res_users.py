@@ -113,11 +113,9 @@ class ResUsersTests(testing.OOTestCase):
         ))
 
     def test__init_create_staff__linked_to_non_staff_partner__takes_data_from_linked(self):
-        user_id = self.staff_user_id
-        partner_id = self.staff_partner_id
+        user_id = self.linked_non_staff_user_id
+        partner_id = self.linked_non_staff_partner_id
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
-        # Remove the category
-        self.clear_partner_categories(partner_id)
 
         result = self.res_users.init_wizard_create_staff(self.cursor, self.uid, user_id)
 
@@ -145,7 +143,7 @@ class ResUsersTests(testing.OOTestCase):
             self):
         user_id = self.staff_user_id
         partner_id = self.staff_partner_id
-        secondary_address_id = self.unlinked_address_id
+        secondary_address_id = self.partnerless_address_id
         # Remove the category
         self.clear_partner_categories(partner_id)
         # Add the new address to the existing one
@@ -173,7 +171,7 @@ class ResUsersTests(testing.OOTestCase):
     def test__init_create_staff__linked_to_a_partnerless_address__returns_error(self):
         user_id = self.staff_user_id
         # The user address is an unlinked one
-        self.set_user_address(user_id, self.unlinked_address_id)
+        self.set_user_address(user_id, self.partnerless_address_id)
 
         result = self.res_users.init_wizard_create_staff(self.cursor, self.uid, user_id)
 
@@ -450,7 +448,7 @@ class ResUsersTests(testing.OOTestCase):
     def test__process_create_staff__linked_to_a_secondary_address__keeps_user_address_id(self):
         user_id = self.staff_user_id
         partner_id = self.staff_partner_id
-        secondary_address_id = self.unlinked_address_id
+        secondary_address_id = self.partnerless_address_id
         # Remove the category
         self.clear_partner_categories(partner_id)
         # Add the new address to the existing one
