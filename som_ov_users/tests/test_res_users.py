@@ -43,17 +43,22 @@ class ResUsersTests(testing.OOTestCase):
         self.maxDiff = None
         self.get_models()
         self.setup_transaction()
+        self.cat_staff_id = self.reference("som_ov_users", "res_partner_category_ovrepresenta_staff")
+        # A proper staff (primary address linked to user and partner with category)
         self.staff_user_id = self.reference('som_ov_users', 'res_users_already_staff')
         self.staff_partner_id = self.reference('som_ov_users', 'res_partner_res_users_already_staff')
+        # Regular partner unrelated to a user and without staff category
         self.non_staff_user_id = self.reference('som_ov_users', 'res_users_non_staff')
-        self.partnerless_address_id = self.reference('som_ov_users', 'res_partner_address_unlinked')
         self.non_staff_partner_id = self.reference('som_ov_users', 'res_partner_not_customer')
         self.non_staff_partner_address_id = self.reference('som_ov_users', 'res_partner_address_not_customer')
-        self.other_partner_id = self.reference('som_ov_users', 'res_partner_soci')
-        self.cat_staff_id = self.reference("som_ov_users", "res_partner_category_ovrepresenta_staff")
+        # A user with a linked address of a partner witout staff category
         self.linked_non_staff_user_id = self.reference('som_ov_users', 'res_users_linked_non_staff')
         self.linked_non_staff_partner_id = self.reference('som_ov_users', 'res_partner_linked_non_staff')
         self.linked_non_staff_partner_address_id = self.reference('som_ov_users', 'res_partner_address_linked_non_staff')
+        # An address without partner
+        self.partnerless_address_id = self.reference('som_ov_users', 'res_partner_address_unlinked')
+        # Other parther to obtain an existing vat
+        self.other_partner_id = self.reference('som_ov_users', 'res_partner_soci')
 
     def set_user_address(self, user_id, address_id):
         self.res_users.write(self.cursor, self.uid, user_id, {
@@ -63,11 +68,6 @@ class ResUsersTests(testing.OOTestCase):
     def add_partner_address(self, partner_id, address_id):
         self.res_partner.write(self.cursor, self.uid, partner_id, {
             'address': [Many2Many.link(address_id)],
-        })
-
-    def clear_partner_categories(self, partner_id):
-        self.res_partner.write(self.cursor, self.uid, partner_id, {
-            'category_id': [Many2Many.set([])],
         })
 
     def add_partner_category(self, partner_id, category_id):
@@ -141,11 +141,10 @@ class ResUsersTests(testing.OOTestCase):
 
     def test__init_create_staff__linked_to_a_secondary_address__warn_not_the_address_to_be_used(
             self):
-        user_id = self.staff_user_id
-        partner_id = self.staff_partner_id
+        # TODO: use  linked_non_staff
+        user_id = self.linked_non_staff_user_id
+        partner_id = self.linked_non_staff_partner_id
         secondary_address_id = self.partnerless_address_id
-        # Remove the category
-        self.clear_partner_categories(partner_id)
         # Add the new address to the existing one
         self.add_partner_address(partner_id, secondary_address_id)
         # The linked address is not the first one of the partner
@@ -441,11 +440,10 @@ class ResUsersTests(testing.OOTestCase):
         self.assertEqual(user.address_id.email, old_email)
 
     def test__process_create_staff__linked_to_a_secondary_address__keeps_user_address_id(self):
-        user_id = self.staff_user_id
-        partner_id = self.staff_partner_id
+        # TODO: use  linked_non_staff
+        user_id = self.linked_non_staff_user_id
+        partner_id = self.linked_non_staff_partner_id
         secondary_address_id = self.partnerless_address_id
-        # Remove the category
-        self.clear_partner_categories(partner_id)
         # Add the new address to the existing one
         self.add_partner_address(partner_id, secondary_address_id)
         # The linked address is not the first one of the partner
