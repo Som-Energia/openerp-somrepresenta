@@ -11,7 +11,6 @@ class WizardCreateStaffUsers(osv.osv_memory):
         active_ids = context.get('active_ids')
 
         res_user_id = active_ids[0] if active_ids else None
-        # TODO: Handle None
 
         if res.get('state') == 'init':  # Ensure we only call init_wizard_create_staff once
             user_obj = self.pool.get("res.users")
