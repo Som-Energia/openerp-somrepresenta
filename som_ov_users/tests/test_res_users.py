@@ -142,13 +142,13 @@ class ResUsersTests(testing.OOTestCase):
             self):
         user_id = self.staff_user_id
         partner_id = self.staff_partner_id
-        new_partner_address_id = self.unlinked_address_id
+        secondary_address_id = self.unlinked_address_id
         # Remove the category
         self.clear_partner_categories(partner_id)
         # Add the new address to the existing one
-        self.add_partner_address(partner_id, new_partner_address_id)
+        self.add_partner_address(partner_id, secondary_address_id)
         # The linked address is not the first one of the partner
-        self.set_user_address(user_id, new_partner_address_id)
+        self.set_user_address(user_id, secondary_address_id)
 
         result = self.res_users.init_wizard_create_staff(self.cursor, self.uid, user_id)
 
@@ -159,7 +159,7 @@ class ResUsersTests(testing.OOTestCase):
             email=partner.address[0].email,  # not "unlinked@somenergia.coop"
             init_message=(
                 "L'adreça vinculada a la usuària, {linked}, "
-                "no serà la que es fará servir a la OV sinó "
+                "no serà la que es farà servir a la OV sinó "
                 "la de l'adreça principal de la persona {primary}"
             ).format(
                 linked=user.address_id.email,
@@ -443,4 +443,43 @@ class ResUsersTests(testing.OOTestCase):
         self.assertEqual(user.address_id.id, old_address_id)
         # And the email remains
         self.assertEqual(user.address_id.email, old_email)
+
+
+    def test__process_create_staff__linked_to_a_secondary_address__keeps_user_address_id(self):
+        user_id = self.staff_user_id
+        partner_id = self.staff_partner_id
+        secondary_address_id = self.unlinked_address_id
+        # Remove the category
+        self.clear_partner_categories(partner_id)
+        # Add the new address to the existing one
+        self.add_partner_address(partner_id, secondary_address_id)
+        # The linked address is not the first one of the partner
+        self.set_user_address(user_id, secondary_address_id)
+        user = self.res_users.browse(self.cursor, self.uid, user_id)
+
+        result = self.res_users.process_wizard_create_staff(
+            self.cursor, self.uid,
+            user=user,
+            vat=False, # `readonly` wizard field returns false
+            email=False, # `readonly` wizard field returns false
+        )
+
+        partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
+        user = self.res_users.browse(self.cursor, self.uid, user_id)
+
+        # Then the linked address is kept
+        self.assertEqual(user.address_id.id, secondary_address_id)
+        # And the result includes a warning
+        self.assertEqual(
+            result['info'], (
+                "La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa"
+                ".\n"
+                "L'adreça vinculada a la usuària, {linked}, "
+                "no serà la que es farà servir a la OV sinó "
+                "la de l'adreça principal de la persona {primary}"
+            ).format(
+                linked=user.address_id.email,
+                primary=partner.address[0].email,
+            )
+        )
 

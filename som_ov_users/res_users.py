@@ -101,7 +101,10 @@ class ResUsers(osv.osv):
                 if not partner.address[0].email:
                     set_partner_email(partner, email)
 
-            link_user_address(user_id, address_id)
+            previous_link_exists = bool(user.address_id)
+            if not previous_link_exists: # Respect existing address id
+                link_user_address(user_id, address_id)
+
             return dict(
                 info='.\n'.join(
                     ["La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa"]
@@ -111,6 +114,16 @@ class ResUsers(osv.osv):
                             new_email=email,
                         ),
                       ] if email and partner.address and partner.address[0].email and partner.address[0].email != email else [])
+                    + ([
+                        (
+                            "L'adreça vinculada a la usuària, {linked}, "
+                            "no serà la que es farà servir a la OV sinó "
+                            "la de l'adreça principal de la persona {primary}"
+                        ).format(
+                            linked=user.address_id.email,
+                            primary=partner.address[0].email,
+                        )
+                    ] if previous_link_exists and user.address_id.email != partner.address[0].email else [])
                 ),
             )
 
@@ -176,7 +189,7 @@ class ResUsers(osv.osv):
             return warning(
                 (
                     "L'adreça vinculada a la usuària, {linked}, "
-                    "no serà la que es fará servir a la OV sinó "
+                    "no serà la que es farà servir a la OV sinó "
                     "la de l'adreça principal de la persona {primary}"
                 ).format(
                     linked=user.address_id.email,
