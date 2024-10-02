@@ -181,10 +181,9 @@ class ResUsersTests(testing.OOTestCase):
         ))
 
     def test__init_create_staff__linked_partner_without_vat__returns_error(self):
-        user_id = self.staff_user_id
-        partner_id = self.staff_partner_id
-        # Remove the category and the partner VAT
-        self.clear_partner_categories(partner_id)
+        user_id = self.linked_non_staff_user_id
+        partner_id = self.linked_non_staff_partner_id
+        # Remove the partner VAT
         self.set_partner_vat(partner_id, False)
 
         result = self.res_users.init_wizard_create_staff(self.cursor, self.uid, user_id)
@@ -414,14 +413,12 @@ class ResUsersTests(testing.OOTestCase):
         self.assertEqual([x.id for x in user.address_id.partner_id.category_id], [self.cat_staff_id])
 
     def test__process_create_staff__linked_to_non_staff_partner__adds_staff_category(self):
-        user_id = self.staff_user_id
-        partner_id = self.staff_partner_id
+        user_id = self.linked_non_staff_user_id
+        partner_id = self.linked_non_staff_partner_id
         partner = self.res_partner.browse(self.cursor, self.uid, partner_id)
         user = self.res_users.browse(self.cursor, self.uid, user_id)
         old_email = user.address_id.email
         old_address_id = user.address_id.id
-        # Remove the category
-        self.clear_partner_categories(partner_id)
 
         result = self.res_users.process_wizard_create_staff(
             self.cursor, self.uid,
