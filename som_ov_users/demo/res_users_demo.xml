@@ -45,15 +45,6 @@
             <field name="active" eval="True"/>
             <field name="lang">ca_ES</field>
         </record>
-        <!-- Address unlinked to any partner (to be linked in tests) -->
-        <record id="res_partner_address_unlinked" model="res.partner.address">
-            <field name="name">Hari Unlinked, Mata</field>
-            <field name="email">unlinked@somenergia.coop</field>
-            <field name="street">Unlinked Street, 1</field>
-            <field name="city">Girona</field>
-            <field name="zip">17002</field>
-            <field name="state_id">20</field>
-        </record>
         <!-- User linked to a partner without staff category -->
         <record id="res_partner_linked_non_staff" model="res.partner">
             <field name="name">Corday, Charlotte</field>
@@ -75,6 +66,19 @@
             <field name="address_id" ref="res_partner_address_linked_non_staff"/>
             <field name="active" eval="True"/>
             <field name="lang">ca_ES</field>
+        </record>
+        <!-- Address unlinked to any partner (to be linked in tests) -->
+        <!-- Caution, this address must be the last one in this file,
+            so that the id is greater simulating it was defined the later.
+            This way when added to a partner it will be a secondary address.
+        -->
+        <record id="res_partner_address_unlinked" model="res.partner.address">
+            <field name="name">Hari Unlinked, Mata</field>
+            <field name="email">unlinked@somenergia.coop</field>
+            <field name="street">Unlinked Street, 1</field>
+            <field name="city">Girona</field>
+            <field name="zip">17002</field>
+            <field name="state_id">20</field>
         </record>
     </data>
 </openerp>
