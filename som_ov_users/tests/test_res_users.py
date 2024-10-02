@@ -431,7 +431,7 @@ class ResUsersTests(testing.OOTestCase):
             email=False, # `readonly` wizard field returns false
         )
 
-        # Then the operation  active')None-Nones successful
+        # Then the operation is successful
         self.assertEqual(
             result['info'],
             "La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa"
@@ -443,7 +443,6 @@ class ResUsersTests(testing.OOTestCase):
         self.assertEqual(user.address_id.id, old_address_id)
         # And the email remains
         self.assertEqual(user.address_id.email, old_email)
-
 
     def test__process_create_staff__linked_to_a_secondary_address__keeps_user_address_id(self):
         user_id = self.staff_user_id
