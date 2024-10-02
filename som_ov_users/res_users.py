@@ -117,27 +117,34 @@ class ResUsers(osv.osv):
         if not address_already_linked:
             link_user_address(user_id, address_id)
 
+        warnings = []
+
+        if email and partner.address and partner.address[0].email and partner.address[0].email != email:
+            warnings += [
+                "Es farà servir el correu ({email}) en comptes de el "
+                "provist ({new_email})"
+                .format(
+                    email=partner.address[0].email,
+                    new_email=email,
+                )]
+
+        if address_already_linked and user.address_id.email != partner.address[0].email:
+            warnings += [
+                "L'adreça vinculada a la usuària, {linked}, "
+                "no serà la que es farà servir a la OV sinó "
+                "la de l'adreça principal de la persona {primary}"
+                .format(
+                    linked=user.address_id.email,
+                    primary=partner.address[0].email,
+                )
+            ]
+
         return dict(
-            info='.\n'.join(
-                ["La usuària ha estat convertida en gestora de l'Oficina Virtual de Representa"]
-                + ([
-                    "Es farà servir el correu ({email}) en comptes de el provist ({new_email})".format(
-                        email=partner.address[0].email,
-                        new_email=email,
-                    ),
-                  ] if email and partner.address and partner.address[0].email and partner.address[0].email != email else [])
-                + ([
-                    (
-                        "L'adreça vinculada a la usuària, {linked}, "
-                        "no serà la que es farà servir a la OV sinó "
-                        "la de l'adreça principal de la persona {primary}"
-                    ).format(
-                        linked=user.address_id.email,
-                        primary=partner.address[0].email,
-                    )
-                ] if address_already_linked and user.address_id.email != partner.address[0].email else [])
-            ),
-        )
+            info='.\n'.join([
+                "La usuària ha estat convertida en gestora de l'Oficina "
+                "Virtual de Representa"
+                ] + warnings)
+            )
 
     def init_wizard_create_staff(self, cursor, uid, res_user_id):
         user = self.browse(cursor, uid, res_user_id)
