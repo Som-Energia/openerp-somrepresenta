@@ -141,7 +141,6 @@ class ResUsersTests(testing.OOTestCase):
 
     def test__init_create_staff__linked_to_a_secondary_address__warn_not_the_address_to_be_used(
             self):
-        # TODO: use  linked_non_staff
         user_id = self.linked_non_staff_user_id
         partner_id = self.linked_non_staff_partner_id
         secondary_address_id = self.partnerless_address_id
@@ -440,7 +439,6 @@ class ResUsersTests(testing.OOTestCase):
         self.assertEqual(user.address_id.email, old_email)
 
     def test__process_create_staff__linked_to_a_secondary_address__keeps_user_address_id(self):
-        # TODO: use  linked_non_staff
         user_id = self.linked_non_staff_user_id
         partner_id = self.linked_non_staff_partner_id
         secondary_address_id = self.partnerless_address_id
