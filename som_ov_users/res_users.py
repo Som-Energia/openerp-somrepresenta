@@ -25,28 +25,6 @@ class ResUsers(osv.osv):
         return vat.upper()
 
     def process_wizard_create_staff(self, cursor, uid, user, vat, email):
-        name = user.name
-        user_id = user.id
-
-        partner_obj = self.pool.get("res.partner")
-        address_obj = self.pool.get("res.partner.address")
-        imd_obj = self.pool.get("ir.model.data")
-
-        if user.address_id:
-            vat = user.address_id.partner_id.vat
-
-        partner_ids = partner_obj.search(cursor, uid, [('vat', '=', vat)])
-        if len(partner_ids) > 1:
-            return dict(
-                info="El VAT de la persona vinculada a la usuària, "
-                     "{vat}, està assignat a més persones".format(
-                    vat=vat,
-                ),
-            )
-
-        cat_staff_id = imd_obj.get_object_reference(
-            cursor, uid, "som_ov_users", "res_partner_category_ovrepresenta_staff"
-        )[1]
 
         def has_staff_category(partner):
             return any(cat.id == cat_staff_id for cat in partner.category_id)
@@ -83,6 +61,30 @@ class ResUsers(osv.osv):
             address_obj.write(cursor, uid, partner.address[0].id, {
                 'email': email,
             })
+
+        name = user.name
+        user_id = user.id
+
+        partner_obj = self.pool.get("res.partner")
+        address_obj = self.pool.get("res.partner.address")
+        imd_obj = self.pool.get("ir.model.data")
+
+        # If previously linked, take the linked vat
+        if user.address_id:
+            vat = user.address_id.partner_id.vat
+
+        partner_ids = partner_obj.search(cursor, uid, [('vat', '=', vat)])
+        if len(partner_ids) > 1:
+            return dict(
+                info="El VAT de la persona vinculada a la usuària, "
+                     "{vat}, està assignat a més persones".format(
+                    vat=vat,
+                ),
+            )
+
+        cat_staff_id = imd_obj.get_object_reference(
+            cursor, uid, "som_ov_users", "res_partner_category_ovrepresenta_staff"
+        )[1]
 
         # No partner found with such vat, create
         if not partner_ids:
