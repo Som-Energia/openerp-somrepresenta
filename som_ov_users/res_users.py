@@ -70,7 +70,8 @@ class ResUsers(osv.osv):
         imd_obj = self.pool.get("ir.model.data")
 
         # If previously linked, take the linked vat
-        if user.address_id:
+        address_already_linked = bool(user.address_id)
+        if address_already_linked:
             vat = user.address_id.partner_id.vat
 
         partner_ids = partner_obj.search(cursor, uid, [('vat', '=', vat)])
@@ -112,8 +113,8 @@ class ResUsers(osv.osv):
             if not partner.address[0].email:
                 set_partner_email(partner, email)
 
-        previous_link_exists = bool(user.address_id)
-        if not previous_link_exists: # Respect existing address id
+        # Respect existing address id if exists
+        if not address_already_linked:
             link_user_address(user_id, address_id)
 
         return dict(
@@ -134,7 +135,7 @@ class ResUsers(osv.osv):
                         linked=user.address_id.email,
                         primary=partner.address[0].email,
                     )
-                ] if previous_link_exists and user.address_id.email != partner.address[0].email else [])
+                ] if address_already_linked and user.address_id.email != partner.address[0].email else [])
             ),
         )
 
