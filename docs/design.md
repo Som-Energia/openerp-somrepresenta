@@ -11,7 +11,7 @@ We identified 3 roles
 - Customer: Plain users
     - Customer valid res_partner with the `customer` category.
 
-## Provisining use cases
+## Turning ERP users into Som Representa staff
 
 Definicions:
 - provided data: the ones provided by the user on the wizard fields
@@ -23,11 +23,11 @@ Base case:
 
 1. Operator selects a User in the ERP
 2. Operator actions "Turnt into SomRepre Staff"
-3. [x] Wizard verifies that user has not a partner address
-4. [x] Wizard prompts for a VAT and a email
-5. [x] Wizard verifies that there is not a partner with that VAT
-6. [x] Wizard creates the partner with provided data
-7. [x] Wizard creates the partner_address with provide data
+3. Wizard verifies that user has not a partner address
+4. Wizard prompts for a VAT and a email
+5. Wizard verifies that there is not a partner with that VAT
+6. Wizard creates the partner with provided data
+7. Wizard creates the partner_address with provide data
 8. Wizard links user to the partner_address
 9. Wizard adds the category to the partner
 10. Wizard presents any result, error or warning to the user
@@ -46,7 +46,7 @@ TODO
 5.b.1. Wizard adds an error: "There is more than one person matching this VAT. Fix it, before proceeding"
 5.a.3. Go to step 10
 
-3.a. [x] Wizard detects that the user is already relatated to an address
+3.a. Wizard detects that the user is already relatated to an address
 3.a.1. Wizard verifies that the linked address is not broken
 3.a.2. Wizard verifies that the linked address is the first one
 3.a.3. Wizard verifies that there is no more partners with that VAT
