@@ -46,11 +46,14 @@ class ResUsersTests(testing.OOTestCase):
         self.staff_user_id = self.reference('som_ov_users', 'res_users_already_staff')
         self.staff_partner_id = self.reference('som_ov_users', 'res_partner_res_users_already_staff')
         self.non_staff_user_id = self.reference('som_ov_users', 'res_users_non_staff')
-        self.unlinked_address_id = self.reference('som_ov_users', 'res_partner_address_unlinked')
+        self.partnerless_address_id = self.reference('som_ov_users', 'res_partner_address_unlinked')
         self.non_staff_partner_id = self.reference('som_ov_users', 'res_partner_not_customer')
         self.non_staff_partner_address_id = self.reference('som_ov_users', 'res_partner_address_not_customer')
         self.other_partner_id = self.reference('som_ov_users', 'res_partner_soci')
         self.cat_staff_id = self.reference("som_ov_users", "res_partner_category_ovrepresenta_staff")
+        self.linked_non_staff_user_id = self.reference('som_ov_users', 'res_users_linked_non_staff')
+        self.linked_non_staff_partner_id = self.reference('som_ov_users', 'res_partner_linked_non_staff')
+        self.linked_non_staff_partner_address_id = self.reference('som_ov_users', 'res_partner_address_linked_non_staff')
 
     def set_user_address(self, user_id, address_id):
         self.res_users.write(self.cursor, self.uid, user_id, {
