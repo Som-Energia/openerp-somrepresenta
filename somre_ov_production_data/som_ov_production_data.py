@@ -4,8 +4,8 @@ from osv import osv
 from datetime import datetime
 from collections import defaultdict
 
-from som_ov_users.decorators import www_entry_point
-from som_ov_users.exceptions import (
+from somre_ov_users.decorators import www_entry_point
+from somre_ov_users.exceptions import (
     NoSuchUser,
 )
 from som_ov_installations.exceptions import (

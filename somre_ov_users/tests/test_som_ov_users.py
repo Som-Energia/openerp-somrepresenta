@@ -4,7 +4,7 @@
 from destral import testing
 from destral.transaction import Transaction
 
-from som_ov_users.exceptions import NoSuchUser
+from somre_ov_users.exceptions import NoSuchUser
 
 from .. import som_ov_users
 

@@ -61,7 +61,7 @@
             <field name="codi_previsio">SR00000</field>
             <field name="potencia_nominal">800</field>
             <field name="name">Installation 0</field>
-            <field name="titular" ref="som_ov_users.res_partner_soci"/>
+            <field name="titular" ref="somre_ov_users.res_partner_soci"/>
             <field name="codigo_ministerio">RE-00000</field>
             <field name="utm_y">0,80284</field>
             <field name="utm_x">41,54670</field>
@@ -81,7 +81,7 @@
             <field name="codi_previsio">SR00001</field>
             <field name="potencia_nominal">801</field>
             <field name="name">Installation 1</field>
-            <field name="titular" ref="som_ov_users.res_partner_soci"/>
+            <field name="titular" ref="somre_ov_users.res_partner_soci"/>
             <field name="codigo_ministerio">RE-00001</field>
             <field name="utm_y">0,80284</field>
             <field name="utm_x">41,54670</field>
@@ -101,7 +101,7 @@
             <field name="codi_previsio">SR00002</field>
             <field name="potencia_nominal">801</field>
             <field name="name">Installation 2</field>
-            <field name="titular" ref="som_ov_users.res_partner_soci_without_contract"/>
+            <field name="titular" ref="somre_ov_users.res_partner_soci_without_contract"/>
             <field name="codigo_ministerio">RE-00002</field>
             <field name="utm_y">0,80284</field>
             <field name="utm_x">41,54670</field>
@@ -121,7 +121,7 @@
             <field name="codi_previsio">SR00003</field>
             <field name="potencia_nominal">801</field>
             <field name="name">Installation 3</field>
-            <field name="titular" ref="som_ov_users.res_partner_soci"/>
+            <field name="titular" ref="somre_ov_users.res_partner_soci"/>
             <field name="codigo_ministerio">RE-00003</field>
             <field name="utm_y"></field>
             <field name="utm_x"></field>
@@ -139,11 +139,11 @@
             <field name="iban">ES3421008161215236295257</field>
             <field name="printable_iban">ES34 2100 8161 2152 3629 5257</field>
             <field name="state">iban</field>
-            <field name="partner_id" ref="som_ov_users.res_partner_soci"/>
+            <field name="partner_id" ref="somre_ov_users.res_partner_soci"/>
             <field name="acc_country_id">67</field>
         </record>
         <record id="giscere_polissa_0" model="giscere.polissa">
-            <field name="titular" ref="som_ov_users.res_partner_soci_legal"/>
+            <field name="titular" ref="somre_ov_users.res_partner_soci_legal"/>
             <field name="renovacio_auto" eval="True"/>
             <field name="comercialitzadora">1</field>
             <field name="desvios">included</field>
@@ -167,7 +167,7 @@
             <field name="titular_nif">ES36464471H</field>
         </record>
         <record id="giscere_polissa_1" model="giscere.polissa">
-            <field name="titular" ref="som_ov_users.res_partner_soci_legal"/>
+            <field name="titular" ref="somre_ov_users.res_partner_soci_legal"/>
             <field name="renovacio_auto" eval="True"/>
             <field name="comercialitzadora">1</field>
             <field name="desvios">included</field>
@@ -190,7 +190,7 @@
             <field name="efecte_cartera">100</field>
         </record>
         <record id="giscere_polissa_2" model="giscere.polissa">
-            <field name="titular" ref="som_ov_users.res_partner_soci_legal"/>
+            <field name="titular" ref="somre_ov_users.res_partner_soci_legal"/>
             <field name="renovacio_auto" eval="True"/>
             <field name="comercialitzadora">1</field>
             <field name="desvios">included</field>
@@ -213,7 +213,7 @@
             <field name="efecte_cartera">100</field>
         </record>
         <record id="giscere_polissa_3" model="giscere.polissa">
-            <field name="titular" ref="som_ov_users.res_partner_soci"/>
+            <field name="titular" ref="somre_ov_users.res_partner_soci"/>
             <field name="renovacio_auto" eval="True"/>
             <field name="comercialitzadora">1</field>
             <field name="desvios">included</field>

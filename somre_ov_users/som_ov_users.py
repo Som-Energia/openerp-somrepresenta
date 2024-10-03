@@ -38,7 +38,7 @@ class SomOvUsers(osv.osv_memory):
         user_obj = self.pool.get('res.users')
         imd_obj = self.pool.get("ir.model.data")
         staff_category_id = imd_obj.get_object_reference(
-            cursor, uid, "som_ov_users", "res_partner_category_ovrepresenta_staff"
+            cursor, uid, "somre_ov_users", "res_partner_category_ovrepresenta_staff"
         )[1]
         if all(cat.id != staff_category_id for cat in partner.category_id):
             return False

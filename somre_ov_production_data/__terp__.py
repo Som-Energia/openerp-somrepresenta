@@ -10,7 +10,7 @@
     "depends":[
         "giscere_mhcil",
         "giscere_polissa",
-        "som_ov_users",
+        "somre_ov_users",
         "som_ov_installations",
     ],
     "init_xml": [],

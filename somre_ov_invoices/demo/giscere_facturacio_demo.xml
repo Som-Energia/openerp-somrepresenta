@@ -3,61 +3,61 @@
     <data>
         <record id="account_invoice_0" model="account.invoice">
 			<field name="currency_id" ref="base.EUR"/>
-			<field name="partner_id" ref="som_ov_users.res_partner_soci"/>
+			<field name="partner_id" ref="somre_ov_users.res_partner_soci"/>
 			<field name="journal_id" ref="account.sales_journal"/>
 			<field name="type">out_invoice</field>
 			<field name="account_id" ref="account.a_sale"/>
 			<field name="name">Proforma Test invoice 0</field>
             <field name="date_invoice">2022-10-31</field>
-			<field name="address_invoice_id" ref="som_ov_users.res_partner_address_soci"/>
+			<field name="address_invoice_id" ref="somre_ov_users.res_partner_address_soci"/>
             <field name="amount_total">28.77</field>
             <field name="state">open</field>
         </record>
         <record id="account_invoice_1" model="account.invoice">
 			<field name="currency_id" ref="base.EUR"/>
-			<field name="partner_id" ref="som_ov_users.res_partner_soci_legal"/>
+			<field name="partner_id" ref="somre_ov_users.res_partner_soci_legal"/>
 			<field name="journal_id" ref="account.sales_journal"/>
 			<field name="type">out_invoice</field>
 			<field name="account_id" ref="account.a_sale"/>
 			<field name="name">Proforma Test invoice 1</field>
             <field name="date_invoice">2022-10-31</field>
-			<field name="address_invoice_id" ref="som_ov_users.res_partner_address_legal_entity"/>
+			<field name="address_invoice_id" ref="somre_ov_users.res_partner_address_legal_entity"/>
             <field name="amount_total">14.35</field>
             <field name="state">draft</field>
         </record>
         <record id="account_invoice_specific_retribution_0" model="account.invoice">
 			<field name="currency_id" ref="base.EUR"/>
-			<field name="partner_id" ref="som_ov_users.res_partner_soci"/>
+			<field name="partner_id" ref="somre_ov_users.res_partner_soci"/>
 			<field name="journal_id" ref="account.sales_journal"/>
 			<field name="type">out_invoice</field>
 			<field name="account_id" ref="account.a_sale"/>
 			<field name="name">Specific retribution Test invoice 0</field>
             <field name="date_invoice">2022-10-31</field>
-			<field name="address_invoice_id" ref="som_ov_users.res_partner_address_soci"/>
+			<field name="address_invoice_id" ref="somre_ov_users.res_partner_address_soci"/>
             <field name="amount_total">14.35</field>
             <field name="state">open</field>
         </record>
         <record id="account_invoice_specific_retribution_complementary_0" model="account.invoice">
             <field name="currency_id" ref="base.EUR"/>
-            <field name="partner_id" ref="som_ov_users.res_partner_soci"/>
+            <field name="partner_id" ref="somre_ov_users.res_partner_soci"/>
             <field name="journal_id" ref="account.sales_journal"/>
             <field name="type">out_invoice</field>
             <field name="account_id" ref="account.a_sale"/>
             <field name="name">Specific retribution Complementary Test invoice 0</field>
             <field name="date_invoice">2022-10-31</field>
-            <field name="address_invoice_id" ref="som_ov_users.res_partner_address_soci"/>
+            <field name="address_invoice_id" ref="somre_ov_users.res_partner_address_soci"/>
             <field name="amount_total">-4.35</field>
             <field name="state">open</field>
         </record>
         <record id="account_invoice_2" model="account.invoice">
 			<field name="currency_id" ref="base.EUR"/>
-			<field name="partner_id" ref="som_ov_users.res_partner_soci"/>
+			<field name="partner_id" ref="somre_ov_users.res_partner_soci"/>
 			<field name="journal_id" ref="account.sales_journal"/>
 			<field name="type">out_invoice</field>
 			<field name="account_id" ref="account.a_sale"/>
 			<field name="name">Proforma Test invoice 2</field>
             <field name="date_invoice">2022-09-30</field>
-			<field name="address_invoice_id" ref="som_ov_users.res_partner_address_soci"/>
+			<field name="address_invoice_id" ref="somre_ov_users.res_partner_address_soci"/>
             <field name="amount_total">29.77</field>
             <field name="state">paid</field>
         </record>
@@ -68,7 +68,7 @@
             <field name="data_final">2022-10-31</field>
             <field name="date_invoice">2022-10-31</field>
             <field name="polissa_id" ref="som_ov_installations.giscere_polissa_3"/>
-            <field name="partner_id" ref="som_ov_users.res_partner_soci"/>
+            <field name="partner_id" ref="somre_ov_users.res_partner_soci"/>
             <field name="tipo_factura">01</field>
             <field name="invoice_id" ref="account_invoice_0"/>
             <field name="cil_id" ref="som_ov_installations.giscere_cil_3"/>
@@ -82,7 +82,7 @@
             <field name="data_final">2022-10-31</field>
             <field name="date_invoice">2022-10-31</field>
             <field name="polissa_id" ref="som_ov_installations.giscere_polissa_2"/>
-            <field name="partner_id" ref="som_ov_users.res_partner_soci_legal"/>
+            <field name="partner_id" ref="somre_ov_users.res_partner_soci_legal"/>
             <field name="tipo_factura">02</field>
             <field name="invoice_id" ref="account_invoice_1"/>
             <field name="cil_id" ref="som_ov_installations.giscere_cil_2"/>
@@ -96,7 +96,7 @@
             <field name="data_final">2022-09-30</field>
             <field name="date_invoice">2022-09-30</field>
             <field name="polissa_id" ref="som_ov_installations.giscere_polissa_3"/>
-            <field name="partner_id" ref="som_ov_users.res_partner_soci"/>
+            <field name="partner_id" ref="somre_ov_users.res_partner_soci"/>
             <field name="tipo_factura">01</field>
             <field name="invoice_id" ref="account_invoice_2"/>
             <field name="cil_id" ref="som_ov_installations.giscere_cil_3"/>
@@ -110,7 +110,7 @@
             <field name="data_final">2022-09-30</field>
             <field name="date_invoice">2022-09-30</field>
             <field name="polissa_id" ref="som_ov_installations.giscere_polissa_3"/>
-            <field name="partner_id" ref="som_ov_users.res_partner_soci"/>
+            <field name="partner_id" ref="somre_ov_users.res_partner_soci"/>
             <field name="tipo_factura">02</field>
             <field name="invoice_id" ref="account_invoice_specific_retribution_0"/>
             <field name="cil_id" ref="som_ov_installations.giscere_cil_3"/>
@@ -124,7 +124,7 @@
             <field name="data_final">2022-09-30</field>
             <field name="date_invoice">2022-09-30</field>
             <field name="polissa_id" ref="som_ov_installations.giscere_polissa_3"/>
-            <field name="partner_id" ref="som_ov_users.res_partner_soci"/>
+            <field name="partner_id" ref="somre_ov_users.res_partner_soci"/>
             <field name="tipo_factura">02</field>
             <field name="invoice_id" ref="account_invoice_specific_retribution_complementary_0"/>
             <field name="cil_id" ref="som_ov_installations.giscere_cil_3"/>

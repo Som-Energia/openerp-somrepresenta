@@ -43,22 +43,22 @@ class ResUsersTests(testing.OOTestCase):
         self.maxDiff = None
         self.get_models()
         self.setup_transaction()
-        self.cat_staff_id = self.reference("som_ov_users", "res_partner_category_ovrepresenta_staff")
+        self.cat_staff_id = self.reference("somre_ov_users", "res_partner_category_ovrepresenta_staff")
         # A proper staff (primary address linked to user and partner with category)
-        self.staff_user_id = self.reference('som_ov_users', 'res_users_already_staff')
-        self.staff_partner_id = self.reference('som_ov_users', 'res_partner_res_users_already_staff')
+        self.staff_user_id = self.reference('somre_ov_users', 'res_users_already_staff')
+        self.staff_partner_id = self.reference('somre_ov_users', 'res_partner_res_users_already_staff')
         # Regular partner unrelated to a user and without staff category
-        self.non_staff_user_id = self.reference('som_ov_users', 'res_users_non_staff')
-        self.non_staff_partner_id = self.reference('som_ov_users', 'res_partner_not_customer')
-        self.non_staff_partner_address_id = self.reference('som_ov_users', 'res_partner_address_not_customer')
+        self.non_staff_user_id = self.reference('somre_ov_users', 'res_users_non_staff')
+        self.non_staff_partner_id = self.reference('somre_ov_users', 'res_partner_not_customer')
+        self.non_staff_partner_address_id = self.reference('somre_ov_users', 'res_partner_address_not_customer')
         # A user with a linked address of a partner witout staff category
-        self.linked_non_staff_user_id = self.reference('som_ov_users', 'res_users_linked_non_staff')
-        self.linked_non_staff_partner_id = self.reference('som_ov_users', 'res_partner_linked_non_staff')
-        self.linked_non_staff_partner_address_id = self.reference('som_ov_users', 'res_partner_address_linked_non_staff')
+        self.linked_non_staff_user_id = self.reference('somre_ov_users', 'res_users_linked_non_staff')
+        self.linked_non_staff_partner_id = self.reference('somre_ov_users', 'res_partner_linked_non_staff')
+        self.linked_non_staff_partner_address_id = self.reference('somre_ov_users', 'res_partner_address_linked_non_staff')
         # An address without partner
-        self.partnerless_address_id = self.reference('som_ov_users', 'res_partner_address_unlinked')
+        self.partnerless_address_id = self.reference('somre_ov_users', 'res_partner_address_unlinked')
         # Other parther to obtain an existing vat
-        self.other_partner_id = self.reference('som_ov_users', 'res_partner_soci')
+        self.other_partner_id = self.reference('somre_ov_users', 'res_partner_soci')
 
     def set_user_address(self, user_id, address_id):
         self.res_users.write(self.cursor, self.uid, user_id, {

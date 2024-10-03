@@ -84,7 +84,7 @@ class ResUsers(osv.osv):
             )
 
         cat_staff_id = imd_obj.get_object_reference(
-            cursor, uid, "som_ov_users", "res_partner_category_ovrepresenta_staff"
+            cursor, uid, "somre_ov_users", "res_partner_category_ovrepresenta_staff"
         )[1]
 
         # No partner found with such vat, create
@@ -224,7 +224,7 @@ class ResUsers(osv.osv):
         if not partner: return False
 
         staff_category_id = imd_obj.get_object_reference(
-            cursor, uid, "som_ov_users", "res_partner_category_ovrepresenta_staff"
+            cursor, uid, "somre_ov_users", "res_partner_category_ovrepresenta_staff"
         )[1]
         return any(cat.id == staff_category_id for cat in partner.category_id)
 

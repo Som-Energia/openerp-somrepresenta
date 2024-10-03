@@ -9,7 +9,7 @@
     "category": "www",
     "depends":[
         "giscere_facturacio",
-        "som_ov_users",
+        "somre_ov_users",
         "som_ov_installations",
     ],
     "init_xml": [],

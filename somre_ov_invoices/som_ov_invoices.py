@@ -10,8 +10,8 @@ try:
 except ImportError:
     import StringIO
 
-from som_ov_users.decorators import www_entry_point
-from som_ov_users.exceptions import NoSuchUser
+from somre_ov_users.decorators import www_entry_point
+from somre_ov_users.exceptions import NoSuchUser
 from exceptions import NoSuchInvoice, UnauthorizedAccess
 
 

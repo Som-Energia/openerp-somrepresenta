@@ -52,7 +52,7 @@ class WizardCreateStaffUsersTests(testing.OOTestCase):
             return imd.get_object_reference(
                 self.cursor, self.uid, module, id,
             )[1]
-        user_id = reference('som_ov_users', 'res_users_already_staff')
+        user_id = reference('somre_ov_users', 'res_users_already_staff')
         user = self.res_users.browse(self.cursor, self.uid, user_id)
         irrelevant_context = {}
         wiz_id = self.wiz_o.create(self.cursor, self.uid, {}, context=irrelevant_context)
