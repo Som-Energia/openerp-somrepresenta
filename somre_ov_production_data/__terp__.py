@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Production data",
+    "name": "Representation service business layer: Production data",
     "description": """
         Module to interact with production data
     """,

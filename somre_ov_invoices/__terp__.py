@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Representa Business layer: Invoices",
+    "name": "Representation service business layer: Invoices",
     "description": """
         Module to interact with invoices
     """,

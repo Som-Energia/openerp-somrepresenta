@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Representa Business layer: Installations",
+    "name": "Representation service business layer: Installations",
     "description": """
         Module to interact with installations
     """,

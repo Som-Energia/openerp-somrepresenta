@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Representa Business layer",
+    "name": "Representation service business layer: Users",
     "description": """
         Module for Representa Virtual Office integration
     """,
