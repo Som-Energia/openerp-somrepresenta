@@ -12,7 +12,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
     def setUp(self):
         self.pool = self.openerp.pool
         self.imd = self.pool.get('ir.model.data')
-        self.invoice = self.pool.get('som.ov.invoices')
+        self.invoice = self.pool.get('somre.ov.invoices')
 
         self.txn = Transaction().start(self.database)
 
@@ -166,7 +166,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
     ])
     def test__get_liquidation_description__base(self, input, expected):
         invoice_id = self.reference(
-            'som_ov_invoices', 'giscere_facturacio_factura_specific_retribution_0')
+            'somre_ov_invoices', 'giscere_facturacio_factura_specific_retribution_0')
 
         result = self.invoice.get_liquidation_description(
             self.cursor, self.uid, input, invoice_id)
@@ -175,7 +175,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
 
     def test__get_liquidation_description__extraline_doest_not_exists(self):
         invoice_id = self.reference(
-            'som_ov_invoices', 'giscere_facturacio_factura_1')
+            'somre_ov_invoices', 'giscere_facturacio_factura_1')
 
         result = self.invoice.get_liquidation_description(
             self.cursor, self.uid, self.specific_retribution_type_value, invoice_id)
@@ -184,7 +184,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
 
     def test__get_liquidation_description__complementary(self):
         invoice_id = self.reference(
-            'som_ov_invoices', 'giscere_facturacio_factura_specific_retribution_complementary_0')
+            'somre_ov_invoices', 'giscere_facturacio_factura_specific_retribution_complementary_0')
 
         result = self.invoice.get_liquidation_description(
             self.cursor, self.uid, self.specific_retribution_type_value, invoice_id)
