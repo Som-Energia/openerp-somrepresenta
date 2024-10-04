@@ -18,7 +18,7 @@ class SomUsersTests(testing.OOTestCase):
         self.pool = self.openerp.pool
         self.imd = self.pool.get('ir.model.data')
         self.res_partner = self.pool.get('res.partner')
-        self.users = self.pool.get('som.ov.users')
+        self.users = self.pool.get('somre.ov.users')
 
         self.txn = Transaction().start(self.database)
 
