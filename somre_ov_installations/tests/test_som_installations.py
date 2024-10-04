@@ -11,7 +11,7 @@ class SomInstallationsTests(testing.OOTestCase):
         self.pool = self.openerp.pool
         self.imd = self.pool.get('ir.model.data')
         self.polissa = self.pool.get('giscere.polissa')
-        self.installation = self.pool.get('somre.ov.installations')
+        self.installation = self.pool.get('som.ov.installations')
 
         self.txn = Transaction().start(self.database)
 

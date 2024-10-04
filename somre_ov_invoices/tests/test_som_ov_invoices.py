@@ -12,7 +12,7 @@ class SomOvInvoicesTests(testing.OOTestCase):
     def setUp(self):
         self.pool = self.openerp.pool
         self.imd = self.pool.get('ir.model.data')
-        self.invoice = self.pool.get('somre.ov.invoices')
+        self.invoice = self.pool.get('som.ov.invoices')
 
         self.txn = Transaction().start(self.database)
 
