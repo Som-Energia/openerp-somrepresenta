@@ -11,7 +11,7 @@
         "giscere_mhcil",
         "giscere_polissa",
         "somre_ov_users",
-        "som_ov_installations",
+        "somre_ov_installations",
     ],
     "init_xml": [],
     "demo_xml": [

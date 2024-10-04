@@ -8,7 +8,7 @@ from somre_ov_users.decorators import www_entry_point
 from somre_ov_users.exceptions import (
     NoSuchUser,
 )
-from som_ov_installations.exceptions import (
+from somre_ov_installations.exceptions import (
     UnauthorizedAccess,
     ContractNotExists,
 )

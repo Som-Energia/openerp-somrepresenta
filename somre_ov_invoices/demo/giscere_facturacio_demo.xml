@@ -67,11 +67,11 @@
             <field name="data_inici">2022-10-01</field>
             <field name="data_final">2022-10-31</field>
             <field name="date_invoice">2022-10-31</field>
-            <field name="polissa_id" ref="som_ov_installations.giscere_polissa_3"/>
+            <field name="polissa_id" ref="somre_ov_installations.giscere_polissa_3"/>
             <field name="partner_id" ref="somre_ov_users.res_partner_soci"/>
             <field name="tipo_factura">01</field>
             <field name="invoice_id" ref="account_invoice_0"/>
-            <field name="cil_id" ref="som_ov_installations.giscere_cil_3"/>
+            <field name="cil_id" ref="somre_ov_installations.giscere_cil_3"/>
             <field name="facturacio" eval="1"/>
             <field name="llista_preu" eval="1"/>
         </record>
@@ -81,11 +81,11 @@
             <field name="data_inici">2022-10-01</field>
             <field name="data_final">2022-10-31</field>
             <field name="date_invoice">2022-10-31</field>
-            <field name="polissa_id" ref="som_ov_installations.giscere_polissa_2"/>
+            <field name="polissa_id" ref="somre_ov_installations.giscere_polissa_2"/>
             <field name="partner_id" ref="somre_ov_users.res_partner_soci_legal"/>
             <field name="tipo_factura">02</field>
             <field name="invoice_id" ref="account_invoice_1"/>
-            <field name="cil_id" ref="som_ov_installations.giscere_cil_2"/>
+            <field name="cil_id" ref="somre_ov_installations.giscere_cil_2"/>
             <field name="facturacio" eval="1"/>
             <field name="llista_preu" eval="1"/>
         </record>
@@ -95,11 +95,11 @@
             <field name="data_inici">2022-09-01</field>
             <field name="data_final">2022-09-30</field>
             <field name="date_invoice">2022-09-30</field>
-            <field name="polissa_id" ref="som_ov_installations.giscere_polissa_3"/>
+            <field name="polissa_id" ref="somre_ov_installations.giscere_polissa_3"/>
             <field name="partner_id" ref="somre_ov_users.res_partner_soci"/>
             <field name="tipo_factura">01</field>
             <field name="invoice_id" ref="account_invoice_2"/>
-            <field name="cil_id" ref="som_ov_installations.giscere_cil_3"/>
+            <field name="cil_id" ref="somre_ov_installations.giscere_cil_3"/>
             <field name="facturacio" eval="1"/>
             <field name="llista_preu" eval="1"/>
         </record>
@@ -109,11 +109,11 @@
             <field name="data_inici">2022-09-01</field>
             <field name="data_final">2022-09-30</field>
             <field name="date_invoice">2022-09-30</field>
-            <field name="polissa_id" ref="som_ov_installations.giscere_polissa_3"/>
+            <field name="polissa_id" ref="somre_ov_installations.giscere_polissa_3"/>
             <field name="partner_id" ref="somre_ov_users.res_partner_soci"/>
             <field name="tipo_factura">02</field>
             <field name="invoice_id" ref="account_invoice_specific_retribution_0"/>
-            <field name="cil_id" ref="som_ov_installations.giscere_cil_3"/>
+            <field name="cil_id" ref="somre_ov_installations.giscere_cil_3"/>
             <field name="facturacio" eval="1"/>
             <field name="llista_preu" eval="1"/>
         </record>
@@ -123,11 +123,11 @@
             <field name="data_inici">2022-09-01</field>
             <field name="data_final">2022-09-30</field>
             <field name="date_invoice">2022-09-30</field>
-            <field name="polissa_id" ref="som_ov_installations.giscere_polissa_3"/>
+            <field name="polissa_id" ref="somre_ov_installations.giscere_polissa_3"/>
             <field name="partner_id" ref="somre_ov_users.res_partner_soci"/>
             <field name="tipo_factura">02</field>
             <field name="invoice_id" ref="account_invoice_specific_retribution_complementary_0"/>
-            <field name="cil_id" ref="som_ov_installations.giscere_cil_3"/>
+            <field name="cil_id" ref="somre_ov_installations.giscere_cil_3"/>
             <field name="facturacio" eval="1"/>
             <field name="llista_preu" eval="1"/>
         </record>
@@ -142,7 +142,7 @@
             <field name="product_id">1</field>
             <field name="uos_id">1</field>
 			<field name="account_id" ref="account.a_sale"/>
-            <field name="polissa_id" ref="som_ov_installations.giscere_polissa_3"/>
+            <field name="polissa_id" ref="somre_ov_installations.giscere_polissa_3"/>
             <field name="date_from">2024-01-01</field>
             <field name="date_to">2024-12-31</field>
             <field name="term">1</field>
@@ -159,7 +159,7 @@
             <field name="product_id">1</field>
             <field name="uos_id">1</field>
             <field name="account_id" ref="account.a_sale"/>
-            <field name="polissa_id" ref="som_ov_installations.giscere_polissa_3"/>
+            <field name="polissa_id" ref="somre_ov_installations.giscere_polissa_3"/>
             <field name="date_from">2024-01-01</field>
             <field name="date_to">2024-12-31</field>
             <field name="term">1</field>
@@ -176,7 +176,7 @@
             <field name="product_id">1</field>
             <field name="uos_id">1</field>
             <field name="account_id" ref="account.a_sale"/>
-            <field name="polissa_id" ref="som_ov_installations.giscere_polissa_3"/>
+            <field name="polissa_id" ref="somre_ov_installations.giscere_polissa_3"/>
             <field name="date_from">2024-01-01</field>
             <field name="date_to">2024-12-31</field>
             <field name="term">1</field>

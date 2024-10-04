@@ -11,7 +11,7 @@ class SomInstallationsTests(testing.OOTestCase):
         self.pool = self.openerp.pool
         self.imd = self.pool.get('ir.model.data')
         self.polissa = self.pool.get('giscere.polissa')
-        self.installation = self.pool.get('som.ov.installations')
+        self.installation = self.pool.get('somre.ov.installations')
 
         self.txn = Transaction().start(self.database)
 
@@ -145,7 +145,7 @@ class SomInstallationsTests(testing.OOTestCase):
 
     def test__get_installation_details__contract_with_no_installation(self):
         installation_obj = self.pool.get('giscere.instalacio')
-        installation_id = self.reference('som_ov_installations', 'giscere_instalacio_1')
+        installation_id = self.reference('somre_ov_installations', 'giscere_instalacio_1')
         installation_obj.unlink(self.cursor, self.uid, [installation_id])
         contract_number = '101'
         vat = self.legal_vat

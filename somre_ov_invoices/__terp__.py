@@ -10,7 +10,7 @@
     "depends":[
         "giscere_facturacio",
         "somre_ov_users",
-        "som_ov_installations",
+        "somre_ov_installations",
     ],
     "init_xml": [],
     "demo_xml": [

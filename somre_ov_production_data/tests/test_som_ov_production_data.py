@@ -139,7 +139,7 @@ class SomOvProductionDataTests(testing.OOTestCase):
     def test__measures__installation_without_forecast_code(self):
         installation_obj = self.pool.get('giscere.instalacio')
         installation_id  = self.reference(
-            'som_ov_installations',
+            'somre_ov_installations',
             'giscere_instalacio_0',
         )
         installation_obj.write(self.cursor, self.uid, installation_id, dict(codi_previsio=None))
