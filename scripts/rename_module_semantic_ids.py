@@ -18,7 +18,10 @@ for old_module, new_module in modules.items():
     if "-r" in sys.argv:
         old_module, new_module = new_module, old_module
 
-    current_module_ids = imd.search([('module', '=', old_module)])
+    current_module_ids = imd.search([
+        ('module', '=', old_module),
+        ('model', '!=', 'ir.module.module'),
+    ])
 
     if not current_module_ids:
         continue
