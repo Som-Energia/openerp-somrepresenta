@@ -16,7 +16,6 @@
             <field name="nv">Carrer Buenaventura Durruti</field>
             <field name="pnp">1</field>
             <field name="aclarador">aclaridor</field>
-            <field name="codi_unitat_fisica">Unitat del poble</field>
             <field name="id_municipi" ref="res_municipi_0"/>
             <field name="id_provincia" ref="res_country_state_0"/>
             <field name="distribuidora_id">1</field>
@@ -27,7 +26,6 @@
             <field name="nv">Carrer Buenaventura Durruti</field>
             <field name="pnp">2</field>
             <field name="aclarador">aclaridor</field>
-            <field name="codi_unitat_fisica">Unitat del poble</field>
             <field name="id_municipi" ref="res_municipi_0"/>
             <field name="id_provincia" ref="res_country_state_0"/>
             <field name="distribuidora_id">1</field>
@@ -38,7 +36,6 @@
             <field name="nv">Carrer Buenaventura Durruti</field>
             <field name="pnp">3</field>
             <field name="aclarador">aclaridor</field>
-            <field name="codi_unitat_fisica">Unitat del poble</field>
             <field name="id_municipi" ref="res_municipi_0"/>
             <field name="id_provincia" ref="res_country_state_0"/>
             <field name="distribuidora_id">1</field>
@@ -49,7 +46,6 @@
             <field name="nv">Carrer Buenaventura Durruti</field>
             <field name="pnp">4</field>
             <field name="aclarador">aclaridor</field>
-            <field name="codi_unitat_fisica">Unitat del poble</field>
             <field name="id_municipi" ref="res_municipi_0"/>
             <field name="id_provincia" ref="res_country_state_0"/>
             <field name="distribuidora_id">1</field>
@@ -69,7 +65,6 @@
             <field name="data_alta">2022-09-01</field>
             <field name="data_baixa"></field>
             <field name="descripcio">Description 0</field>
-            <field name="solicitud_ree">20201203132064</field>
             <field name="tipo">IT-00000</field>
             <field name="unitat_oferta">2</field>
             <field name="unitat_fisica">1</field>
@@ -89,7 +84,6 @@
             <field name="data_alta">2022-09-02</field>
             <field name="data_baixa"></field>
             <field name="descripcio">Description 1</field>
-            <field name="solicitud_ree">20201203132064</field>
             <field name="tipo">IT-00001</field>
             <field name="unitat_oferta">2</field>
             <field name="unitat_fisica">1</field>
@@ -109,7 +103,6 @@
             <field name="data_alta">2022-09-02</field>
             <field name="data_baixa"></field>
             <field name="descripcio">Description 2</field>
-            <field name="solicitud_ree">20201203132064</field>
             <field name="tipo">IT-00001</field>
             <field name="unitat_oferta">2</field>
             <field name="unitat_fisica">1</field>
@@ -129,7 +122,6 @@
             <field name="data_alta">2022-09-02</field>
             <field name="data_baixa"></field>
             <field name="descripcio">Description 3</field>
-            <field name="solicitud_ree">20201203132064</field>
             <field name="tipo">IT-00001</field>
             <field name="unitat_oferta">2</field>
             <field name="unitat_fisica">1</field>
@@ -145,7 +137,6 @@
         <record id="giscere_polissa_0" model="giscere.polissa">
             <field name="titular" ref="somre_ov_users.res_partner_soci_legal"/>
             <field name="renovacio_auto" eval="True"/>
-            <field name="comercialitzadora">1</field>
             <field name="desvios">included</field>
             <field name="representation_type">indirecta_cnmc</field>
             <field name="contract_type">01</field>
@@ -169,7 +160,6 @@
         <record id="giscere_polissa_1" model="giscere.polissa">
             <field name="titular" ref="somre_ov_users.res_partner_soci_legal"/>
             <field name="renovacio_auto" eval="True"/>
-            <field name="comercialitzadora">1</field>
             <field name="desvios">included</field>
             <field name="representation_type">indirecta_cnmc</field>
             <field name="contract_type">01</field>
@@ -192,7 +182,6 @@
         <record id="giscere_polissa_2" model="giscere.polissa">
             <field name="titular" ref="somre_ov_users.res_partner_soci_legal"/>
             <field name="renovacio_auto" eval="True"/>
-            <field name="comercialitzadora">1</field>
             <field name="desvios">included</field>
             <field name="representation_type">indirecta_cnmc</field>
             <field name="contract_type">01</field>
@@ -215,7 +204,6 @@
         <record id="giscere_polissa_3" model="giscere.polissa">
             <field name="titular" ref="somre_ov_users.res_partner_soci"/>
             <field name="renovacio_auto" eval="True"/>
-            <field name="comercialitzadora">1</field>
             <field name="desvios">included</field>
             <field name="representation_type">indirecta_cnmc</field>
             <field name="contract_type">01</field>
