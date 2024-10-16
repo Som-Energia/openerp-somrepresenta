@@ -155,7 +155,7 @@
             <field name="desvios">included</field>
             <field name="bank" ref="res_partner_bank_0"/>
             <field name="efecte_cartera">100</field>
-            <field name="titular_nif">ES36464471H</field>
+            <field name="titular_nif">ESW2796397D</field>
         </record>
         <record id="giscere_polissa_1" model="giscere.polissa">
             <field name="titular" ref="somre_ov_users.res_partner_soci_legal"/>
