@@ -7,7 +7,7 @@ on:
     - cron: '0 0 * * 1'
 jobs:
   erp-tests-module:
-    uses: Som-Energia/openerp_som_addons/.github/workflows/reusable_workflow.yml
+    uses: Som-Energia/openerp_som_addons/.github/workflows/reusable_workflow.yml@main
     with:
       module: som_ov_invoices
     secrets:
